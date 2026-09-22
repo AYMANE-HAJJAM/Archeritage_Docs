@@ -11,6 +11,7 @@ import {
   updateSectionAction,
   type ProjectActionState,
 } from "../../actions";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const initial: ProjectActionState = {};
 
@@ -269,6 +270,7 @@ function SectionRow({
   groups: Group[];
 }) {
   const [open, setOpen] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [updateState, updateAction, updating] = useActionState(updateSectionAction, initial);
   const [deleteState, deleteAction, deleting] = useActionState(deleteSectionAction, initial);
 
@@ -376,27 +378,43 @@ function SectionRow({
           </form>
 
           {!section.codeLocked ? (
-            <form
-              action={deleteAction}
-              onSubmit={(e) => {
-                if (!confirm(`Supprimer définitivement ${section.code} ?`)) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              <input type="hidden" name="sectionId" value={section.id} />
-              <input type="hidden" name="projectId" value={projectId} />
+            <>
               <button
-                type="submit"
+                type="button"
                 disabled={deleting}
+                onClick={() => setConfirmDelete(true)}
                 className="text-xs text-destructive underline-offset-2 hover:underline"
               >
                 Supprimer (rubrique vide uniquement)
               </button>
+              <form
+                id={`delete-section-admin-${section.id}`}
+                action={deleteAction}
+                className="hidden"
+              >
+                <input type="hidden" name="sectionId" value={section.id} />
+                <input type="hidden" name="projectId" value={projectId} />
+              </form>
+              <ConfirmDialog
+                open={confirmDelete}
+                onOpenChange={setConfirmDelete}
+                title={`Supprimer définitivement ${section.code} ?`}
+                description="Cette action est définitive. La rubrique doit être vide."
+                confirmLabel="Supprimer"
+                destructive
+                pending={deleting}
+                onConfirm={() => {
+                  setConfirmDelete(false);
+                  const form = document.getElementById(
+                    `delete-section-admin-${section.id}`,
+                  ) as HTMLFormElement | null;
+                  form?.requestSubmit();
+                }}
+              />
               {deleteState.error ? (
                 <p className="mt-1 text-xs text-destructive">{deleteState.error}</p>
               ) : null}
-            </form>
+            </>
           ) : (
             <p className="text-xs text-muted-foreground">
               Suppression bloquée — désactivez la rubrique si elle ne doit plus

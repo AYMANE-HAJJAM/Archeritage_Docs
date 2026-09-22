@@ -11,7 +11,9 @@ async function main() {
   if (process.env.NODE_ENV === "production" && (password === developmentPassword || !process.env.SEED_ADMIN_EMAIL || !process.env.SEED_ADMIN_NAME)) {
     throw new Error("Set unique SEED_ADMIN_EMAIL, SEED_ADMIN_NAME and SEED_ADMIN_PASSWORD in production.");
   }
-  if (password.length < 14 || Buffer.byteLength(password) > 72) throw new Error("Seed password must be 14–72 bytes.");
+  if (password.length < 6 || password.length > 72) {
+    throw new Error("Seed password must be 6–72 characters.");
+  }
   await db.user.upsert({
     where: { email: (process.env.SEED_ADMIN_EMAIL || "admin@archeritage.local").toLowerCase() },
     update: {

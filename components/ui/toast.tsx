@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCircle2, Info, X, XCircle } from "lucide-react";
 import {
   createContext,
   useCallback,
@@ -8,7 +9,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type ToastTone = "success" | "error" | "info";
@@ -30,7 +30,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
   const pushToast = useCallback((message: string, tone: ToastTone = "success") => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    setItems((current) => [...current, { id, message, tone }]);
+    setItems((current) => [...current.slice(-4), { id, message, tone }]);
   }, []);
 
   const dismiss = useCallback((id: string) => {
@@ -43,8 +43,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={value}>
       {children}
       <div
-        className="pointer-events-none fixed bottom-4 right-4 z-[80] flex w-[min(22rem,calc(100vw-2rem))] flex-col gap-2"
+        className="pointer-events-none fixed bottom-4 right-4 z-[80] flex w-[min(22rem,calc(100vw-2rem))] flex-col gap-2 sm:bottom-5 sm:right-5"
         aria-live="polite"
+        aria-relevant="additions"
       >
         {items.map((item) => (
           <ToastCard key={item.id} item={item} onDismiss={() => dismiss(item.id)} />
@@ -66,19 +67,35 @@ function ToastCard({
     return () => window.clearTimeout(timer);
   }, [onDismiss]);
 
+  const Icon =
+    item.tone === "success"
+      ? CheckCircle2
+      : item.tone === "error"
+        ? XCircle
+        : Info;
+
   return (
     <div
       role="status"
       className={cn(
-        "pointer-events-auto flex items-start gap-3 border px-3 py-2.5 text-sm shadow-[var(--shadow-panel)]",
+        "pointer-events-auto flex items-start gap-2.5 border bg-surface px-3 py-2.5 text-sm shadow-[var(--shadow-panel)]",
         item.tone === "success" &&
-          "border-[color-mix(in_srgb,var(--success)_30%,var(--border))] bg-surface text-foreground",
+          "border-[color-mix(in_srgb,var(--success)_28%,var(--border))]",
         item.tone === "error" &&
-          "border-[color-mix(in_srgb,var(--destructive)_35%,var(--border))] bg-surface text-foreground",
-        item.tone === "info" && "border-border bg-surface text-foreground",
+          "border-[color-mix(in_srgb,var(--destructive)_32%,var(--border))]",
+        item.tone === "info" && "border-border",
       )}
     >
-      <p className="min-w-0 flex-1 leading-5">{item.message}</p>
+      <Icon
+        className={cn(
+          "mt-0.5 size-4 shrink-0",
+          item.tone === "success" && "text-[var(--success)]",
+          item.tone === "error" && "text-destructive",
+          item.tone === "info" && "text-muted-foreground",
+        )}
+        aria-hidden
+      />
+      <p className="min-w-0 flex-1 leading-5 text-foreground">{item.message}</p>
       <button
         type="button"
         onClick={onDismiss}
@@ -95,8 +112,11 @@ export function useToast() {
   const ctx = useContext(ToastContext);
   if (!ctx) {
     return {
-      pushToast: (message: string) => {
-        if (typeof window !== "undefined") window.alert(message);
+      pushToast: (message: string, tone?: ToastTone) => {
+        void tone;
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("[toast] ToastProvider missing:", message);
+        }
       },
     };
   }

@@ -9,12 +9,11 @@ import {
   buildInvitationUrl,
   hashInvitationToken,
 } from "@/lib/admin/invite-token";
+import { validatePassword } from "@/lib/auth/password";
 
 export { buildInvitationUrl, hashInvitationToken };
 
 const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-const MIN_PASSWORD_BYTES = 14;
-const MAX_PASSWORD_BYTES = 72;
 export async function createInvitationForUser(
   userId: string,
   actorUserId: string | null,
@@ -72,12 +71,9 @@ export async function getInvitationPreview(rawToken: string) {
 }
 
 export async function activateInvitation(rawToken: string, password: string) {
-  const passwordBytes = Buffer.byteLength(password, "utf8");
-  if (passwordBytes < MIN_PASSWORD_BYTES || passwordBytes > MAX_PASSWORD_BYTES) {
-    throw new HttpError(
-      400,
-      "Le mot de passe doit contenir entre 14 et 72 octets.",
-    );
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    throw new HttpError(400, passwordError);
   }
 
   const tokenHash = hashInvitationToken(rawToken);

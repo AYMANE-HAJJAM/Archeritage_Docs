@@ -13,6 +13,7 @@ import {
   reorderSectionsAction,
   updateSectionAction,
 } from "@/app/(private)/manage/actions";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 export type EditableGroup = {
   id: string;
@@ -59,6 +60,9 @@ export function StructureEditMode({
   const [moveSection, setMoveSection] = useState<EditableSection | null>(null);
   const [menuSectionId, setMenuSectionId] = useState<string | null>(null);
   const [renameGroupId, setRenameGroupId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<EditableSection | null>(
+    null,
+  );
 
   function refresh() {
     router.refresh();
@@ -308,20 +312,8 @@ export function StructureEditMode({
                               );
                             }}
                             onDelete={() => {
-                              if (
-                                !confirm(
-                                  section.documentCount > 0 || section.codeLocked
-                                    ? "Cette rubrique contient du contenu. La suppression sera refusée — préférez la désactivation."
-                                    : `Supprimer la rubrique « ${section.title} » ?`,
-                                )
-                              ) {
-                                return;
-                              }
-                              const fd = new FormData();
-                              fd.set("sectionId", section.id);
-                              runAction(deleteSectionAction, fd, () =>
-                                setMenuSectionId(null),
-                              );
+                              setPendingDelete(section);
+                              setMenuSectionId(null);
                             }}
                             pending={pending}
                           />
@@ -478,6 +470,39 @@ export function StructureEditMode({
           </form>
         </Modal>
       ) : null}
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onOpenChange={(open) => {
+          if (!open) setPendingDelete(null);
+        }}
+        title={
+          pendingDelete
+            ? pendingDelete.documentCount > 0 || pendingDelete.codeLocked
+              ? "Suppression probablement refusée"
+              : `Supprimer « ${pendingDelete.title} » ?`
+            : "Supprimer ?"
+        }
+        description={
+          pendingDelete &&
+          (pendingDelete.documentCount > 0 || pendingDelete.codeLocked)
+            ? "Cette rubrique contient du contenu. La suppression sera refusée — préférez la désactivation."
+            : "Cette action est définitive pour une rubrique vide."
+        }
+        confirmLabel="Supprimer"
+        destructive
+        pending={pending}
+        onConfirm={() => {
+          if (!pendingDelete) return;
+          const fd = new FormData();
+          fd.set("sectionId", pendingDelete.id);
+          const target = pendingDelete;
+          setPendingDelete(null);
+          runAction(deleteSectionAction, fd, () => {
+            if (menuSectionId === target.id) setMenuSectionId(null);
+          });
+        }}
+      />
     </div>
   );
 }

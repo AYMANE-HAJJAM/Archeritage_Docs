@@ -1,11 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   reclassifyDocumentAction,
   updateProjectAction,
   type ProjectActionState,
 } from "../actions";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const initial: ProjectActionState = {};
 
@@ -115,38 +116,53 @@ export function ProjectArchiveForm({
   fileCount: number;
 }) {
   const [state, action, pending] = useActionState(updateProjectAction, initial);
+  const [confirmArchive, setConfirmArchive] = useState(false);
 
   return (
-    <form
-      action={action}
-      className="flex flex-wrap items-center gap-3 border border-border p-4"
-      onSubmit={(e) => {
-        if (
-          isActive &&
-          !confirm(
-            `Archiver ce projet ? (${fileCount} document(s) conservés — pas de suppression)`,
-          )
-        ) {
-          e.preventDefault();
-        }
-      }}
-    >
-      <input type="hidden" name="projectId" value={projectId} />
-      <input type="hidden" name="isActive" value={isActive ? "0" : "1"} />
-      <p className="flex-1 text-sm text-muted-foreground">
-        {isActive
-          ? "L’archivage retire le projet de la navigation utilisateur."
-          : "Projet archivé — réactivation possible."}
-      </p>
-      {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
-      <button
-        type="submit"
-        disabled={pending}
-        className="h-9 rounded-md border border-border px-4 text-sm hover:bg-muted"
+    <>
+      <form
+        id={`archive-project-${projectId}`}
+        action={action}
+        className="flex flex-wrap items-center gap-3 border border-border p-4"
       >
-        {isActive ? "Archiver" : "Réactiver"}
-      </button>
-    </form>
+        <input type="hidden" name="projectId" value={projectId} />
+        <input type="hidden" name="isActive" value={isActive ? "0" : "1"} />
+        <p className="flex-1 text-sm text-muted-foreground">
+          {isActive
+            ? "L’archivage retire le projet de la navigation utilisateur."
+            : "Projet archivé — réactivation possible."}
+        </p>
+        {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
+        <button
+          type={isActive ? "button" : "submit"}
+          disabled={pending}
+          onClick={
+            isActive
+              ? () => setConfirmArchive(true)
+              : undefined
+          }
+          className="h-9 rounded-md border border-border px-4 text-sm hover:bg-muted"
+        >
+          {isActive ? "Archiver" : "Réactiver"}
+        </button>
+      </form>
+      <ConfirmDialog
+        open={confirmArchive}
+        onOpenChange={setConfirmArchive}
+        title="Archiver ce projet ?"
+        description={`${fileCount} document(s) conservés — pas de suppression.`}
+        confirmLabel="Archiver"
+        destructive
+        pending={pending}
+        onConfirm={() => {
+          setConfirmArchive(false);
+          const form = document.getElementById(
+            `archive-project-${projectId}`,
+          ) as HTMLFormElement | null;
+          form?.requestSubmit();
+        }}
+      />
+    </>
   );
 }
 

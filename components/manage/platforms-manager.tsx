@@ -10,6 +10,7 @@ import { CreatePlatformDialog } from "@/components/manage/create-platform-dialog
 import { HeritageCard } from "@/components/heritage/heritage-card";
 import { EmptyState, PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 
@@ -109,6 +110,7 @@ function PlatformHeritageCard({
   onCloseEdit: () => void;
   onUpdated: (row: PlatformRow) => void;
 }) {
+  const [confirmArchive, setConfirmArchive] = useState(false);
   const dossierMeta =
     platform.dossierCount === 1
       ? "1 dossier patrimonial"
@@ -124,44 +126,65 @@ function PlatformHeritageCard({
     "Plateforme de connaissance et de suivi patrimonial.";
 
   return (
-    <HeritageCard
-      href={`/projects/manage/${platform.id}`}
-      code={platform.code}
-      title={platform.name}
-      description={description}
-      meta={`${dossierMeta} · ${docMeta} · ${status} · Mis à jour le ${activity}`}
-      adminActions={[
-        { id: "edit", label: "Modifier", onSelect: onEdit },
-        {
-          id: "structure",
-          label: "Gérer la structure",
-          href: `/structure?territoire=${encodeURIComponent(platform.id)}`,
-        },
-        {
-          id: "archive",
-          label: platform.isActive ? "Archiver" : "Réactiver",
-          destructive: platform.isActive,
-          onSelect: () => {
-            const form = document.getElementById(
-              `archive-platform-${platform.id}`,
-            ) as HTMLFormElement | null;
-            form?.requestSubmit();
+    <>
+      <HeritageCard
+        href={`/projects/manage/${platform.id}`}
+        code={platform.code}
+        title={platform.name}
+        description={description}
+        meta={`${dossierMeta} · ${docMeta} · ${status} · Mis à jour le ${activity}`}
+        adminActions={[
+          { id: "edit", label: "Modifier", onSelect: onEdit },
+          {
+            id: "structure",
+            label: "Gérer la structure",
+            href: `/structure?territoire=${encodeURIComponent(platform.id)}`,
           },
-        },
-      ]}
-      footerExtra={
-        <>
-          <ArchivePlatformForm platform={platform} onUpdated={onUpdated} />
-          {editing ? (
-            <EditPlatformForm
-              platform={platform}
-              onDone={onCloseEdit}
-              onUpdated={onUpdated}
-            />
-          ) : null}
-        </>
-      }
-    />
+          {
+            id: "archive",
+            label: platform.isActive ? "Archiver" : "Réactiver",
+            destructive: platform.isActive,
+            onSelect: () => {
+              if (platform.isActive) {
+                setConfirmArchive(true);
+                return;
+              }
+              const form = document.getElementById(
+                `archive-platform-${platform.id}`,
+              ) as HTMLFormElement | null;
+              form?.requestSubmit();
+            },
+          },
+        ]}
+        footerExtra={
+          <>
+            <ArchivePlatformForm platform={platform} onUpdated={onUpdated} />
+            {editing ? (
+              <EditPlatformForm
+                platform={platform}
+                onDone={onCloseEdit}
+                onUpdated={onUpdated}
+              />
+            ) : null}
+          </>
+        }
+      />
+      <ConfirmDialog
+        open={confirmArchive}
+        onOpenChange={setConfirmArchive}
+        title={`Archiver « ${platform.name} » ?`}
+        description="Les dossiers et documents sont conservés. Vous pourrez réactiver le projet plus tard."
+        confirmLabel="Archiver"
+        destructive
+        onConfirm={() => {
+          setConfirmArchive(false);
+          const form = document.getElementById(
+            `archive-platform-${platform.id}`,
+          ) as HTMLFormElement | null;
+          form?.requestSubmit();
+        }}
+      />
+    </>
   );
 }
 
@@ -199,16 +222,6 @@ function ArchivePlatformForm({
       id={`archive-platform-${platform.id}`}
       action={action}
       className="hidden"
-      onSubmit={(e) => {
-        if (
-          platform.isActive &&
-          !confirm(
-            `Archiver « ${platform.name} » ? Les dossiers et documents sont conservés.`,
-          )
-        ) {
-          e.preventDefault();
-        }
-      }}
     >
       <input type="hidden" name="territoireId" value={platform.id} />
       <input type="hidden" name="isActive" value={platform.isActive ? "0" : "1"} />

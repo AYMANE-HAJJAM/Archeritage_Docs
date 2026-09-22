@@ -1,7 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { activateAccountAction, type ActivateState } from "./actions";
+import {
+  MIN_PASSWORD_LENGTH,
+  PASSWORD_MISMATCH_MESSAGE,
+  PASSWORD_TOO_SHORT_MESSAGE,
+} from "@/lib/auth/password";
+import { useToast } from "@/components/ui/toast";
 
 const initial: ActivateState = {};
 
@@ -12,7 +18,28 @@ export function ActivateForm({
   token: string;
   email: string;
 }) {
+  const { pushToast } = useToast();
   const [state, action, pending] = useActionState(activateAccountAction, initial);
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [touched, setTouched] = useState({ password: false, confirm: false });
+
+  const passwordError =
+    touched.password && password.length > 0 && password.length < MIN_PASSWORD_LENGTH
+      ? PASSWORD_TOO_SHORT_MESSAGE
+      : state.fieldErrors?.password;
+  const confirmError =
+    touched.confirm && confirm.length > 0 && password !== confirm
+      ? PASSWORD_MISMATCH_MESSAGE
+      : state.fieldErrors?.confirm;
+
+  useEffect(() => {
+    if (!state.error || state.fieldErrors) return;
+    const timer = window.setTimeout(() => {
+      pushToast(state.error!, "error");
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [state, pushToast]);
 
   return (
     <form action={action} className="space-y-4">
@@ -32,11 +59,19 @@ export function ActivateForm({
           name="password"
           type="password"
           required
-          minLength={14}
+          minLength={MIN_PASSWORD_LENGTH}
           maxLength={72}
           autoComplete="new-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onBlur={() => setTouched((t) => ({ ...t, password: true }))}
           className="mt-1 h-10 w-full rounded-md border border-border bg-background px-3 text-sm"
         />
+        {passwordError ? (
+          <p className="mt-1 text-xs text-destructive" role="alert">
+            {passwordError}
+          </p>
+        ) : null}
       </label>
       <label className="block text-xs">
         <span className="text-muted-foreground">Confirmer le mot de passe</span>
@@ -44,13 +79,21 @@ export function ActivateForm({
           name="confirm"
           type="password"
           required
-          minLength={14}
+          minLength={MIN_PASSWORD_LENGTH}
           maxLength={72}
           autoComplete="new-password"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          onBlur={() => setTouched((t) => ({ ...t, confirm: true }))}
           className="mt-1 h-10 w-full rounded-md border border-border bg-background px-3 text-sm"
         />
+        {confirmError ? (
+          <p className="mt-1 text-xs text-destructive" role="alert">
+            {confirmError}
+          </p>
+        ) : null}
       </label>
-      {state.error ? (
+      {state.error && !passwordError && !confirmError ? (
         <p className="text-sm text-destructive" role="alert">
           {state.error}
         </p>

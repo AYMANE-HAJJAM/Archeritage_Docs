@@ -16,6 +16,7 @@ import {
   type DossierFlags,
 } from "@/components/admin/permission-matrix";
 import type { UsersTableRow } from "@/lib/admin/user-row";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { RowActionsMenu } from "@/components/ui/row-actions-menu";
 import { useToast } from "@/components/ui/toast";
 
@@ -37,6 +38,7 @@ export function UserRowActions({
   const { pushToast } = useToast();
   const [panel, setPanel] = useState<"none" | "edit" | "access">("none");
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
+  const [confirmDisable, setConfirmDisable] = useState(false);
 
   const [updateState, updateAction, updating] = useActionState(
     updateUserAction,
@@ -126,7 +128,7 @@ export function UserRowActions({
     const timer = window.setTimeout(() => {
       if (accessState.ok && accessState.user) {
         onUserUpdated(accessState.user);
-        pushToast("Accès enregistrés.", "success");
+        pushToast("Accès mis à jour.", "success");
         setPanel("none");
       } else if (accessState.error) {
         pushToast(accessState.error, "error");
@@ -165,15 +167,7 @@ export function UserRowActions({
             label: "Désactiver",
             destructive: true,
             disabled: disabling,
-            onSelect: () => {
-              if (
-                confirm(
-                  `Désactiver ${user.firstName} ${user.lastName} ? La session sera révoquée.`,
-                )
-              ) {
-                disableFormRef.current?.requestSubmit();
-              }
-            },
+            onSelect: () => setConfirmDisable(true),
           },
         ]),
   ];
@@ -194,6 +188,20 @@ export function UserRowActions({
       ) : null}
 
       <RowActionsMenu actions={menuActions} label={`Actions pour ${user.email}`} />
+
+      <ConfirmDialog
+        open={confirmDisable}
+        onOpenChange={setConfirmDisable}
+        title="Désactiver cet utilisateur ?"
+        description="Il ne pourra plus se connecter tant que son compte n’est pas réactivé."
+        confirmLabel="Désactiver"
+        destructive
+        pending={disabling}
+        onConfirm={() => {
+          setConfirmDisable(false);
+          disableFormRef.current?.requestSubmit();
+        }}
+      />
 
       <form ref={disableFormRef} action={disableAction} className="hidden">
         <input type="hidden" name="userId" value={user.id} />

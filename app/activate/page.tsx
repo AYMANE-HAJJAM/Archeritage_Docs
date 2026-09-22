@@ -24,7 +24,7 @@ export default async function ActivatePage({
     return (
       <ActivateShell>
         <p className="text-sm text-muted-foreground">
-          Ce lien d’activation est invalide, expiré ou déjà utilisé.
+          Ce lien d’activation a expiré. Demandez une nouvelle invitation.
         </p>
       </ActivateShell>
     );

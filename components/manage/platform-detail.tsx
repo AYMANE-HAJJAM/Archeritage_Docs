@@ -13,6 +13,7 @@ import {
   HeritageCardAdminMenu,
 } from "@/components/heritage/heritage-card";
 import { CreateDossierDialog } from "@/components/manage/create-dossier-dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
 import { SAFI_PROJECTS } from "@/lib/heritage/config/structure";
 
@@ -55,6 +56,10 @@ export function PlatformDetailView({
   const [createOpen, setCreateOpen] = useState(false);
   const [editPlatform, setEditPlatform] = useState(false);
   const [editDossierId, setEditDossierId] = useState<string | null>(null);
+  const [confirmArchivePlatform, setConfirmArchivePlatform] = useState(false);
+  const [confirmArchiveDossierId, setConfirmArchiveDossierId] = useState<
+    string | null
+  >(null);
   const [platformState, platformAction, platformPending] = useActionState(
     updateTerritoireAction,
     initial,
@@ -168,6 +173,10 @@ export function PlatformDetailView({
                 destructive: platform.isActive,
                 disabled: archiving,
                 onSelect: () => {
+                  if (platform.isActive) {
+                    setConfirmArchivePlatform(true);
+                    return;
+                  }
                   const form = document.getElementById(
                     `archive-platform-${platform.id}`,
                   ) as HTMLFormElement | null;
@@ -209,16 +218,6 @@ export function PlatformDetailView({
         id={`archive-platform-${platform.id}`}
         action={archivePlatformAction}
         className="hidden"
-        onSubmit={(e) => {
-          if (
-            platform.isActive &&
-            !confirm(
-              `Archiver « ${platform.name} » ? Les dossiers et documents sont conservés.`,
-            )
-          ) {
-            e.preventDefault();
-          }
-        }}
       >
         <input type="hidden" name="territoireId" value={platform.id} />
         <input
@@ -227,6 +226,43 @@ export function PlatformDetailView({
           value={platform.isActive ? "0" : "1"}
         />
       </form>
+
+      <ConfirmDialog
+        open={confirmArchivePlatform}
+        onOpenChange={setConfirmArchivePlatform}
+        title={`Archiver « ${platform.name} » ?`}
+        description="Les dossiers et documents sont conservés. Vous pourrez réactiver le projet plus tard."
+        confirmLabel="Archiver"
+        destructive
+        pending={archiving}
+        onConfirm={() => {
+          setConfirmArchivePlatform(false);
+          const form = document.getElementById(
+            `archive-platform-${platform.id}`,
+          ) as HTMLFormElement | null;
+          form?.requestSubmit();
+        }}
+      />
+
+      <ConfirmDialog
+        open={Boolean(confirmArchiveDossierId)}
+        onOpenChange={(open) => {
+          if (!open) setConfirmArchiveDossierId(null);
+        }}
+        title="Archiver ce dossier ?"
+        description="Documents et structure sont conservés. Vous pourrez réactiver le dossier plus tard."
+        confirmLabel="Archiver"
+        destructive
+        onConfirm={() => {
+          const id = confirmArchiveDossierId;
+          setConfirmArchiveDossierId(null);
+          if (!id) return;
+          const form = document.getElementById(
+            `archive-dossier-${id}`,
+          ) as HTMLFormElement | null;
+          form?.requestSubmit();
+        }}
+      />
 
       {editPlatform ? (
         <form
@@ -316,6 +352,16 @@ export function PlatformDetailView({
                 onEdit={() => setEditDossierId(dossier.id)}
                 onCloseEdit={() => setEditDossierId(null)}
                 onDossierUpdated={upsertDossier}
+                onRequestArchive={() => {
+                  if (dossier.isActive) {
+                    setConfirmArchiveDossierId(dossier.id);
+                    return;
+                  }
+                  const form = document.getElementById(
+                    `archive-dossier-${dossier.id}`,
+                  ) as HTMLFormElement | null;
+                  form?.requestSubmit();
+                }}
               />
             );
           })}
@@ -335,6 +381,7 @@ function DossierHeritageCard({
   onEdit,
   onCloseEdit,
   onDossierUpdated,
+  onRequestArchive,
 }: {
   platformId: string;
   dossier: DossierRow;
@@ -345,6 +392,7 @@ function DossierHeritageCard({
   onEdit: () => void;
   onCloseEdit: () => void;
   onDossierUpdated: (row: DossierRow) => void;
+  onRequestArchive: () => void;
 }) {
   return (
     <HeritageCard
@@ -363,12 +411,7 @@ function DossierHeritageCard({
           id: "archive",
           label: dossier.isActive ? "Archiver" : "Réactiver",
           destructive: dossier.isActive,
-          onSelect: () => {
-            const form = document.getElementById(
-              `archive-dossier-${dossier.id}`,
-            ) as HTMLFormElement | null;
-            form?.requestSubmit();
-          },
+          onSelect: onRequestArchive,
         },
       ]}
       footerExtra={
@@ -424,21 +467,7 @@ function ArchiveDossierForm({
   }, [pending, state, onUpdated, pushToast]);
 
   return (
-    <form
-      id={`archive-dossier-${dossier.id}`}
-      action={action}
-      className="hidden"
-      onSubmit={(e) => {
-        if (
-          dossier.isActive &&
-          !confirm(
-            `Archiver « ${dossier.name} » ? Documents et structure sont conservés.`,
-          )
-        ) {
-          e.preventDefault();
-        }
-      }}
-    >
+    <form id={`archive-dossier-${dossier.id}`} action={action} className="hidden">
       <input type="hidden" name="projectId" value={dossier.id} />
       <input type="hidden" name="territoireId" value={territoireId} />
       <input type="hidden" name="isActive" value={dossier.isActive ? "0" : "1"} />

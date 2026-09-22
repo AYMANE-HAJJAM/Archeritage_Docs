@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import { AppSidebar, pageTitleFromPath } from "@/components/layout/sidebar";
 import { AppTopbar } from "@/components/layout/topbar";
-import { ToastProvider } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 
 export function AppShell({
@@ -43,37 +42,35 @@ export function AppShell({
   }
 
   return (
-    <ToastProvider>
-      <div className="min-h-dvh bg-background">
-        <AppSidebar
-          role={user.role}
-          collapsed={collapsed}
-          onToggleCollapsed={toggleCollapsed}
+    <div className="min-h-dvh bg-background">
+      <AppSidebar
+        role={user.role}
+        collapsed={collapsed}
+        onToggleCollapsed={toggleCollapsed}
+        mobileOpen={mobileOpen}
+        onMobileOpenChange={setMobileOpen}
+      />
+
+      <div
+        className={cn(
+          "flex min-h-dvh flex-col transition-[padding] duration-200 ease-out",
+          collapsed ? "lg:pl-[4.5rem]" : "lg:pl-[15rem]",
+        )}
+      >
+        <AppTopbar
+          title={title}
+          user={user}
           mobileOpen={mobileOpen}
-          onMobileOpenChange={setMobileOpen}
+          onMobileOpen={() => setMobileOpen(true)}
         />
 
-        <div
-          className={cn(
-            "flex min-h-dvh flex-col transition-[padding] duration-200 ease-out",
-            collapsed ? "lg:pl-[4.5rem]" : "lg:pl-[15rem]",
-          )}
+        <main
+          id="main"
+          className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
         >
-          <AppTopbar
-            title={title}
-            user={user}
-            mobileOpen={mobileOpen}
-            onMobileOpen={() => setMobileOpen(true)}
-          />
-
-          <main
-            id="main"
-            className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
-          >
-            {children}
-          </main>
-        </div>
+          {children}
+        </main>
       </div>
-    </ToastProvider>
+    </div>
   );
 }

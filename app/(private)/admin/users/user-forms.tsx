@@ -13,6 +13,7 @@ import {
   type AccessPlatform,
   type ProjectAccessFlags,
 } from "@/components/admin/user-access-panel";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const initial: AdminActionState = {};
 
@@ -74,6 +75,7 @@ export function UserRowActions({
   territoireAccess: Record<string, { canCreateDossier: boolean }>;
 }) {
   const [open, setOpen] = useState(false);
+  const [confirmDisable, setConfirmDisable] = useState(false);
   const [updateState, updateAction, updating] = useActionState(
     updateUserAction,
     initial,
@@ -139,28 +141,40 @@ export function UserRowActions({
 
       <div className="flex flex-wrap gap-2">
         {user.status !== "DISABLED" ? (
-          <form
-            action={disableAction}
-            onSubmit={(e) => {
-              if (
-                !confirm(
-                  `Désactiver ${user.firstName} ${user.lastName} ? La session sera révoquée.`,
-                )
-              ) {
-                e.preventDefault();
-              }
-            }}
-          >
-            <input type="hidden" name="userId" value={user.id} />
-            <input type="hidden" name="disabled" value="1" />
+          <>
             <button
-              type="submit"
+              type="button"
               disabled={disabling}
+              onClick={() => setConfirmDisable(true)}
               className="text-xs text-destructive underline-offset-2 hover:underline"
             >
               Désactiver
             </button>
-          </form>
+            <form
+              id={`admin-disable-${user.id}`}
+              action={disableAction}
+              className="hidden"
+            >
+              <input type="hidden" name="userId" value={user.id} />
+              <input type="hidden" name="disabled" value="1" />
+            </form>
+            <ConfirmDialog
+              open={confirmDisable}
+              onOpenChange={setConfirmDisable}
+              title="Désactiver cet utilisateur ?"
+              description="Il ne pourra plus se connecter tant que son compte n’est pas réactivé."
+              confirmLabel="Désactiver"
+              destructive
+              pending={disabling}
+              onConfirm={() => {
+                setConfirmDisable(false);
+                const form = document.getElementById(
+                  `admin-disable-${user.id}`,
+                ) as HTMLFormElement | null;
+                form?.requestSubmit();
+              }}
+            />
+          </>
         ) : (
           <form action={disableAction}>
             <input type="hidden" name="userId" value={user.id} />

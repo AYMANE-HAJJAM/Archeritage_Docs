@@ -24,6 +24,7 @@ import {
   type ProjectActionState,
 } from "@/app/(private)/manage/actions";
 import { useToast } from "@/components/ui/toast";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const initial: ProjectActionState = {};
 
@@ -535,6 +536,7 @@ function SectionInspector({
   const { pushToast } = useToast();
   const [state, action, pending] = useActionState(updateSectionAction, initial);
   const [delState, delAction, deleting] = useActionState(deleteSectionAction, initial);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const updateWasPending = useRef(false);
   const deleteWasPending = useRef(false);
 
@@ -654,17 +656,11 @@ function SectionInspector({
       </form>
 
       {!section.codeLocked ? (
-        <form
-          action={delAction}
-          onSubmit={(e) => {
-            if (!confirm(`Supprimer ${section.code} ?`)) e.preventDefault();
-          }}
-        >
-          <input type="hidden" name="sectionId" value={section.id} />
-          <input type="hidden" name="projectId" value={projectId} />
+        <>
           <button
-            type="submit"
+            type="button"
             disabled={deleting}
+            onClick={() => setConfirmDelete(true)}
             className="text-xs text-destructive underline-offset-2 hover:underline"
           >
             Supprimer (vide uniquement)
@@ -672,7 +668,27 @@ function SectionInspector({
           {delState.error ? (
             <p className="mt-1 text-xs text-destructive">{delState.error}</p>
           ) : null}
-        </form>
+          <form ref={undefined} action={delAction} className="hidden" id={`delete-section-${section.id}`}>
+            <input type="hidden" name="sectionId" value={section.id} />
+            <input type="hidden" name="projectId" value={projectId} />
+          </form>
+          <ConfirmDialog
+            open={confirmDelete}
+            onOpenChange={setConfirmDelete}
+            title={`Supprimer ${section.code} ?`}
+            description="Cette action est définitive. La rubrique doit être vide."
+            confirmLabel="Supprimer"
+            destructive
+            pending={deleting}
+            onConfirm={() => {
+              setConfirmDelete(false);
+              const form = document.getElementById(
+                `delete-section-${section.id}`,
+              ) as HTMLFormElement | null;
+              form?.requestSubmit();
+            }}
+          />
+        </>
       ) : (
         <p className="text-[11px] text-muted-foreground">
           Suppression bloquée — désactivez la rubrique si elle ne doit plus
@@ -905,36 +921,52 @@ function DeleteGroupButton({
 }) {
   const { pushToast } = useToast();
   const [state, action, pending] = useActionState(deleteGroupAction, initial);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const wasPending = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     const finished = wasPending.current && !pending;
     wasPending.current = pending;
     if (!finished) return;
-    if (state.ok && state.deletedId) {
-      onDeleted(state.deletedId);
-      pushToast("Groupe retiré.", "success");
-    } else if (state.error) {
-      pushToast(state.error, "error");
-    }
+    const timer = window.setTimeout(() => {
+      if (state.ok && state.deletedId) {
+        onDeleted(state.deletedId);
+        pushToast("Groupe retiré.", "success");
+      } else if (state.error) {
+        pushToast(state.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [pending, state, onDeleted, pushToast]);
 
   return (
-    <form
-      action={action}
-      onSubmit={(e) => {
-        if (!confirm("Supprimer ce groupe vide ?")) e.preventDefault();
-      }}
-    >
-      <input type="hidden" name="groupId" value={groupId} />
+    <>
       <button
-        type="submit"
+        type="button"
         disabled={pending}
+        onClick={() => setConfirmDelete(true)}
         className="text-[10px] text-destructive underline-offset-2 hover:underline"
       >
         Retirer
       </button>
+      <form ref={formRef} action={action} className="hidden">
+        <input type="hidden" name="groupId" value={groupId} />
+      </form>
+      <ConfirmDialog
+        open={confirmDelete}
+        onOpenChange={setConfirmDelete}
+        title="Supprimer ce groupe vide ?"
+        description="Cette action retire le groupe de la structure."
+        confirmLabel="Supprimer"
+        destructive
+        pending={pending}
+        onConfirm={() => {
+          setConfirmDelete(false);
+          formRef.current?.requestSubmit();
+        }}
+      />
       {state.error ? <span className="text-[10px] text-destructive">{state.error}</span> : null}
-    </form>
+    </>
   );
 }
