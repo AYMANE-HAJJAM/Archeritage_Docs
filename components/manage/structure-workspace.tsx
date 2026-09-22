@@ -1,6 +1,13 @@
 "use client";
 
-import { useActionState, useMemo, useState, useTransition } from "react";
+import {
+  useActionState,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
@@ -12,30 +19,16 @@ import {
   reorderGroupsAction,
   reorderSectionsAction,
   updateSectionAction,
+  type LiveGroup,
+  type LiveSection,
   type ProjectActionState,
 } from "@/app/(private)/manage/actions";
+import { useToast } from "@/components/ui/toast";
 
 const initial: ProjectActionState = {};
 
-export type StructureGroup = {
-  id: string;
-  label: string;
-  sortOrder: number;
-};
-
-export type StructureSection = {
-  id: string;
-  code: string;
-  slug: string;
-  title: string;
-  description: string | null;
-  kind: string;
-  groupId: string | null;
-  sortOrder: number;
-  isActive: boolean;
-  documentCount: number;
-  codeLocked: boolean;
-};
+export type StructureGroup = LiveGroup;
+export type StructureSection = LiveSection;
 
 export type StructureProject = {
   id: string;
@@ -55,8 +48,8 @@ export function StructureWorkspace({
   territoires,
   initialTerritoireId,
   initialProjectId,
-  groups,
-  sections,
+  groups: initialGroups,
+  sections: initialSections,
 }: {
   territoires: StructureTerritoire[];
   initialTerritoireId: string;
@@ -65,14 +58,42 @@ export function StructureWorkspace({
   sections: StructureSection[];
 }) {
   const router = useRouter();
+  const { pushToast } = useToast();
+  const [groups, setGroups] = useState(initialGroups);
+  const [sections, setSections] = useState(initialSections);
+  const [structureSource, setStructureSource] = useState({
+    groups: initialGroups,
+    sections: initialSections,
+    projectId: initialProjectId,
+  });
+  if (
+    initialGroups !== structureSource.groups ||
+    initialSections !== structureSource.sections ||
+    initialProjectId !== structureSource.projectId
+  ) {
+    setStructureSource({
+      groups: initialGroups,
+      sections: initialSections,
+      projectId: initialProjectId,
+    });
+    setGroups(initialGroups);
+    setSections(initialSections);
+  }
   const [selectedId, setSelectedId] = useState<string | null>(
-    sections[0]?.id ?? null,
+    initialSections[0]?.id ?? null,
   );
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [dragSectionId, setDragSectionId] = useState<string | null>(null);
   const [dragGroupId, setDragGroupId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
+  // Keep selection valid when structure source changes.
+  const selectedStillExists = selectedId
+    ? sections.some((s) => s.id === selectedId)
+    : false;
+  if (selectedId && !selectedStillExists) {
+    setSelectedId(sections[0]?.id ?? null);
+  }
   const selected = sections.find((s) => s.id === selectedId) ?? null;
   const currentTerritoire =
     territoires.find((t) => t.id === initialTerritoireId) ?? territoires[0];
@@ -98,6 +119,36 @@ export function StructureWorkspace({
     [sections],
   );
 
+  function upsertSection(row: StructureSection) {
+    setSections((prev) => {
+      const idx = prev.findIndex((s) => s.id === row.id);
+      if (idx === -1) return [...prev, row];
+      const next = [...prev];
+      next[idx] = row;
+      return next;
+    });
+    setSelectedId(row.id);
+  }
+
+  function removeSection(id: string) {
+    setSections((prev) => prev.filter((s) => s.id !== id));
+    setSelectedId((prev) => (prev === id ? null : prev));
+  }
+
+  function upsertGroup(row: StructureGroup) {
+    setGroups((prev) => {
+      const idx = prev.findIndex((g) => g.id === row.id);
+      if (idx === -1) return [...prev, row];
+      const next = [...prev];
+      next[idx] = row;
+      return next;
+    });
+  }
+
+  function removeGroup(id: string) {
+    setGroups((prev) => prev.filter((g) => g.id !== id));
+  }
+
   function switchTerritoire(territoireId: string) {
     const t = territoires.find((x) => x.id === territoireId);
     const first = t?.dossiers[0];
@@ -116,13 +167,24 @@ export function StructureWorkspace({
     );
   }
 
-  function persistGroupOrder(nextIds: string[]) {
+  function persistGroupOrder(nextIds: string[], previous: StructureGroup[]) {
+    setGroups((prev) =>
+      nextIds
+        .map((id, index) => {
+          const g = prev.find((x) => x.id === id);
+          return g ? { ...g, sortOrder: index } : null;
+        })
+        .filter(Boolean) as StructureGroup[],
+    );
     const fd = new FormData();
     fd.set("projectId", initialProjectId);
     fd.set("orderedIds", nextIds.join(","));
     startTransition(async () => {
-      await reorderGroupsAction(initial, fd);
-      router.refresh();
+      const result = await reorderGroupsAction(initial, fd);
+      if (!result.ok) {
+        setGroups(previous);
+        pushToast(result.error || "Réordonnancement impossible.", "error");
+      }
     });
   }
 
@@ -132,6 +194,7 @@ export function StructureWorkspace({
     const target = sections.find((s) => s.id === targetSectionId);
     if (!drag || !target) return;
 
+    const previous = sections;
     const order = sections
       .slice()
       .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -143,24 +206,45 @@ export function StructureWorkspace({
     order.splice(to, 0, dragSectionId);
     setDragSectionId(null);
 
+    const nextGroupId = target.groupId;
+    setSections((prev) =>
+      order.map((id, index) => {
+        const s = prev.find((x) => x.id === id)!;
+        if (id === dragSectionId) {
+          return { ...s, groupId: nextGroupId, sortOrder: index };
+        }
+        return { ...s, sortOrder: index };
+      }),
+    );
+
     startTransition(async () => {
       if (drag.groupId !== target.groupId) {
         const fd = new FormData();
         fd.set("sectionId", drag.id);
         fd.set("projectId", initialProjectId);
         fd.set("groupId", target.groupId || "");
-        await updateSectionAction(initial, fd);
+        const move = await updateSectionAction(initial, fd);
+        if (!move.ok) {
+          setSections(previous);
+          pushToast(move.error || "Déplacement impossible.", "error");
+          return;
+        }
+        if (move.section) upsertSection(move.section);
       }
       const orderFd = new FormData();
       orderFd.set("projectId", initialProjectId);
       orderFd.set("orderedIds", order.join(","));
-      await reorderSectionsAction(initial, orderFd);
-      router.refresh();
+      const result = await reorderSectionsAction(initial, orderFd);
+      if (!result.ok) {
+        setSections(previous);
+        pushToast(result.error || "Réordonnancement impossible.", "error");
+      }
     });
   }
 
   function onDropGroup(targetGroupId: string) {
     if (!dragGroupId || dragGroupId === targetGroupId) return;
+    const previous = groups;
     const order = groups
       .slice()
       .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -171,7 +255,7 @@ export function StructureWorkspace({
     order.splice(from, 1);
     order.splice(to, 0, dragGroupId);
     setDragGroupId(null);
-    persistGroupOrder(order);
+    persistGroupOrder(order, previous);
   }
 
   return (
@@ -244,8 +328,12 @@ export function StructureWorkspace({
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-4">
-          <AddGroupBar projectId={initialProjectId} />
-          <AddSectionBar projectId={initialProjectId} groups={groups} />
+          <AddGroupBar projectId={initialProjectId} onCreated={upsertGroup} />
+          <AddSectionBar
+            projectId={initialProjectId}
+            groups={groups}
+            onCreated={upsertSection}
+          />
 
           <div className="space-y-5">
             {grouped.map(({ group, sections: groupSections }) => {
@@ -282,9 +370,16 @@ export function StructureWorkspace({
                     <span className="text-[10px] tabular-nums text-muted-foreground">
                       {groupSections.length}
                     </span>
-                    <RenameGroupInline projectId={initialProjectId} group={group} />
+                    <RenameGroupInline
+                      projectId={initialProjectId}
+                      group={group}
+                      onRenamed={upsertGroup}
+                    />
                     {groupSections.length === 0 ? (
-                      <DeleteGroupButton groupId={group.id} />
+                      <DeleteGroupButton
+                        groupId={group.id}
+                        onDeleted={removeGroup}
+                      />
                     ) : null}
                   </div>
 
@@ -348,6 +443,8 @@ export function StructureWorkspace({
               projectId={initialProjectId}
               section={selected}
               groups={groups}
+              onUpdated={upsertSection}
+              onDeleted={removeSection}
             />
           ) : (
             <div className="border border-border p-4 text-sm text-muted-foreground">
@@ -426,14 +523,44 @@ function SectionInspector({
   projectId,
   section,
   groups,
+  onUpdated,
+  onDeleted,
 }: {
   projectId: string;
   section: StructureSection;
   groups: StructureGroup[];
+  onUpdated: (row: StructureSection) => void;
+  onDeleted: (id: string) => void;
 }) {
-  const router = useRouter();
+  const { pushToast } = useToast();
   const [state, action, pending] = useActionState(updateSectionAction, initial);
   const [delState, delAction, deleting] = useActionState(deleteSectionAction, initial);
+  const updateWasPending = useRef(false);
+  const deleteWasPending = useRef(false);
+
+  useEffect(() => {
+    const finished = updateWasPending.current && !pending;
+    updateWasPending.current = pending;
+    if (!finished) return;
+    if (state.ok && state.section) {
+      onUpdated(state.section);
+      pushToast("Rubrique enregistrée.", "success");
+    } else if (state.error) {
+      pushToast(state.error, "error");
+    }
+  }, [pending, state, onUpdated, pushToast]);
+
+  useEffect(() => {
+    const finished = deleteWasPending.current && !deleting;
+    deleteWasPending.current = deleting;
+    if (!finished) return;
+    if (delState.ok && delState.deletedId) {
+      onDeleted(delState.deletedId);
+      pushToast("Rubrique supprimée.", "success");
+    } else if (delState.error) {
+      pushToast(delState.error, "error");
+    }
+  }, [deleting, delState, onDeleted, pushToast]);
 
   return (
     <div className="space-y-4 border border-border p-4">
@@ -449,13 +576,7 @@ function SectionInspector({
         ) : null}
       </div>
 
-      <form
-        action={async (fd) => {
-          await action(fd);
-          router.refresh();
-        }}
-        className="space-y-3"
-      >
+      <form action={action} className="space-y-3">
         <input type="hidden" name="sectionId" value={section.id} />
         <input type="hidden" name="projectId" value={projectId} />
         <label className="block text-xs">
@@ -534,10 +655,7 @@ function SectionInspector({
 
       {!section.codeLocked ? (
         <form
-          action={async (fd) => {
-            await delAction(fd);
-            router.refresh();
-          }}
+          action={delAction}
           onSubmit={(e) => {
             if (!confirm(`Supprimer ${section.code} ?`)) e.preventDefault();
           }}
@@ -565,17 +683,33 @@ function SectionInspector({
   );
 }
 
-function AddGroupBar({ projectId }: { projectId: string }) {
-  const router = useRouter();
+function AddGroupBar({
+  projectId,
+  onCreated,
+}: {
+  projectId: string;
+  onCreated: (row: StructureGroup) => void;
+}) {
+  const { pushToast } = useToast();
   const [state, action, pending] = useActionState(createGroupAction, initial);
+  const wasPending = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    if (state.ok && state.group) {
+      onCreated(state.group);
+      formRef.current?.reset();
+      pushToast("Groupe ajouté.", "success");
+    } else if (state.error) {
+      pushToast(state.error, "error");
+    }
+  }, [pending, state, onCreated, pushToast]);
+
   return (
-    <form
-      action={async (fd) => {
-        await action(fd);
-        router.refresh();
-      }}
-      className="flex flex-wrap items-end gap-2"
-    >
+    <form ref={formRef} action={action} className="flex flex-wrap items-end gap-2">
       <input type="hidden" name="projectId" value={projectId} />
       <label className="block min-w-[200px] flex-1 text-xs">
         <span className="text-muted-foreground">Nouveau groupe</span>
@@ -601,20 +735,35 @@ function AddGroupBar({ projectId }: { projectId: string }) {
 function AddSectionBar({
   projectId,
   groups,
+  onCreated,
 }: {
   projectId: string;
   groups: StructureGroup[];
+  onCreated: (row: StructureSection) => void;
 }) {
-  const router = useRouter();
+  const { pushToast } = useToast();
   const [state, action, pending] = useActionState(createSectionAction, initial);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const wasPending = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    if (state.ok && state.section) {
+      onCreated(state.section);
+      formRef.current?.reset();
+      pushToast("Rubrique ajoutée.", "success");
+    } else if (state.error) {
+      pushToast(state.error, "error");
+    }
+  }, [pending, state, onCreated, pushToast]);
 
   return (
     <form
-      action={async (fd) => {
-        await action(fd);
-        router.refresh();
-      }}
+      ref={formRef}
+      action={action}
       className="space-y-3 rounded-md border border-border p-3"
     >
       <input type="hidden" name="projectId" value={projectId} />
@@ -692,13 +841,33 @@ function AddSectionBar({
 function RenameGroupInline({
   projectId,
   group,
+  onRenamed,
 }: {
   projectId: string;
   group: StructureGroup;
+  onRenamed: (row: StructureGroup) => void;
 }) {
-  const router = useRouter();
+  const { pushToast } = useToast();
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState(renameGroupAction, initial);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    const timer = window.setTimeout(() => {
+      if (state.ok && state.group) {
+        onRenamed(state.group);
+        setOpen(false);
+        pushToast("Groupe renommé.", "success");
+      } else if (state.error) {
+        pushToast(state.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [pending, state, onRenamed, pushToast]);
+
   if (!open) {
     return (
       <button
@@ -711,14 +880,7 @@ function RenameGroupInline({
     );
   }
   return (
-    <form
-      action={async (fd) => {
-        await action(fd);
-        setOpen(false);
-        router.refresh();
-      }}
-      className="flex items-center gap-1"
-    >
+    <form action={action} className="flex items-center gap-1">
       <input type="hidden" name="projectId" value={projectId} />
       <input type="hidden" name="groupId" value={group.id} />
       <input
@@ -734,15 +896,32 @@ function RenameGroupInline({
   );
 }
 
-function DeleteGroupButton({ groupId }: { groupId: string }) {
-  const router = useRouter();
+function DeleteGroupButton({
+  groupId,
+  onDeleted,
+}: {
+  groupId: string;
+  onDeleted: (id: string) => void;
+}) {
+  const { pushToast } = useToast();
   const [state, action, pending] = useActionState(deleteGroupAction, initial);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    if (state.ok && state.deletedId) {
+      onDeleted(state.deletedId);
+      pushToast("Groupe retiré.", "success");
+    } else if (state.error) {
+      pushToast(state.error, "error");
+    }
+  }, [pending, state, onDeleted, pushToast]);
+
   return (
     <form
-      action={async (fd) => {
-        await action(fd);
-        router.refresh();
-      }}
+      action={action}
       onSubmit={(e) => {
         if (!confirm("Supprimer ce groupe vide ?")) e.preventDefault();
       }}

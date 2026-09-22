@@ -20,7 +20,7 @@ const STATUT_LABEL: Record<string, string> = {
 };
 
 export function SectionDocumentsList({
-  documents,
+  documents: initialDocuments,
   title = "Documents",
   uploadContext,
   canDownload = true,
@@ -30,7 +30,19 @@ export function SectionDocumentsList({
   uploadContext?: UploadContextPayload;
   canDownload?: boolean;
 }) {
+  const [documents, setDocuments] = useState(initialDocuments);
+  const [docsSource, setDocsSource] = useState(initialDocuments);
+  if (initialDocuments !== docsSource) {
+    setDocsSource(initialDocuments);
+    setDocuments(initialDocuments);
+  }
   const [preview, setPreview] = useState<SectionDocument | null>(null);
+  function appendDocument(doc: SectionDocument) {
+    setDocuments((prev) => {
+      if (prev.some((d) => d.id === doc.id)) return prev;
+      return [doc, ...prev];
+    });
+  }
 
   const showStatus = useMemo(
     () => documents.some((file) => Boolean(file.docStatut)),
@@ -54,7 +66,12 @@ export function SectionDocumentsList({
             </p>
           )}
         </div>
-        {uploadContext ? <ContextualUpload context={uploadContext} /> : null}
+        {uploadContext ? (
+          <ContextualUpload
+            context={uploadContext}
+            onDocumentUploaded={appendDocument}
+          />
+        ) : null}
       </div>
 
       {documents.length === 0 ? (

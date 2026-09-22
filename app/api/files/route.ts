@@ -106,12 +106,42 @@ export async function POST(request: Request) {
         select: {
           id: true,
           displayName: true,
+          originalName: true,
+          extension: true,
+          mimeType: true,
+          size: true,
+          storageProvider: true,
+          folderId: true,
+          createdAt: true,
+          docStatut: true,
+          docVersion: true,
           documentScope: true,
           docCategorie: true,
           uploadedById: true,
+          uploadedBy: { select: { name: true } },
         },
       });
-      return Response.json(record, { status: 201 });
+      return Response.json(
+        {
+          id: record.id,
+          displayName: record.displayName,
+          originalName: record.originalName,
+          extension: record.extension,
+          mimeType: record.mimeType,
+          size: record.size,
+          storageProvider: record.storageProvider,
+          folderId: record.folderId,
+          createdAt: record.createdAt.toISOString(),
+          docStatut: record.docStatut,
+          docVersion: record.docVersion,
+          documentScope: record.documentScope,
+          docCategorie: record.docCategorie,
+          uploadedById: record.uploadedById,
+          uploadedByName: record.uploadedBy?.name ?? null,
+          location: "",
+        },
+        { status: 201 },
+      );
     } catch (error) {
       try {
         await deleteObject({

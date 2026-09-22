@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { InviteUserDialog } from "@/components/admin/invite-user-dialog";
@@ -39,13 +39,13 @@ export function UsersManagement({
 }) {
   const router = useRouter();
   const [users, setUsers] = useState(initialUsers);
+  const [usersSource, setUsersSource] = useState(initialUsers);
+  if (initialUsers !== usersSource) {
+    setUsersSource(initialUsers);
+    setUsers(initialUsers);
+  }
   const [pending, startTransition] = useTransition();
   const debounceRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    setUsers(initialUsers);
-  }, [initialUsers]);
-
   function upsertUser(row: UsersTableRow) {
     setUsers((prev) => {
       const idx = prev.findIndex((u) => u.id === row.id);

@@ -11,6 +11,8 @@ export type HeritageCardAdminAction = {
   href?: string;
   onSelect?: () => void;
   destructive?: boolean;
+  /** When true, the menu item is non-interactive (e.g. mutation in flight). */
+  disabled?: boolean;
 };
 
 /**
@@ -152,11 +154,20 @@ export function HeritageCardAdminMenu({
                 key={action.id}
                 role="menuitem"
                 href={action.href}
+                aria-disabled={action.disabled || undefined}
+                tabIndex={action.disabled ? -1 : undefined}
                 className={cn(
                   "block px-3 py-2 text-xs font-medium transition-colors hover:bg-muted",
                   action.destructive ? "text-destructive" : "text-foreground",
+                  action.disabled && "pointer-events-none opacity-50",
                 )}
-                onClick={() => setOpen(false)}
+                onClick={(e) => {
+                  if (action.disabled) {
+                    e.preventDefault();
+                    return;
+                  }
+                  setOpen(false);
+                }}
               >
                 {action.label}
               </Link>
@@ -165,11 +176,13 @@ export function HeritageCardAdminMenu({
                 key={action.id}
                 type="button"
                 role="menuitem"
+                disabled={action.disabled}
                 className={cn(
-                  "block w-full px-3 py-2 text-left text-xs font-medium transition-colors hover:bg-muted",
+                  "block w-full px-3 py-2 text-left text-xs font-medium transition-colors hover:bg-muted disabled:opacity-50",
                   action.destructive ? "text-destructive" : "text-foreground",
                 )}
                 onClick={() => {
+                  if (action.disabled) return;
                   setOpen(false);
                   action.onSelect?.();
                 }}

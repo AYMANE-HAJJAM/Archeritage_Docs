@@ -1,34 +1,44 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import {
   updateTerritoireAction,
+  type LivePlatform,
   type ProjectActionState,
 } from "@/app/(private)/manage/actions";
 import { CreatePlatformDialog } from "@/components/manage/create-platform-dialog";
 import { HeritageCard } from "@/components/heritage/heritage-card";
 import { EmptyState, PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 
 const initial: ProjectActionState = {};
 
-export type PlatformRow = {
-  id: string;
-  name: string;
-  code: string;
-  slug: string;
-  description: string | null;
-  isActive: boolean;
-  dossierCount: number;
-  sectionCount: number;
-  fileCount: number;
-  lastActivityAt: string;
-};
+export type PlatformRow = LivePlatform;
 
-export function PlatformsManager({ platforms }: { platforms: PlatformRow[] }) {
+export function PlatformsManager({
+  platforms: initialPlatforms,
+}: {
+  platforms: PlatformRow[];
+}) {
+  const [platforms, setPlatforms] = useState(initialPlatforms);
+  const [platformsSource, setPlatformsSource] = useState(initialPlatforms);
+  if (initialPlatforms !== platformsSource) {
+    setPlatformsSource(initialPlatforms);
+    setPlatforms(initialPlatforms);
+  }
   const [createOpen, setCreateOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  function upsertPlatform(row: PlatformRow) {
+    setPlatforms((prev) => {
+      const idx = prev.findIndex((p) => p.id === row.id);
+      if (idx === -1) return [row, ...prev];
+      const next = [...prev];
+      next[idx] = row;
+      return next;
+    });
+  }
 
   const single = platforms.length === 1;
 
@@ -45,7 +55,11 @@ export function PlatformsManager({ platforms }: { platforms: PlatformRow[] }) {
         }
       />
 
-      <CreatePlatformDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <CreatePlatformDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onPlatformCreated={upsertPlatform}
+      />
 
       {platforms.length === 0 ? (
         <EmptyState
@@ -73,6 +87,7 @@ export function PlatformsManager({ platforms }: { platforms: PlatformRow[] }) {
               editing={editId === platform.id}
               onEdit={() => setEditId(platform.id)}
               onCloseEdit={() => setEditId(null)}
+              onUpdated={upsertPlatform}
             />
           ))}
         </div>
@@ -86,11 +101,13 @@ function PlatformHeritageCard({
   editing,
   onEdit,
   onCloseEdit,
+  onUpdated,
 }: {
   platform: PlatformRow;
   editing: boolean;
   onEdit: () => void;
   onCloseEdit: () => void;
+  onUpdated: (row: PlatformRow) => void;
 }) {
   const dossierMeta =
     platform.dossierCount === 1
@@ -134,9 +151,13 @@ function PlatformHeritageCard({
       ]}
       footerExtra={
         <>
-          <ArchivePlatformForm platform={platform} />
+          <ArchivePlatformForm platform={platform} onUpdated={onUpdated} />
           {editing ? (
-            <EditPlatformForm platform={platform} onDone={onCloseEdit} />
+            <EditPlatformForm
+              platform={platform}
+              onDone={onCloseEdit}
+              onUpdated={onUpdated}
+            />
           ) : null}
         </>
       }
@@ -144,8 +165,35 @@ function PlatformHeritageCard({
   );
 }
 
-function ArchivePlatformForm({ platform }: { platform: PlatformRow }) {
-  const [state, action] = useActionState(updateTerritoireAction, initial);
+function ArchivePlatformForm({
+  platform,
+  onUpdated,
+}: {
+  platform: PlatformRow;
+  onUpdated: (row: PlatformRow) => void;
+}) {
+  const { pushToast } = useToast();
+  const [state, action, pending] = useActionState(updateTerritoireAction, initial);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    const timer = window.setTimeout(() => {
+      if (state.ok && state.platform) {
+        onUpdated(state.platform);
+        pushToast(
+          state.platform.isActive ? "Projet réactivé." : "Projet archivé.",
+          "success",
+        );
+      } else if (state.error) {
+        pushToast(state.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [pending, state, onUpdated, pushToast]);
+
   return (
     <form
       id={`archive-platform-${platform.id}`}
@@ -172,11 +220,32 @@ function ArchivePlatformForm({ platform }: { platform: PlatformRow }) {
 function EditPlatformForm({
   platform,
   onDone,
+  onUpdated,
 }: {
   platform: PlatformRow;
   onDone: () => void;
+  onUpdated: (row: PlatformRow) => void;
 }) {
+  const { pushToast } = useToast();
   const [state, action, pending] = useActionState(updateTerritoireAction, initial);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    const timer = window.setTimeout(() => {
+      if (state.ok && state.platform) {
+        onUpdated(state.platform);
+        onDone();
+        pushToast("Projet mis à jour.", "success");
+      } else if (state.error) {
+        pushToast(state.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [pending, state, onUpdated, onDone, pushToast]);
+
   return (
     <form
       action={action}
@@ -208,9 +277,7 @@ function EditPlatformForm({
           <option value="0">Archivé</option>
         </select>
       </label>
-      {state.error ? (
-        <p className="text-xs text-destructive">{state.error}</p>
-      ) : null}
+      {state.error ? <p className="text-xs text-destructive">{state.error}</p> : null}
       <div className="flex gap-2 pt-1">
         <button
           type="submit"
@@ -236,15 +303,11 @@ function Field({
   label,
   defaultValue,
   required,
-  pattern,
-  placeholder,
 }: {
   name: string;
   label: string;
   defaultValue?: string;
   required?: boolean;
-  pattern?: string;
-  placeholder?: string;
 }) {
   return (
     <label className="block text-xs">
@@ -253,9 +316,7 @@ function Field({
         name={name}
         defaultValue={defaultValue}
         required={required}
-        pattern={pattern}
-        placeholder={placeholder}
-        className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
+        className="mt-1 h-8 w-full rounded-md border border-border bg-background px-2 text-sm"
       />
     </label>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import {
   updateProjectAction,
   updateTerritoireAction,
@@ -46,6 +46,12 @@ export function PlatformDetailView({
   const { pushToast } = useToast();
   const [platform, setPlatform] = useState(initialPlatform);
   const [dossiers, setDossiers] = useState(initialPlatform.dossiers);
+  const [platformSource, setPlatformSource] = useState(initialPlatform);
+  if (initialPlatform !== platformSource) {
+    setPlatformSource(initialPlatform);
+    setPlatform(initialPlatform);
+    setDossiers(initialPlatform.dossiers);
+  }
   const [createOpen, setCreateOpen] = useState(false);
   const [editPlatform, setEditPlatform] = useState(false);
   const [editDossierId, setEditDossierId] = useState<string | null>(null);
@@ -57,44 +63,56 @@ export function PlatformDetailView({
     updateTerritoireAction,
     initial,
   );
+  const platformWasPending = useRef(false);
+  const archiveWasPending = useRef(false);
 
   useEffect(() => {
-    setPlatform(initialPlatform);
-    setDossiers(initialPlatform.dossiers);
-  }, [initialPlatform]);
+    const finished = platformWasPending.current && !platformPending;
+    platformWasPending.current = platformPending;
+    if (!finished) return;
+    const timer = window.setTimeout(() => {
+      if (platformState.ok && platformState.platform) {
+        const p = platformState.platform;
+        setPlatform((prev) => ({
+          ...prev,
+          name: p.name,
+          code: p.code,
+          slug: p.slug,
+          description: p.description,
+          isActive: p.isActive,
+          updatedAt: p.lastActivityAt,
+        }));
+        setEditPlatform(false);
+        pushToast("Projet mis à jour.", "success");
+      } else if (platformState.error) {
+        pushToast(platformState.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [platformPending, platformState, pushToast]);
 
   useEffect(() => {
-    if (!platformState.ok || !platformState.platform) return;
-    const p = platformState.platform;
-    setPlatform((prev) => ({
-      ...prev,
-      name: p.name,
-      code: p.code,
-      slug: p.slug,
-      description: p.description,
-      isActive: p.isActive,
-      updatedAt: p.lastActivityAt,
-    }));
-    setEditPlatform(false);
-    pushToast("Projet mis à jour.", "success");
-  }, [platformState, pushToast]);
-
-  useEffect(() => {
-    if (!archiveState.ok || !archiveState.platform) return;
-    const p = archiveState.platform;
-    setPlatform((prev) => ({
-      ...prev,
-      isActive: p.isActive,
-      name: p.name,
-      code: p.code,
-      slug: p.slug,
-      description: p.description,
-    }));
-    pushToast(
-      p.isActive ? "Projet réactivé." : "Projet archivé.",
-      "success",
-    );
-  }, [archiveState, pushToast]);
+    const finished = archiveWasPending.current && !archiving;
+    archiveWasPending.current = archiving;
+    if (!finished) return;
+    const timer = window.setTimeout(() => {
+      if (archiveState.ok && archiveState.platform) {
+        const p = archiveState.platform;
+        setPlatform((prev) => ({
+          ...prev,
+          isActive: p.isActive,
+          name: p.name,
+          code: p.code,
+          slug: p.slug,
+          description: p.description,
+        }));
+        pushToast(p.isActive ? "Projet réactivé." : "Projet archivé.", "success");
+      } else if (archiveState.error) {
+        pushToast(archiveState.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [archiving, archiveState, pushToast]);
 
   function upsertDossier(row: DossierRow) {
     setDossiers((prev) => {
@@ -384,16 +402,26 @@ function ArchiveDossierForm({
   onUpdated: (row: DossierRow) => void;
 }) {
   const { pushToast } = useToast();
-  const [state, action] = useActionState(updateProjectAction, initial);
+  const [state, action, pending] = useActionState(updateProjectAction, initial);
+  const wasPending = useRef(false);
 
   useEffect(() => {
-    if (!state.ok || !state.dossier) return;
-    onUpdated(state.dossier);
-    pushToast(
-      state.dossier.isActive ? "Dossier réactivé." : "Dossier archivé.",
-      "success",
-    );
-  }, [state, onUpdated, pushToast]);
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    const timer = window.setTimeout(() => {
+      if (state.ok && state.dossier) {
+        onUpdated(state.dossier);
+        pushToast(
+          state.dossier.isActive ? "Dossier réactivé." : "Dossier archivé.",
+          "success",
+        );
+      } else if (state.error) {
+        pushToast(state.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [pending, state, onUpdated, pushToast]);
 
   return (
     <form
@@ -432,13 +460,23 @@ function EditDossierForm({
 }) {
   const { pushToast } = useToast();
   const [state, action, pending] = useActionState(updateProjectAction, initial);
+  const wasPending = useRef(false);
 
   useEffect(() => {
-    if (!state.ok || !state.dossier) return;
-    onUpdated(state.dossier);
-    onDone();
-    pushToast("Dossier mis à jour.", "success");
-  }, [state, onUpdated, onDone, pushToast]);
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    const timer = window.setTimeout(() => {
+      if (state.ok && state.dossier) {
+        onUpdated(state.dossier);
+        onDone();
+        pushToast("Dossier mis à jour.", "success");
+      } else if (state.error) {
+        pushToast(state.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [pending, state, onUpdated, onDone, pushToast]);
 
   return (
     <form

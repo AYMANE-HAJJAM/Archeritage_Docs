@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   createProjectAction,
   type ProjectActionState,
@@ -23,10 +22,12 @@ export function CreateDossierDialog({
   open,
   onOpenChange,
   territoireId,
+  onDossierCreated,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   territoireId: string;
+  onDossierCreated?: (dossier: NonNullable<ProjectActionState["dossier"]>) => void;
 }) {
   const pendingRef = useRef(false);
 
@@ -58,6 +59,7 @@ export function CreateDossierDialog({
           <CreateDossierForm
             territoireId={territoireId}
             pendingRef={pendingRef}
+            onDossierCreated={onDossierCreated}
             onSuccess={() => onOpenChange(false)}
             onCancel={() => {
               if (!pendingRef.current) onOpenChange(false);
@@ -72,18 +74,20 @@ export function CreateDossierDialog({
 function CreateDossierForm({
   territoireId,
   pendingRef,
+  onDossierCreated,
   onSuccess,
   onCancel,
 }: {
   territoireId: string;
   pendingRef: React.MutableRefObject<boolean>;
+  onDossierCreated?: (dossier: NonNullable<ProjectActionState["dossier"]>) => void;
   onSuccess: () => void;
   onCancel: () => void;
 }) {
-  const router = useRouter();
   const [state, action, pending] = useActionState(createProjectAction, initial);
   const [name, setName] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const wasPending = useRef(false);
 
   const previewCode = name.trim() ? proposeDossierCode(name) : "—";
   const previewSlug = name.trim() ? generateSlug(name) : "—";
@@ -93,10 +97,12 @@ function CreateDossierForm({
   }, [pending, pendingRef]);
 
   useEffect(() => {
-    if (!state.ok) return;
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished || !state.ok) return;
+    if (state.dossier) onDossierCreated?.(state.dossier);
     onSuccess();
-    router.refresh();
-  }, [state.ok, onSuccess, router]);
+  }, [pending, state, onDossierCreated, onSuccess]);
 
   return (
     <form action={action} className="mt-6 space-y-4">

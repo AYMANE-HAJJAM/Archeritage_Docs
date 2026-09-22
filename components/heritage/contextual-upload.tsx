@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Check, Upload, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import type { SectionDocument } from "@/lib/heritage/queries/section-documents";
 import { formatSize } from "@/lib/utils";
 
 export type UploadContextPayload = {
@@ -39,6 +40,7 @@ export function ContextualUpload({
   label = "Importer des documents",
   className,
   disabled = false,
+  onDocumentUploaded,
   onBatchComplete,
   onBusyChange,
 }: {
@@ -46,6 +48,7 @@ export function ContextualUpload({
   label?: string;
   className?: string;
   disabled?: boolean;
+  onDocumentUploaded?: (doc: SectionDocument) => void;
   onBatchComplete?: (result: { done: number; failed: number }) => void;
   onBusyChange?: (busy: boolean) => void;
 }) {
@@ -84,7 +87,7 @@ export function ContextualUpload({
         const file = files[index];
         update(index, { status: "uploading", progress: 0 });
         try {
-          await new Promise<void>((resolve, reject) => {
+          const doc = await new Promise<SectionDocument>((resolve, reject) => {
             const request = new XMLHttpRequest();
             request.open("POST", "/api/files");
             request.upload.onprogress = (event) => {
@@ -97,7 +100,14 @@ export function ContextualUpload({
             };
             request.onload = () => {
               if (request.status >= 200 && request.status < 300) {
-                resolve();
+                try {
+                  const payload = JSON.parse(
+                    request.responseText,
+                  ) as SectionDocument;
+                  resolve(payload);
+                } catch {
+                  reject(new Error("Réponse serveur invalide."));
+                }
                 return;
               }
               let message = "L’envoi a échoué.";
@@ -121,6 +131,7 @@ export function ContextualUpload({
             if (context.projectId) form.append("projectId", context.projectId);
             request.send(form);
           });
+          onDocumentUploaded?.(doc);
           update(index, { status: "done", progress: 100 });
           done += 1;
         } catch (error) {
@@ -137,7 +148,8 @@ export function ContextualUpload({
       setIsUploading(false);
       onBusyChange?.(false);
       if (input.current) input.current.value = "";
-      router.refresh();
+      // Background consistency only — UI already updated from response.
+      if (done > 0) router.refresh();
       onBatchComplete?.({ done, failed });
     }
   }
@@ -156,13 +168,13 @@ export function ContextualUpload({
         }}
       />
 
-        <Button
-          type="button"
-          size="sm"
-          variant="accent"
-          disabled={disabled || isUploading}
-          onClick={() => input.current?.click()}
-        >
+      <Button
+        type="button"
+        size="sm"
+        variant="accent"
+        disabled={disabled || isUploading}
+        onClick={() => input.current?.click()}
+      >
         <Upload />
         {label}
       </Button>

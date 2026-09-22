@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   createTerritoireAction,
   type ProjectActionState,
@@ -22,9 +21,11 @@ const initial: ProjectActionState = {};
 export function CreatePlatformDialog({
   open,
   onOpenChange,
+  onPlatformCreated,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onPlatformCreated?: (platform: NonNullable<ProjectActionState["platform"]>) => void;
 }) {
   const pendingRef = useRef(false);
 
@@ -55,6 +56,7 @@ export function CreatePlatformDialog({
         {open ? (
           <CreatePlatformForm
             pendingRef={pendingRef}
+            onPlatformCreated={onPlatformCreated}
             onSuccess={() => onOpenChange(false)}
             onCancel={() => {
               if (!pendingRef.current) onOpenChange(false);
@@ -68,17 +70,19 @@ export function CreatePlatformDialog({
 
 function CreatePlatformForm({
   pendingRef,
+  onPlatformCreated,
   onSuccess,
   onCancel,
 }: {
   pendingRef: React.MutableRefObject<boolean>;
+  onPlatformCreated?: (platform: NonNullable<ProjectActionState["platform"]>) => void;
   onSuccess: () => void;
   onCancel: () => void;
 }) {
-  const router = useRouter();
   const [state, action, pending] = useActionState(createTerritoireAction, initial);
   const [name, setName] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const wasPending = useRef(false);
 
   const previewCode = name.trim() ? proposeProjectCode(name) : "—";
   const previewSlug = name.trim() ? generateSlug(name) : "—";
@@ -88,10 +92,12 @@ function CreatePlatformForm({
   }, [pending, pendingRef]);
 
   useEffect(() => {
-    if (!state.ok) return;
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished || !state.ok) return;
+    if (state.platform) onPlatformCreated?.(state.platform);
     onSuccess();
-    router.refresh();
-  }, [state.ok, onSuccess, router]);
+  }, [pending, state, onPlatformCreated, onSuccess]);
 
   return (
     <form action={action} className="mt-6 space-y-4">
