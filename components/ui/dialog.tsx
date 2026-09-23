@@ -6,7 +6,14 @@ import { cn } from "@/lib/utils";
 export const Dialog = Primitive.Root;
 export const DialogTitle = Primitive.Title;
 export const DialogDescription = Primitive.Description;
-export function DialogContent({ className, children, ...props }: React.ComponentProps<typeof Primitive.Content>) {
+export function DialogContent({
+  className,
+  children,
+  hideCloseButton = false,
+  ...props
+}: React.ComponentProps<typeof Primitive.Content> & {
+  hideCloseButton?: boolean;
+}) {
   return (
     <Primitive.Portal>
       <Primitive.Overlay className="fixed inset-0 z-40 bg-[color-mix(in_srgb,var(--foreground)_40%,transparent)] backdrop-blur-[1px]" />
@@ -18,12 +25,14 @@ export function DialogContent({ className, children, ...props }: React.Component
         {...props}
       >
         {children}
-        <Primitive.Close
-          className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Fermer"
-        >
-          <X className="size-5" />
-        </Primitive.Close>
+        {!hideCloseButton ? (
+          <Primitive.Close
+            className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Fermer"
+          >
+            <X className="size-5" />
+          </Primitive.Close>
+        ) : null}
       </Primitive.Content>
     </Primitive.Portal>
   );

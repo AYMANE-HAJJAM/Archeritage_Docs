@@ -37,6 +37,19 @@ npm run dev            # http://localhost:3000
 
 Env vars are listed in `.env.example` (never commit secrets).
 
+### Preview tooling (LibreOffice + ffmpeg)
+
+| Tool | Purpose | Local | Render / production |
+|------|---------|-------|---------------------|
+| **LibreOffice** (`soffice`) | Office → PDF preview | Install LibreOffice, or set `SOFFICE_PATH` | Install in the image/runtime |
+| **ffmpeg** | MTS/AVI/MOV/… → H.264 MP4 preview derivative | Bundled via `ffmpeg-static`, or system ffmpeg / `FFMPEG_PATH` | Prefer **Docker** (`Dockerfile`) with system ffmpeg; `ffmpeg-static` also works on Node hosts |
+
+Detection order: `FFMPEG_PATH` → common install paths → PATH → `ffmpeg-static`.
+
+Originals stay untouched in B2; derivatives are cached under `.cache/video-previews/` and `archeritage/previews/{sha256}.mp4` (key = `File.id` + `sourceHash`/`storageVersion`). Download always returns the original.
+
+**Docker / Render:** use `Dockerfile` (ships `ffmpeg`) or `render.yaml` blueprint (`runtime: docker`). Native Render Node runtimes without Docker should keep `ffmpeg-static` in `dependencies`.
+
 ## Architecture (where things live)
 
 | Concern | Location |
@@ -78,7 +91,7 @@ After migration + seed, **runtime** section titles/order/groups come from Postgr
 - Auth: bcrypt login, opaque HttpOnly session (8h). Disabled / invited accounts cannot authenticate; disable revokes sessions.
 - Upload: any **USER** (or ADMIN) via contextual section upload — ADMIN not required.
 - Confidential documents (`CONFIDENTIEL`): USER blocked on read; ADMIN allowed. Broader ProjectMember rules are Phase 2B.
-- Preview/download: authenticated streams; Office may convert via LibreOffice.
+- Preview/download: authenticated streams; Office may convert via LibreOffice; non-native video (MTS/AVI/…) may convert via ffmpeg → MP4 preview derivative (original unchanged).
 
 ## Adding a feature
 

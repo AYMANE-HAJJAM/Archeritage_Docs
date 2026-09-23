@@ -115,6 +115,7 @@ test("USER with canManageStructure resolves structure permission", () => {
       canView: true,
       canUpload: false,
       canDownload: false,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: true,
       canReclassifyDocuments: false,
@@ -126,6 +127,7 @@ test("USER with canManageStructure resolves structure permission", () => {
       canView: true,
       canUpload: false,
       canDownload: false,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -133,6 +135,7 @@ test("USER with canManageStructure resolves structure permission", () => {
   );
   assert.equal(allowed.canManageStructure, true);
   assert.equal(denied.canManageStructure, false);
+  assert.equal(allowed.canDeleteDocuments, false);
 });
 
 test("ADMIN always has canManageStructure", () => {

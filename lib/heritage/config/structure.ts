@@ -240,3 +240,12 @@ export function documentsPath(projectSlug: string): string {
 export function sectionQueryPath(projectSlug: string, sectionCode: string): string {
   return `/projects/${projectSlug}?section=${encodeURIComponent(sectionCode)}`;
 }
+
+/** Section URL scoped to a documentary folder (unlimited nesting). */
+export function sectionFolderPath(
+  projectSlug: string,
+  sectionCode: string,
+  folderId: string,
+): string {
+  return `${sectionQueryPath(projectSlug, sectionCode)}&folder=${encodeURIComponent(folderId)}`;
+}

@@ -70,7 +70,7 @@ async function main() {
     }
 
     console.log(
-      `${execute ? "SET" : "WOULD SET"}\t${file.displayName}\t${file.folder.name}\t→\t${row.proposedSection} (${row.proposedLabel})`,
+      `${execute ? "SET" : "WOULD SET"}\t${file.displayName}\t${file.folder?.name ?? "(racine)"}\t→\t${row.proposedSection} (${row.proposedLabel})`,
     );
 
     if (execute) {

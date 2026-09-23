@@ -20,9 +20,17 @@ export type PlatformRow = LivePlatform;
 
 export function PlatformsManager({
   platforms: initialPlatforms,
+  /** manage = admin fiche; browse = open territoire landing */
+  cardHrefMode = "manage",
+  eyebrow = "Administration",
+  description = "Consultez vos plateformes patrimoniales, créez un projet ou organisez leur structure documentaire.",
 }: {
   platforms: PlatformRow[];
+  cardHrefMode?: "manage" | "browse";
+  eyebrow?: string;
+  description?: string;
 }) {
+  const { pushToast } = useToast();
   const [platforms, setPlatforms] = useState(initialPlatforms);
   const [platformsSource, setPlatformsSource] = useState(initialPlatforms);
   if (initialPlatforms !== platformsSource) {
@@ -46,12 +54,12 @@ export function PlatformsManager({
   return (
     <div>
       <PageHeader
-        eyebrow="Administration"
+        eyebrow={eyebrow}
         title="Projets"
-        description="Consultez vos plateformes patrimoniales, ouvrez une fiche pour ajouter des dossiers ou organisez leur structure documentaire."
+        description={description}
         actions={
           <Button type="button" onClick={() => setCreateOpen(true)}>
-            Ajouter un projet
+            + Ajouter un projet
           </Button>
         }
       />
@@ -59,12 +67,15 @@ export function PlatformsManager({
       <CreatePlatformDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
-        onPlatformCreated={upsertPlatform}
+        onPlatformCreated={(platform) => {
+          upsertPlatform(platform);
+          pushToast("Projet créé avec succès.", "success");
+        }}
       />
 
       {platforms.length === 0 ? (
         <EmptyState
-          title="Aucun projet pour le moment"
+          title="Aucun projet patrimonial."
           description="Créez votre première plateforme pour y rattacher des dossiers patrimoniaux et leurs documents."
           action={
             <Button type="button" onClick={() => setCreateOpen(true)}>
@@ -85,6 +96,11 @@ export function PlatformsManager({
             <PlatformHeritageCard
               key={platform.id}
               platform={platform}
+              href={
+                cardHrefMode === "browse"
+                  ? `/territoires/${platform.code.toLowerCase()}`
+                  : `/projects/manage/${platform.id}`
+              }
               editing={editId === platform.id}
               onEdit={() => setEditId(platform.id)}
               onCloseEdit={() => setEditId(null)}
@@ -99,12 +115,14 @@ export function PlatformsManager({
 
 function PlatformHeritageCard({
   platform,
+  href,
   editing,
   onEdit,
   onCloseEdit,
   onUpdated,
 }: {
   platform: PlatformRow;
+  href: string;
   editing: boolean;
   onEdit: () => void;
   onCloseEdit: () => void;
@@ -128,7 +146,7 @@ function PlatformHeritageCard({
   return (
     <>
       <HeritageCard
-        href={`/projects/manage/${platform.id}`}
+        href={href}
         code={platform.code}
         title={platform.name}
         description={description}
@@ -269,8 +287,6 @@ function EditPlatformForm({
         Modifier le projet
       </p>
       <Field name="name" label="Nom" defaultValue={platform.name} required />
-      <Field name="code" label="Code" defaultValue={platform.code} required />
-      <Field name="slug" label="Slug" defaultValue={platform.slug} required />
       <label className="block text-xs">
         <span className="text-muted-foreground">Description</span>
         <input

@@ -16,7 +16,7 @@ export type ProjectDocumentRow = {
   mimeType: string;
   size: number;
   storageProvider: "CLOUDINARY" | "BACKBLAZE_B2";
-  folderId: string;
+  folderId: string | null;
   createdAt: string;
   updatedAt: string;
   location: string;

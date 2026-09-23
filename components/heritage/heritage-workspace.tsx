@@ -2,7 +2,10 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback, useTransition } from "react";
-import { SectionDocumentsList } from "@/components/heritage/section-documents-list";
+import {
+  DocumentaryBreadcrumb,
+  DocumentaryFolderBrowser,
+} from "@/components/heritage/documentary-folder-browser";
 import {
   HeritageWorkspaceHeader,
   SectionExplorer,
@@ -25,6 +28,7 @@ import type {
   HeritageStructure,
 } from "@/lib/heritage/config/structure";
 import type { ProjectPermissionFlags } from "@/lib/access/permissions";
+import type { DocumentaryFolderCard } from "@/lib/heritage/documentary-folder-types";
 import { formatSize } from "@/lib/utils";
 
 type HeritageWorkspaceProps = {
@@ -35,6 +39,11 @@ type HeritageWorkspaceProps = {
   structured?: SectionStructuredData;
   territoryHref?: string;
   projectId?: string;
+  heritageSectionId?: string | null;
+  currentFolderId?: string | null;
+  folders?: DocumentaryFolderCard[];
+  breadcrumbParts?: { name: string; href: string | null }[];
+  moveTargets?: { id: string | null; label: string }[];
   permissions: ProjectPermissionFlags;
   structureEdit?: {
     groups: EditableGroup[];
@@ -64,6 +73,11 @@ export function HeritageWorkspace({
   structured = EMPTY_STRUCTURED,
   territoryHref = "/territoires/saf",
   projectId,
+  heritageSectionId = null,
+  currentFolderId = null,
+  folders = [],
+  breadcrumbParts = [],
+  moveTargets = [],
   permissions,
   structureEdit = null,
   editMode = false,
@@ -135,31 +149,36 @@ export function HeritageWorkspace({
         onToggleStructureEdit={() => setEditMode(!inStructureEdit)}
       />
 
-      {selectedSection ? (
+      {selectedSection && projectId && heritageSectionId ? (
         <div className="space-y-5">
-          <SectionSummaryBar
-            section={selectedSection}
-            sectionSummary={summary.sections[selectedSection.code]}
-          />
-          {showsStructured && (
+          {breadcrumbParts.length > 0 ? (
+            <DocumentaryBreadcrumb parts={breadcrumbParts} />
+          ) : null}
+          {!currentFolderId ? (
+            <SectionSummaryBar
+              section={selectedSection}
+              sectionSummary={summary.sections[selectedSection.code]}
+            />
+          ) : null}
+          {showsStructured && !currentFolderId && (
             <StructuredContentPanel
               section={selectedSection}
               structured={structured}
             />
           )}
-          <SectionDocumentsList
+          <DocumentaryFolderBrowser
+            projectId={projectId}
+            projectSlug={structure.projectSlug}
+            sectionCode={selectedSection.code}
+            heritageSectionId={heritageSectionId}
+            currentFolderId={currentFolderId}
+            folders={folders}
             documents={documents}
-            title={showsStructured ? "Documents liés" : "Documents"}
+            moveTargets={moveTargets}
+            canManage={permissions.canManageStructure}
+            canUpload={permissions.canUpload}
             canDownload={permissions.canDownload}
-            uploadContext={
-              projectId && permissions.canUpload
-                ? {
-                    documentScope: "PROJECT_SECTION",
-                    docCategorie: selectedSection.code,
-                    projectId,
-                  }
-                : undefined
-            }
+            canDelete={permissions.canDeleteDocuments}
           />
         </div>
       ) : inStructureEdit && structureEdit && projectId ? (

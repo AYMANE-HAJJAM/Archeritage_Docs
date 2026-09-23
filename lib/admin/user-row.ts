@@ -4,6 +4,7 @@ export type DossierFlags = {
   canView: boolean;
   canUpload: boolean;
   canDownload: boolean;
+  canDeleteDocuments: boolean;
   canManageStructure: boolean;
 };
 

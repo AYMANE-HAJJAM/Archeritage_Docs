@@ -16,15 +16,54 @@ export async function authenticate(request: Request, mutation = false) {
   return user;
 }
 export function apiError(error: unknown) {
-  if (error instanceof HttpError) return Response.json({ error: error.message }, { status: error.status });
-  if (error instanceof ZodError) return Response.json({ error: "Les informations saisies ne sont pas valides." }, { status: 400 });
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    if (error.code === "P2003") return Response.json({ error: "Ce dossier contient encore des éléments ou n’existe plus." }, { status: 409 });
-    if (error.code === "P2025") return Response.json({ error: "Cet élément n’existe plus." }, { status: 404 });
-    if (error.code === "P2002") return Response.json({ error: "Un élément de ce nom existe déjà." }, { status: 409 });
+  if (error instanceof HttpError) {
+    return Response.json({ error: error.message }, { status: error.status });
   }
-  console.error("Operation failed", error instanceof Error ? error.name : "UnknownError");
-  return Response.json({ error: "L’opération a échoué. Veuillez réessayer." }, { status: 500 });
+  if (error instanceof ZodError) {
+    return Response.json(
+      { error: "Les informations saisies ne sont pas valides." },
+      { status: 400 },
+    );
+  }
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === "P2003") {
+      return Response.json(
+        { error: "Ce dossier contient encore des éléments ou n’existe plus." },
+        { status: 409 },
+      );
+    }
+    if (error.code === "P2025") {
+      return Response.json({ error: "Cet élément n’existe plus." }, { status: 404 });
+    }
+    if (error.code === "P2002") {
+      return Response.json(
+        { error: "Un élément de ce nom existe déjà." },
+        { status: 409 },
+      );
+    }
+  }
+
+  const message = error instanceof Error ? error.message : String(error);
+  const name = error instanceof Error ? error.name : "UnknownError";
+
+  // Surface known size / config failures with the right status instead of a generic 500.
+  if (/trop volumineux|dépasse la taille|MAX_UPLOAD_MB/i.test(message)) {
+    console.error("[apiError] upload limit", { name, message });
+    return Response.json(
+      {
+        error: /MAX_UPLOAD_MB/i.test(message)
+          ? "Configuration d’upload invalide. Contactez un administrateur."
+          : "Le fichier dépasse la taille autorisée.",
+      },
+      { status: 413 },
+    );
+  }
+
+  console.error("Operation failed", { name, message: message.slice(0, 500) });
+  return Response.json(
+    { error: "L’opération a échoué. Veuillez réessayer." },
+    { status: 500 },
+  );
 }
 export async function readJson(request: Request) {
   const body = await readLimitedBody(request, 16 * 1024);

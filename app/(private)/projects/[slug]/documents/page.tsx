@@ -3,6 +3,12 @@ import { ChevronRight } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 
 import { ProjectDocumentsIndex } from "@/components/heritage/project-documents-index";
+import {
+  assertProjectAccess,
+  getProjectPermissionsForUser,
+  requireActiveUser,
+} from "@/lib/access";
+import { db } from "@/lib/db";
 import { getProjectDocumentsIndex } from "@/lib/heritage/queries/project-documents";
 import {
   CHATEAU_SLUG,
@@ -28,11 +34,20 @@ export default async function ProjectDocumentsPage({
 }) {
   const { slug } = await params;
   const query = await searchParams;
+  const user = await requireActiveUser();
 
   // Legacy folder/archive query params no longer expose a competing UX.
   if (isHeritageProject(slug) && (query.view === "folders" || query.folder)) {
     redirect(documentsPath(slug));
   }
+
+  const project = await db.project.findUnique({
+    where: { slug },
+    select: { id: true, isActive: true },
+  });
+  if (!project || !project.isActive) notFound();
+  await assertProjectAccess(user, project.id);
+  const permissions = await getProjectPermissionsForUser(user, project.id);
 
   const index = await getProjectDocumentsIndex(slug);
   if (!index) notFound();
@@ -76,7 +91,12 @@ export default async function ProjectDocumentsPage({
         </p>
       </header>
 
-      <ProjectDocumentsIndex data={index} initialQuery={initialQuery} />
+      <ProjectDocumentsIndex
+        data={index}
+        initialQuery={initialQuery}
+        canDownload={permissions.canDownload}
+        canDelete={permissions.canDeleteDocuments}
+      />
     </section>
   );
 }

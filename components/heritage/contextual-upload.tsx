@@ -12,6 +12,8 @@ export type UploadContextPayload = {
   documentScope: "PROJECT_SECTION";
   docCategorie: string;
   projectId?: string;
+  /** Documentary folder destination; omit/null = section root. */
+  folderId?: string | null;
 };
 
 type UploadItem = {
@@ -129,6 +131,7 @@ export function ContextualUpload({
             form.append("documentScope", context.documentScope);
             form.append("docCategorie", context.docCategorie);
             if (context.projectId) form.append("projectId", context.projectId);
+            if (context.folderId) form.append("folderId", context.folderId);
             request.send(form);
           });
           onDocumentUploaded?.(doc);

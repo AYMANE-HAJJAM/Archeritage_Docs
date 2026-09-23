@@ -5,6 +5,7 @@
  * - canView (Voir)
  * - canUpload (Importer)
  * - canDownload (Télécharger)
+ * - canDeleteDocuments (Supprimer des documents)
  * - canManageStructure (Gérer la structure)
  *
  * Dossier creation under a plateforme is ADMIN-only.
@@ -21,12 +22,13 @@ export type ProjectPermissionFlags = {
   canView: boolean;
   canUpload: boolean;
   canDownload: boolean;
+  canDeleteDocuments: boolean;
   canEditDossier: boolean;
   canManageStructure: boolean;
   canReclassifyDocuments: boolean;
 };
 
-/** Normalize flags so view is required for upload/download/structure. */
+/** Normalize flags so view is required for upload/download/delete/structure. */
 export function normalizeProjectPermissions(
   flags: ProjectPermissionFlags,
 ): ProjectPermissionFlags {
@@ -35,6 +37,7 @@ export function normalizeProjectPermissions(
       canView: false,
       canUpload: false,
       canDownload: false,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -48,6 +51,7 @@ export const EMPTY_PROJECT_PERMISSIONS: ProjectPermissionFlags =
     canView: false,
     canUpload: false,
     canDownload: false,
+    canDeleteDocuments: false,
     canEditDossier: false,
     canManageStructure: false,
     canReclassifyDocuments: false,
@@ -57,6 +61,7 @@ export const FULL_PROJECT_PERMISSIONS: ProjectPermissionFlags = {
   canView: true,
   canUpload: true,
   canDownload: true,
+  canDeleteDocuments: true,
   canEditDossier: true,
   canManageStructure: true,
   canReclassifyDocuments: true,
@@ -72,6 +77,7 @@ export function resolveProjectPermissions(
     canView: membership.canView,
     canUpload: membership.canUpload,
     canDownload: membership.canDownload,
+    canDeleteDocuments: membership.canDeleteDocuments,
     canEditDossier: membership.canEditDossier,
     canManageStructure: membership.canManageStructure,
     canReclassifyDocuments: membership.canReclassifyDocuments,

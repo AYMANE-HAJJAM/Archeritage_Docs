@@ -33,7 +33,7 @@ type FlatItem =
       meta?: string;
       preview: PreviewFile;
     }
-  | { kind: "folder"; id: string; href: string; label: string };
+  | { kind: "folder"; id: string; href: string; label: string; meta?: string };
 
 type HeritageProjectSearchProps = {
   projectSlug: string;
@@ -59,9 +59,11 @@ function buildFlatItems(result: HeritageProjectSearchResult | null): FlatItem[] 
       id: d.id,
       href: d.href,
       label: d.displayName,
-      meta: d.sectionCode
-        ? `${d.sectionCode}${d.sectionTitle ? ` · ${d.sectionTitle}` : ""}`
-        : undefined,
+      meta: d.pathLabel
+        ? d.pathLabel
+        : d.sectionCode
+          ? `${d.sectionCode}${d.sectionTitle ? ` · ${d.sectionTitle}` : ""}`
+          : undefined,
       preview: {
         id: d.id,
         displayName: d.displayName,
@@ -78,6 +80,7 @@ function buildFlatItems(result: HeritageProjectSearchResult | null): FlatItem[] 
       id: f.id,
       href: f.href,
       label: f.name,
+      meta: f.pathLabel ?? undefined,
     });
   }
   return items;
@@ -95,6 +98,16 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
   const [preview, setPreview] = useState<PreviewFile | null>(null);
 
   const flatItems = useMemo(() => buildFlatItems(result), [result]);
+  const previewFiles = useMemo(
+    () =>
+      flatItems
+        .filter(
+          (item): item is Extract<FlatItem, { kind: "document" }> =>
+            item.kind === "document",
+        )
+        .map((item) => item.preview),
+    [flatItems],
+  );
   const sectionOffset = 0;
   const documentOffset = result?.sections.length ?? 0;
   const folderOffset = documentOffset + (result?.documents.length ?? 0);
@@ -379,7 +392,12 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
         ) : null}
       </div>
 
-      <FilePreviewModal file={preview} onClose={() => setPreview(null)} />
+      <FilePreviewModal
+        file={preview}
+        files={previewFiles}
+        onClose={() => setPreview(null)}
+        onNavigate={setPreview}
+      />
     </>
   );
 }

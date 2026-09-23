@@ -15,6 +15,7 @@ export type ProjectAccessInput = {
   canView: boolean;
   canUpload: boolean;
   canDownload: boolean;
+  canDeleteDocuments: boolean;
   canManageStructure: boolean;
 };
 
@@ -52,6 +53,7 @@ function toStoredFlags(input: ProjectAccessInput): ProjectPermissionFlags {
     canView: input.canView,
     canUpload: input.canUpload,
     canDownload: input.canDownload,
+    canDeleteDocuments: input.canDeleteDocuments,
     canManageStructure: input.canManageStructure,
     canEditDossier: false,
     canReclassifyDocuments: false,
@@ -99,6 +101,7 @@ export async function upsertUserProjectAccess(
       canView: flags.canView,
       canUpload: flags.canUpload,
       canDownload: flags.canDownload,
+      canDeleteDocuments: flags.canDeleteDocuments,
       canManageStructure: flags.canManageStructure,
     },
   });

@@ -42,6 +42,7 @@ test("USER view-only: preview allowed, upload/download/structure denied", () => 
       canView: true,
       canUpload: false,
       canDownload: false,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -50,6 +51,7 @@ test("USER view-only: preview allowed, upload/download/structure denied", () => 
   assert.equal(perms.canView, true);
   assert.equal(perms.canUpload, false);
   assert.equal(perms.canDownload, false);
+  assert.equal(perms.canDeleteDocuments, false);
   assert.equal(perms.canManageStructure, false);
 });
 
@@ -60,6 +62,7 @@ test("USER download allowed only with canDownload", () => {
       canView: true,
       canUpload: false,
       canDownload: false,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -71,6 +74,7 @@ test("USER download allowed only with canDownload", () => {
       canView: true,
       canUpload: false,
       canDownload: true,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -87,6 +91,7 @@ test("USER upload allowed only with canUpload", () => {
       canView: true,
       canUpload: false,
       canDownload: true,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -98,6 +103,7 @@ test("USER upload allowed only with canUpload", () => {
       canView: true,
       canUpload: true,
       canDownload: true,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -114,6 +120,7 @@ test("USER manage structure allowed only with canManageStructure", () => {
       canView: true,
       canUpload: true,
       canDownload: true,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -125,6 +132,7 @@ test("USER manage structure allowed only with canManageStructure", () => {
       canView: true,
       canUpload: false,
       canDownload: false,
+      canDeleteDocuments: false,
       canEditDossier: false,
       canManageStructure: true,
       canReclassifyDocuments: false,
@@ -134,11 +142,48 @@ test("USER manage structure allowed only with canManageStructure", () => {
   assert.equal(allowed.canManageStructure, true);
 });
 
+test("USER delete documents allowed only with canDeleteDocuments", () => {
+  const denied = resolveProjectPermissions(
+    { id: "u", role: "USER" },
+    {
+      canView: true,
+      canUpload: true,
+      canDownload: true,
+      canDeleteDocuments: false,
+      canEditDossier: false,
+      canManageStructure: true,
+      canReclassifyDocuments: false,
+    },
+  );
+  const allowed = resolveProjectPermissions(
+    { id: "u", role: "USER" },
+    {
+      canView: true,
+      canUpload: false,
+      canDownload: false,
+      canDeleteDocuments: true,
+      canEditDossier: false,
+      canManageStructure: false,
+      canReclassifyDocuments: false,
+    },
+  );
+  assert.equal(denied.canDeleteDocuments, false);
+  assert.equal(allowed.canDeleteDocuments, true);
+  // Structure management must not imply deletion.
+  assert.equal(denied.canManageStructure, true);
+});
+
+test("ADMIN always has canDeleteDocuments", () => {
+  const perms = resolveProjectPermissions({ id: "a", role: "ADMIN" }, null);
+  assert.equal(perms.canDeleteDocuments, true);
+});
+
 test("normalize clears dependent flags when view is false", () => {
   const normalized = normalizeProjectPermissions({
     canView: false,
     canUpload: true,
     canDownload: true,
+    canDeleteDocuments: true,
     canEditDossier: true,
     canManageStructure: true,
     canReclassifyDocuments: true,
@@ -152,6 +197,7 @@ test("UI flag rules: unchecking Voir clears dependents", () => {
       canView: true,
       canUpload: true,
       canDownload: true,
+      canDeleteDocuments: true,
       canManageStructure: true,
     },
     "canView",
@@ -160,6 +206,7 @@ test("UI flag rules: unchecking Voir clears dependents", () => {
   assert.equal(next.canView, false);
   assert.equal(next.canUpload, false);
   assert.equal(next.canDownload, false);
+  assert.equal(next.canDeleteDocuments, false);
   assert.equal(next.canManageStructure, false);
 });
 
@@ -169,6 +216,7 @@ test("UI flag rules: checking Importer forces Voir", () => {
       canView: false,
       canUpload: false,
       canDownload: false,
+      canDeleteDocuments: false,
       canManageStructure: false,
     },
     "canUpload",
@@ -176,6 +224,22 @@ test("UI flag rules: checking Importer forces Voir", () => {
   );
   assert.equal(next.canView, true);
   assert.equal(next.canUpload, true);
+});
+
+test("UI flag rules: checking Supprimer des documents forces Voir", () => {
+  const next = applyFlagChange(
+    {
+      canView: false,
+      canUpload: false,
+      canDownload: false,
+      canDeleteDocuments: false,
+      canManageStructure: false,
+    },
+    "canDeleteDocuments",
+    true,
+  );
+  assert.equal(next.canView, true);
+  assert.equal(next.canDeleteDocuments, true);
 });
 
 test("canCreateDossier is ADMIN-only (USER membership ignored)", () => {
@@ -210,6 +274,7 @@ test("inaccessible dossier: canView false means no access", () => {
       canView: false,
       canUpload: true,
       canDownload: true,
+      canDeleteDocuments: true,
       canEditDossier: false,
       canManageStructure: false,
       canReclassifyDocuments: false,
@@ -218,6 +283,7 @@ test("inaccessible dossier: canView false means no access", () => {
   assert.equal(perms.canView, false);
   assert.equal(perms.canUpload, false);
   assert.equal(perms.canDownload, false);
+  assert.equal(perms.canDeleteDocuments, false);
 });
 
 test("invitation token is hashed (never store plaintext)", () => {

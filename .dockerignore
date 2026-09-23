@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.cache
+source_import
+.env
+.env.*
+!.env.example
+*.md
+.cursor
+coverage

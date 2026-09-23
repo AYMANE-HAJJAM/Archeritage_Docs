@@ -32,7 +32,7 @@ export type SectionSummary = {
   labels: string[];
   /** Associated files via docCategorie (documents + photos). */
   fileCount: number;
-  /** Always 0 — no section-level Folder association in the data model. */
+  /** Total documentary folders under this heritage section (all depths). */
   subfolderCount: number;
   totalBytes: number;
   lastUpdatedAt: string | null;
@@ -149,6 +149,7 @@ function buildSectionSummary(
     interventions: StructuredAgg;
   },
   fileBySection: Map<string, FileAgg>,
+  folderCountBySectionCode: Map<string, number>,
 ): SectionSummary {
   const files = fileBySection.get(section.code) ?? {
     documents: 0,
@@ -218,7 +219,7 @@ function buildSectionSummary(
     hasContent,
     labels,
     fileCount,
-    subfolderCount: 0,
+    subfolderCount: folderCountBySectionCode.get(section.code) ?? 0,
     totalBytes,
     lastUpdatedAt: toIso(lastUpdatedAt),
     status: hasContent ? "Documentée" : "Vide",
@@ -276,6 +277,7 @@ export async function getProjectHeritageSummary(
     totalFiles,
     projectFileAgg,
     classifiedFiles,
+    sectionFolderRows,
     sequences,
     tours,
     portes,
@@ -302,6 +304,15 @@ export async function getProjectHeritageSummary(
         storageProvider: true,
         size: true,
         updatedAt: true,
+      },
+    }),
+    db.folder.findMany({
+      where: {
+        projectId: project.id,
+        heritageSectionId: { not: null },
+      },
+      select: {
+        heritageSection: { select: { code: true } },
       },
     }),
     structuredAgg({ projectId: project.id, type: "SEQUENCE" }),
@@ -368,6 +379,16 @@ export async function getProjectHeritageSummary(
       : Promise.resolve({ count: 0, lastUpdatedAt: null }),
   ]);
 
+  const folderCountBySectionCode = new Map<string, number>();
+  for (const row of sectionFolderRows) {
+    const code = row.heritageSection?.code;
+    if (!code) continue;
+    folderCountBySectionCode.set(
+      code,
+      (folderCountBySectionCode.get(code) ?? 0) + 1,
+    );
+  }
+
   const fileBySection = new Map<string, FileAgg>();
   for (const file of classifiedFiles) {
     if (!file.docCategorie) continue;
@@ -400,7 +421,12 @@ export async function getProjectHeritageSummary(
   let lastActivityAt: Date | null = projectFileAgg._max.updatedAt ?? null;
 
   for (const section of sections) {
-    const summary = buildSectionSummary(section, projectStructured, fileBySection);
+    const summary = buildSectionSummary(
+      section,
+      projectStructured,
+      fileBySection,
+      folderCountBySectionCode,
+    );
     sectionSummaries[section.code] = summary;
     if (summary.hasContent) documentedSections += 1;
     if (summary.lastUpdatedAt) {

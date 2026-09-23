@@ -18,6 +18,7 @@ export type DossierFlags = {
   canView: boolean;
   canUpload: boolean;
   canDownload: boolean;
+  canDeleteDocuments: boolean;
   canManageStructure: boolean;
 };
 
@@ -26,6 +27,7 @@ export function emptyFlags(): DossierFlags {
     canView: false,
     canUpload: false,
     canDownload: false,
+    canDeleteDocuments: false,
     canManageStructure: false,
   };
 }
@@ -44,6 +46,7 @@ export function applyFlagChange(
     value &&
     (key === "canUpload" ||
       key === "canDownload" ||
+      key === "canDeleteDocuments" ||
       key === "canManageStructure")
   ) {
     next.canView = true;
@@ -179,6 +182,14 @@ function DossierPermissionRow({
           onChange={(v) => setFlag("canDownload", v)}
         />
         <Perm
+          label="Supprimer des documents"
+          name={formMode ? `canDeleteDocuments_${dossier.id}` : undefined}
+          checked={current.canDeleteDocuments}
+          disabled={disabled || viewOff}
+          formMode={formMode}
+          onChange={(v) => setFlag("canDeleteDocuments", v)}
+        />
+        <Perm
           label="Gérer la structure"
           name={formMode ? `canManageStructure_${dossier.id}` : undefined}
           checked={current.canManageStructure}
@@ -187,8 +198,6 @@ function DossierPermissionRow({
           onChange={(v) => setFlag("canManageStructure", v)}
         />
       </div>
-      {/* Hidden mirrors so disabled unchecked boxes still submit correctly via JS state... 
-          actually disabled checkboxes don't submit. Use hidden fields for formMode. */}
       {formMode ? (
         <>
           <input
@@ -205,6 +214,11 @@ function DossierPermissionRow({
             type="hidden"
             name={`canDownload_${dossier.id}`}
             value={current.canDownload ? "1" : "0"}
+          />
+          <input
+            type="hidden"
+            name={`canDeleteDocuments_${dossier.id}`}
+            value={current.canDeleteDocuments ? "1" : "0"}
           />
           <input
             type="hidden"

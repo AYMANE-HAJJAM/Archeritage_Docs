@@ -26,6 +26,7 @@ import { EmptyState } from "@/components/layout/page-header";
 import { useToast } from "@/components/ui/toast";
 import { SectionRemoveControl } from "@/components/manage/section-remove-control";
 import { GroupRemoveControl } from "@/components/manage/group-remove-control";
+import { StructureDocumentaryFolders } from "@/components/manage/structure-documentary-folders";
 import { Check } from "lucide-react";
 
 const initial: ProjectActionState = {};
@@ -884,6 +885,11 @@ function SectionInspector({
           className="size-9 border border-border"
         />
       </div>
+
+      <StructureDocumentaryFolders
+        projectId={projectId}
+        heritageSectionId={section.id}
+      />
     </div>
   );
 }

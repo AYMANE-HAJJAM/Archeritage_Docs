@@ -78,6 +78,7 @@ async function buildUserRow(userId: string): Promise<UsersTableRow | null> {
         canView: row.canView,
         canUpload: row.canUpload,
         canDownload: row.canDownload,
+        canDeleteDocuments: row.canDeleteDocuments,
         canManageStructure: row.canManageStructure,
       },
     ]),
@@ -101,6 +102,7 @@ function projectAccessFromForm(form: FormData): Record<string, DossierFlags> {
         canView: flag(form, `canView_${projectId}`),
         canUpload: flag(form, `canUpload_${projectId}`),
         canDownload: flag(form, `canDownload_${projectId}`),
+        canDeleteDocuments: flag(form, `canDeleteDocuments_${projectId}`),
         canManageStructure: flag(form, `canManageStructure_${projectId}`),
       },
     ]),
@@ -250,6 +252,7 @@ function parseProjectAccessFromForm(form: FormData) {
     canView: flag(form, `canView_${projectId}`),
     canUpload: flag(form, `canUpload_${projectId}`),
     canDownload: flag(form, `canDownload_${projectId}`),
+    canDeleteDocuments: flag(form, `canDeleteDocuments_${projectId}`),
     canManageStructure: flag(form, `canManageStructure_${projectId}`),
   }));
 }
@@ -268,6 +271,7 @@ export async function updateUserProjectAccessAction(
       canView: flag(form, "canView"),
       canUpload: flag(form, "canUpload"),
       canDownload: flag(form, "canDownload"),
+      canDeleteDocuments: flag(form, "canDeleteDocuments"),
       canManageStructure: flag(form, "canManageStructure"),
     });
     const user = await buildUserRow(userId);

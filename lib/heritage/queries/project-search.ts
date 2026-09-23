@@ -7,8 +7,11 @@ import {
   type AccessUser,
 } from "@/lib/access";
 import { HttpError } from "@/lib/http";
-import { normalizeSearchText } from "@/lib/utils";
-import { sectionQueryPath } from "@/lib/heritage/config/structure";
+import { folderTrail, normalizeSearchText } from "@/lib/utils";
+import {
+  sectionFolderPath,
+  sectionQueryPath,
+} from "@/lib/heritage/config/structure";
 
 const SECTION_LIMIT = 5;
 const DOCUMENT_LIMIT = 10;
@@ -33,6 +36,7 @@ export type HeritageSearchDocumentHit = {
   storageProvider: "CLOUDINARY" | "BACKBLAZE_B2";
   sectionCode: string | null;
   sectionTitle: string | null;
+  pathLabel: string | null;
   href: string;
 };
 
@@ -40,6 +44,7 @@ export type HeritageSearchFolderHit = {
   type: "folder";
   id: string;
   name: string;
+  pathLabel: string | null;
   href: string;
 };
 
@@ -57,7 +62,7 @@ export type HeritageProjectSearchResult = {
 
 /**
  * In-project search for heritage dossiers (Château / Murailles).
- * Scoped to one project; enforces canView + confidentiality.
+ * Searches sections, documentary folders (any depth), and documents.
  */
 export async function searchHeritageProject(
   user: AccessUser,
@@ -76,7 +81,7 @@ export async function searchHeritageProject(
 
   const project = await db.project.findUnique({
     where: { slug: projectSlug },
-    select: { id: true, slug: true, isActive: true },
+    select: { id: true, slug: true, isActive: true, name: true },
   });
   if (!project || !project.isActive) {
     throw new HttpError(404, "Projet introuvable.");
@@ -114,6 +119,7 @@ export async function searchHeritageProject(
         mimeType: true,
         size: true,
         storageProvider: true,
+        folderId: true,
         docTitle: true,
         docAuteur: true,
         docSource: true,
@@ -125,16 +131,28 @@ export async function searchHeritageProject(
     db.folder.findMany({
       where: {
         projectId: project.id,
-        NOT: { name: "__imports__" },
+        heritageSectionId: { not: null },
       },
       orderBy: { name: "asc" },
-      select: { id: true, name: true },
+      select: {
+        id: true,
+        name: true,
+        parentId: true,
+        heritageSectionId: true,
+        heritageSection: { select: { code: true, title: true } },
+      },
     }),
   ]);
 
   const sectionTitleByCode = new Map(
     sectionRows.map((s) => [s.code, s.title] as const),
   );
+
+  const folderRefs = folderRows.map((f) => ({
+    id: f.id,
+    name: f.name,
+    parentId: f.parentId,
+  }));
 
   const matchedSections = sectionRows.filter((section) => {
     const haystack = normalizeSearchText(
@@ -184,9 +202,30 @@ export async function searchHeritageProject(
         file.documentScope === "PROJECT_SECTION" && file.docCategorie
           ? file.docCategorie
           : null;
-      const href = sectionCode
-        ? `${sectionQueryPath(project.slug, sectionCode)}&preview=${encodeURIComponent(file.id)}`
-        : `/projects/${project.slug}/documents`;
+      const sectionTitle = sectionCode
+        ? (sectionTitleByCode.get(sectionCode) ?? null)
+        : null;
+
+      const trail = file.folderId
+        ? folderTrail(file.folderId, folderRefs)
+        : [];
+      const pathParts = [
+        project.name,
+        sectionCode && sectionTitle
+          ? `${sectionCode} ${sectionTitle}`
+          : sectionCode,
+        ...trail.map((p) => p.name),
+      ].filter(Boolean) as string[];
+
+      let href: string;
+      if (sectionCode && file.folderId && trail.length) {
+        href = `${sectionFolderPath(project.slug, sectionCode, file.folderId)}&preview=${encodeURIComponent(file.id)}`;
+      } else if (sectionCode) {
+        href = `${sectionQueryPath(project.slug, sectionCode)}&preview=${encodeURIComponent(file.id)}`;
+      } else {
+        href = `/projects/${project.slug}/documents`;
+      }
+
       return {
         type: "document" as const,
         id: file.id,
@@ -196,9 +235,8 @@ export async function searchHeritageProject(
         size: file.size,
         storageProvider: file.storageProvider,
         sectionCode,
-        sectionTitle: sectionCode
-          ? (sectionTitleByCode.get(sectionCode) ?? null)
-          : null,
+        sectionTitle,
+        pathLabel: pathParts.join(" › ") || null,
         href,
       };
     });
@@ -206,14 +244,28 @@ export async function searchHeritageProject(
   const folders: HeritageSearchFolderHit[] = matchedFolders
     .slice(0, FOLDER_LIMIT)
     .map((folder) => {
-      const displayName = folder.name.replace(/^\d+\s+[—\-]\s+/, "").trim();
-      // Heritage folder deep-links redirect; land on the project document index
-      // filtered by the folder name so the click is not a dead end.
+      const sectionCode = folder.heritageSection?.code;
+      const sectionTitle = folder.heritageSection?.title;
+      const trail = folderTrail(folder.id, folderRefs);
+      const pathParts = [
+        project.name,
+        sectionCode && sectionTitle
+          ? `${sectionCode} ${sectionTitle}`
+          : sectionCode,
+        ...trail.map((p) => p.name),
+      ].filter(Boolean) as string[];
+
+      const href =
+        sectionCode
+          ? sectionFolderPath(project.slug, sectionCode, folder.id)
+          : `/projects/${project.slug}/documents`;
+
       return {
         type: "folder" as const,
         id: folder.id,
-        name: displayName || folder.name,
-        href: `/projects/${project.slug}/documents?q=${encodeURIComponent(displayName || folder.name)}`,
+        name: folder.name,
+        pathLabel: pathParts.join(" › ") || null,
+        href,
       };
     });
 

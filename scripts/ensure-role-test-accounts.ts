@@ -38,6 +38,7 @@ async function upsertProjectAccess(
     canView: boolean;
     canUpload: boolean;
     canDownload: boolean;
+    canDeleteDocuments?: boolean;
     canManageStructure: boolean;
   },
 ) {
@@ -60,6 +61,7 @@ async function upsertProjectAccess(
       canView: flags.canView,
       canUpload: flags.canUpload,
       canDownload: flags.canDownload,
+      canDeleteDocuments: flags.canDeleteDocuments ?? false,
       canEditDossier: false,
       canManageStructure: flags.canManageStructure,
       canReclassifyDocuments: false,
@@ -68,6 +70,7 @@ async function upsertProjectAccess(
       canView: flags.canView,
       canUpload: flags.canUpload,
       canDownload: flags.canDownload,
+      canDeleteDocuments: flags.canDeleteDocuments ?? false,
       canEditDossier: false,
       canManageStructure: flags.canManageStructure,
       canReclassifyDocuments: false,

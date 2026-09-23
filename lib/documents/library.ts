@@ -11,8 +11,16 @@ export async function getLibrary(slug: string, folderId: string | null, query: Q
   const project = await db.project.findUnique({ where: { slug }, select: { id: true, name: true, slug: true } });
   if (!project) notFound();
   const [allFoldersRaw, folderFileCounts] = await Promise.all([
-    db.folder.findMany({ where: { projectId: project.id }, select: { id: true, name: true, parentId: true }, orderBy: { name: "asc" } }),
-    db.file.groupBy({ by: ["folderId"], where: { projectId: project.id }, _count: true }),
+    db.folder.findMany({
+      where: { projectId: project.id, heritageSectionId: null },
+      select: { id: true, name: true, parentId: true },
+      orderBy: { name: "asc" },
+    }),
+    db.file.groupBy({
+      by: ["folderId"],
+      where: { projectId: project.id },
+      _count: true,
+    }),
   ]);
   // Technical inbox used by contextual SAFI uploads — keep internal, hide from Explorer IA.
   const allFolders = allFoldersRaw.filter((folder) => folder.name !== "__imports__");

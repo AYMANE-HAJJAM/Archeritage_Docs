@@ -11,7 +11,7 @@ export type SectionDocument = {
   mimeType: string;
   size: number;
   storageProvider: "CLOUDINARY" | "BACKBLAZE_B2";
-  folderId: string;
+  folderId: string | null;
   createdAt: string;
   location: string;
   docStatut: string | null;
@@ -19,9 +19,15 @@ export type SectionDocument = {
   uploadedByName: string | null;
 };
 
+/**
+ * Documents visible at a given level inside a heritage section.
+ * - folderId null → section root (not inside a documentary folder)
+ * - folderId set → direct children of that documentary folder only
+ */
 export async function getSectionDocuments(
   projectSlug: string,
   sectionCode: string,
+  folderId: string | null = null,
 ): Promise<SectionDocument[]> {
   const project = await db.project.findUnique({
     where: { slug: projectSlug },
@@ -29,12 +35,40 @@ export async function getSectionDocuments(
   });
   if (!project) return [];
 
+  const section = await db.heritageSection.findFirst({
+    where: {
+      projectId: project.id,
+      code: sectionCode,
+      isActive: true,
+    },
+    select: { id: true },
+  });
+
+  const documentaryFolderIds = section
+    ? (
+        await db.folder.findMany({
+          where: { heritageSectionId: section.id },
+          select: { id: true },
+        })
+      ).map((f) => f.id)
+    : [];
+
   const [files, folders] = await Promise.all([
     db.file.findMany({
       where: {
         projectId: project.id,
         docCategorie: sectionCode,
         OR: [{ documentScope: "PROJECT_SECTION" }, { documentScope: null }],
+        ...(folderId
+          ? { folderId }
+          : documentaryFolderIds.length
+            ? {
+                OR: [
+                  { folderId: null },
+                  { folderId: { notIn: documentaryFolderIds } },
+                ],
+              }
+            : {}),
       },
       orderBy: [{ displayName: "asc" }, { id: "asc" }],
       select: {

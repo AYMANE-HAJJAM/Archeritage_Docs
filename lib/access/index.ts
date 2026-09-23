@@ -1,5 +1,6 @@
 export {
   assertCanCreateDossier,
+  assertCanDeleteDocuments,
   assertCanDownload,
   assertCanManageStructure,
   assertCanReclassify,

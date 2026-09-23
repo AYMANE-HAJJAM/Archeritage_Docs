@@ -72,6 +72,7 @@ export default async function UsersPage({
             canView: row.canView,
             canUpload: row.canUpload,
             canDownload: row.canDownload,
+            canDeleteDocuments: row.canDeleteDocuments,
             canManageStructure: row.canManageStructure,
           },
         ]),

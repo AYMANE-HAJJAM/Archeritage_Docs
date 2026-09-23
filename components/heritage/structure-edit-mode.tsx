@@ -539,6 +539,21 @@ export function StructureEditMode({
                 className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
               />
             </label>
+            <label className="block text-xs">
+              <span className="text-muted-foreground">Groupe</span>
+              <select
+                name="groupId"
+                defaultValue={editSection.groupId ?? ""}
+                className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
+              >
+                <option value="">— Sans groupe —</option>
+                {orderedGroups.map((g) => (
+                  <option key={g.id} value={g.id}>
+                    {g.label}
+                  </option>
+                ))}
+              </select>
+            </label>
             <p className="text-[11px] text-muted-foreground">
               Code stable : {editSection.code}
             </p>

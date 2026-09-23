@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
+import { Readable } from "node:stream";
 import { v2 as cloudinary, type UploadApiResponse } from "cloudinary";
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import type { File as StoredFile } from "@/generated/prisma/client";
@@ -10,18 +11,101 @@ function cloud() {
   return cloudinary;
 }
 function b2() {
-  return new S3Client({ endpoint: required("B2_ENDPOINT"), region: required("B2_REGION"), credentials: { accessKeyId: required("B2_KEY_ID"), secretAccessKey: required("B2_APPLICATION_KEY") }, requestChecksumCalculation: "WHEN_REQUIRED", responseChecksumValidation: "WHEN_REQUIRED" });
+  return new S3Client({
+    endpoint: required("B2_ENDPOINT"),
+    region: required("B2_REGION"),
+    credentials: {
+      accessKeyId: required("B2_KEY_ID"),
+      secretAccessKey: required("B2_APPLICATION_KEY"),
+    },
+    requestChecksumCalculation: "WHEN_REQUIRED",
+    responseChecksumValidation: "WHEN_REQUIRED",
+  });
 }
-export async function uploadObject(bytes: Buffer, provider: StoredFile["storageProvider"], mimeType: string) {
+
+export async function uploadObject(
+  bytes: Buffer,
+  provider: StoredFile["storageProvider"],
+  mimeType: string,
+) {
+  return uploadObjectBody(bytes, bytes.length, provider, mimeType);
+}
+
+/**
+ * Upload bytes or a Node readable stream to Cloudinary (images) / B2 (documents).
+ * Prefer streaming for large B2 objects to avoid duplicating the full payload in RAM.
+ */
+export async function uploadObjectBody(
+  body: Buffer | Readable,
+  contentLength: number,
+  provider: StoredFile["storageProvider"],
+  mimeType: string,
+) {
   const key = `archeritage/${randomUUID()}`;
   if (provider === "CLOUDINARY") {
+    if (!Buffer.isBuffer(body)) {
+      throw new Error("Cloudinary upload requires a buffered image body.");
+    }
     const result = await new Promise<UploadApiResponse>((resolve, reject) => {
-      cloud().uploader.upload_stream({ public_id: key, resource_type: "image", type: "authenticated", allowed_formats: ["jpg", "png", "webp"], overwrite: false }, (error, result) => error ? reject(error) : result ? resolve(result) : reject(new Error("Upload failed"))).end(bytes);
+      cloud()
+        .uploader.upload_stream(
+          {
+            public_id: key,
+            resource_type: "image",
+            type: "authenticated",
+            allowed_formats: ["jpg", "png", "webp"],
+            overwrite: false,
+          },
+          (error, result) =>
+            error
+              ? reject(error)
+              : result
+                ? resolve(result)
+                : reject(new Error("Upload failed")),
+        )
+        .end(body);
     });
     return { storageKey: result.public_id, storageVersion: String(result.version) };
   }
-  const result = await b2().send(new PutObjectCommand({ Bucket: required("B2_BUCKET_NAME"), Key: key, Body: bytes, ContentType: mimeType, ContentLength: bytes.length }));
-  return { storageKey: key, storageVersion: result.VersionId ?? null };
+
+  try {
+    const result = await b2().send(
+      new PutObjectCommand({
+        Bucket: required("B2_BUCKET_NAME"),
+        Key: key,
+        Body: body,
+        ContentType: mimeType,
+        ContentLength: contentLength,
+      }),
+    );
+    return { storageKey: key, storageVersion: result.VersionId ?? null };
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    const err = error as {
+      name?: string;
+      Code?: string;
+      $metadata?: { httpStatusCode?: number; requestId?: string };
+    };
+    console.error("[storage] B2 PutObject failed", {
+      key,
+      contentLength,
+      mimeType,
+      name: err.name,
+      code: err.Code,
+      httpStatus: err.$metadata?.httpStatusCode,
+      requestId: err.$metadata?.requestId,
+      detail: detail.slice(0, 500),
+    });
+    throw new Error(`B2 upload failed: ${detail.slice(0, 280)}`);
+  }
+}
+
+/** Stream a Web File/Blob to B2 without buffering the whole object in Node. */
+export async function uploadWebFileToB2(file: Blob, mimeType: string) {
+  const nodeStream = Readable.fromWeb(
+    file.stream() as import("node:stream/web").ReadableStream,
+  );
+  return uploadObjectBody(nodeStream, file.size, "BACKBLAZE_B2", mimeType);
 }
 type ObjectRef = Pick<StoredFile, "storageProvider" | "storageKey" | "storageVersion">;
 export async function deleteObject(file: ObjectRef) {
@@ -37,7 +121,7 @@ export async function readObject(file: StoredFile, thumbnail: boolean, range: st
     const client = cloud();
     const url = download
       ? client.utils.private_download_url(file.storageKey, file.extension === "jpeg" ? "jpg" : file.extension, { resource_type: "image", type: "authenticated", expires_at: Math.floor(Date.now() / 1000) + 60 })
-      : client.url(file.storageKey, { type: "authenticated", resource_type: "image", sign_url: true, secure: true, version: Number(file.storageVersion), transformation: [{ width: thumbnail ? 560 : 1800, height: thumbnail ? 400 : 1800, crop: thumbnail ? "fill" : "limit", quality: "auto", fetch_format: "auto" }] });
+      : client.url(file.storageKey, { type: "authenticated", resource_type: "image", sign_url: true, secure: true, version: Number(file.storageVersion), transformation: [{ width: thumbnail ? 112 : 1800, height: thumbnail ? 112 : 1800, crop: thumbnail ? "fill" : "limit", quality: "auto", fetch_format: "auto" }] });
     // The signed provider URL stays on the server; browsers only receive bytes.
     const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(30000) });
     if (!response.ok || !response.body) throw new Error("Storage read failed");
@@ -78,16 +162,39 @@ export async function getCachedPreviewObject(previewKey: string): Promise<Buffer
   }
 }
 
-export async function putCachedPreviewObject(previewKey: string, bytes: Buffer): Promise<void> {
+export async function putCachedPreviewObject(
+  previewKey: string,
+  bytes: Buffer,
+  contentType = "application/pdf",
+): Promise<void> {
   try {
     await b2().send(new PutObjectCommand({
       Bucket: required("B2_BUCKET_NAME"),
       Key: previewKey,
       Body: bytes,
-      ContentType: "application/pdf",
+      ContentType: contentType,
       ContentLength: bytes.length,
     }));
   } catch (error) {
     console.warn("Failed to persist preview object to B2:", error instanceof Error ? error.message : "UnknownError");
+  }
+}
+
+/** Best-effort removal of a cached preview derivative in B2 (PDF or MP4). */
+export async function deleteCachedPreviewObject(previewKey: string): Promise<void> {
+  try {
+    await b2().send(new DeleteObjectCommand({
+      Bucket: required("B2_BUCKET_NAME"),
+      Key: previewKey,
+    }));
+  } catch (error: unknown) {
+    const err = error as { name?: string; $metadata?: { httpStatusCode?: number } };
+    if (err.name === "NoSuchKey" || err.$metadata?.httpStatusCode === 404) {
+      return;
+    }
+    console.warn(
+      "Failed to delete B2 preview cache object:",
+      error instanceof Error ? error.message : "UnknownError",
+    );
   }
 }

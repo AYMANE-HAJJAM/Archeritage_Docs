@@ -36,7 +36,7 @@ Bootstrap templates live in `lib/heritage/config/structure.ts`. **Runtime SoT** 
 - Next.js App Router (TypeScript), Prisma → PostgreSQL/Neon
 - Images → Cloudinary (authenticated); documents → Backblaze B2
 - Custom cookie sessions (`lib/auth`); API Origin check on mutations (`lib/http`)
-- Preview: PDF stream or LibreOffice → PDF (`lib/storage/preview-cache`)
+- Preview: PDF stream, LibreOffice → PDF (`lib/storage/preview-cache`), or ffmpeg → MP4 video derivative (`lib/storage/video-preview-cache`, binary via `FFMPEG_PATH` / PATH / `ffmpeg-static`; Docker has system ffmpeg)
 
 **Next.js version note:** this app uses Next.js 16+. Consult `node_modules/next/dist/docs/` before changing framework code. Root `AGENTS.md` / `CLAUDE.md` are maintained by `next dev`.
 

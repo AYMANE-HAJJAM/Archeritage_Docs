@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { authenticate, apiError, HttpError } from "@/lib/http";
 import { assertFileDownloadable, assertFileReadable } from "@/lib/access";
+import { isVideoFile, videoContentType } from "@/lib/documents/file-kind";
 import { contentDisposition } from "@/lib/validation/file";
 import { readObject } from "@/lib/storage";
 
@@ -18,16 +19,18 @@ export async function GET(
 
     const url = new URL(request.url);
     const image = file.storageProvider === "CLOUDINARY";
+    const video = isVideoFile(file);
     const forceDownload =
       url.searchParams.has("download") ||
       (!image &&
+        !video &&
         file.mimeType !== "application/pdf" &&
         !url.searchParams.has("thumbnail"));
 
     if (forceDownload) {
       await assertFileDownloadable(user, file);
     } else {
-      // Inline image/PDF consultation or thumbnail — view/preview only.
+      // Inline image/PDF/video consultation or thumbnail — view/preview only.
       await assertFileReadable(user, file);
     }
 
@@ -46,8 +49,12 @@ export async function GET(
       !file.displayName.toLowerCase().endsWith(`.${file.extension}`)
         ? `${file.displayName}.${file.extension}`
         : file.displayName;
+    // Prefer extension-derived video MIME — stored type may be octet-stream.
+    const contentType = video
+      ? videoContentType(file)
+      : result.contentType;
     const headers = new Headers({
-      "Content-Type": result.contentType,
+      "Content-Type": contentType,
       "Content-Disposition": contentDisposition(downloadName, !forceDownload),
       "Cache-Control": "private, no-store",
       "X-Content-Type-Options": "nosniff",

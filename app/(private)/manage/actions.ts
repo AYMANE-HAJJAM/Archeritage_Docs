@@ -38,6 +38,7 @@ import {
   updateSection,
   updateSectionSchema,
 } from "@/lib/admin/structure";
+import { parseUpdateSectionFormData } from "@/lib/admin/section-update-form";
 import { db } from "@/lib/db";
 
 /** Live UI payloads — presentation only; server remains source of truth. */
@@ -405,19 +406,9 @@ export async function updateSectionAction(
     });
     if (!sectionRow) return { error: "Rubrique introuvable." };
     const user = await requireStructureEditor(sectionRow.projectId);
-    const parsed = updateSectionSchema.safeParse({
-      title: form.get("title") || undefined,
-      description: form.get("description") || null,
-      slug: form.get("slug") || undefined,
-      kind: form.get("kind") || undefined,
-      groupId: form.get("groupId") || null,
-      isActive:
-        form.get("isActive") === "0"
-          ? false
-          : form.get("isActive") === "1"
-            ? true
-            : undefined,
-    });
+    // PATCH: only fields present in FormData are applied. Omitted groupId must
+    // NOT become null (that moved title-only edits into « Autres »).
+    const parsed = updateSectionSchema.safeParse(parseUpdateSectionFormData(form));
     if (!sectionId || !parsed.success) return { error: "Vérifiez la rubrique." };
     await updateSection(sectionId, parsed.data, user.id);
     const section = await toLiveSection(sectionId);

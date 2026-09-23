@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowDownToLine, Eye, FileText, ImageIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
+import { DocumentFileGlyph } from "@/components/documents/document-file-glyph";
+import { DocumentRowActions } from "@/components/documents/document-row-actions";
 import { FilePreviewModal } from "@/components/documents/file-preview";
 import type { ProjectDocumentsData } from "@/lib/heritage/queries/project-documents";
 import { formatSize, normalizeSearchText } from "@/lib/utils";
@@ -24,17 +26,29 @@ type Filters = {
   version: string;
 };
 
+type ProjectDoc = ProjectDocumentsData["documents"][number];
+
 export function ProjectDocumentsIndex({
   data,
   initialQuery = "",
+  canDownload = true,
+  canDelete = false,
 }: {
   data: ProjectDocumentsData;
   /** Prefill search from URL (e.g. in-project search “Voir tous”). */
   initialQuery?: string;
+  canDownload?: boolean;
+  canDelete?: boolean;
 }) {
-  const [preview, setPreview] = useState<
-    ProjectDocumentsData["documents"][number] | null
-  >(null);
+  const router = useRouter();
+  const [documents, setDocuments] = useState(data.documents);
+  const [docsSource, setDocsSource] = useState(data.documents);
+  if (data.documents !== docsSource) {
+    setDocsSource(data.documents);
+    setDocuments(data.documents);
+  }
+
+  const [preview, setPreview] = useState<ProjectDoc | null>(null);
   const [filters, setFilters] = useState<Filters>({
     q: initialQuery,
     section: "all",
@@ -45,7 +59,7 @@ export function ProjectDocumentsIndex({
 
   const filtered = useMemo(() => {
     const q = normalizeSearchText(filters.q);
-    return data.documents.filter((file) => {
+    return documents.filter((file) => {
       if (q) {
         const haystack = normalizeSearchText(
           `${file.displayName} ${file.originalName} ${file.sectionLabel}`,
@@ -68,7 +82,38 @@ export function ProjectDocumentsIndex({
       }
       return true;
     });
-  }, [data.documents, filters]);
+  }, [documents, filters]);
+
+  const totalBytes = useMemo(
+    () => documents.reduce((sum, file) => sum + file.size, 0),
+    [documents],
+  );
+  const heritageCount = useMemo(
+    () =>
+      new Set(
+        documents
+          .filter((f) => f.placementGroup === "heritage")
+          .map((f) => f.sectionCode),
+      ).size,
+    [documents],
+  );
+  const projectLevelCount = useMemo(
+    () => documents.filter((f) => f.placementGroup === "project").length,
+    [documents],
+  );
+
+  function removeDocument(fileId: string) {
+    setPreview((current) => {
+      if (!current || current.id !== fileId) return current;
+      const index = filtered.findIndex((d) => d.id === fileId);
+      const nextVisible = filtered.filter((d) => d.id !== fileId);
+      if (nextVisible.length === 0) return null;
+      if (index >= 0 && index < nextVisible.length) return nextVisible[index];
+      return nextVisible[nextVisible.length - 1] ?? null;
+    });
+    setDocuments((prev) => prev.filter((d) => d.id !== fileId));
+    router.refresh();
+  }
 
   const showStatus = data.hasAnyStatus;
   const showVersion = data.hasAnyVersion;
@@ -76,21 +121,19 @@ export function ProjectDocumentsIndex({
   return (
     <div>
       <p className="mb-4 text-xs text-muted-foreground" aria-live="polite">
-          {[
-            `${data.summary.total} document${data.summary.total > 1 ? "s" : ""}`,
-            data.summary.totalBytes > 0
-              ? formatSize(data.summary.totalBytes)
-              : null,
-            `${data.summary.heritage} rubrique${data.summary.heritage > 1 ? "s" : ""}`,
-            data.summary.projectLevel > 0
-              ? `${data.summary.projectLevel} document${data.summary.projectLevel > 1 ? "s" : ""} projet`
-              : null,
-            data.summary.lastActivityAt
-              ? `Dernière activité : ${new Date(data.summary.lastActivityAt).toLocaleDateString("fr-FR", { timeZone: "UTC" })}`
-              : null,
-          ]
-            .filter(Boolean)
-            .join(" · ")}
+        {[
+          `${documents.length} document${documents.length > 1 ? "s" : ""}`,
+          totalBytes > 0 ? formatSize(totalBytes) : null,
+          `${heritageCount} rubrique${heritageCount > 1 ? "s" : ""}`,
+          projectLevelCount > 0
+            ? `${projectLevelCount} document${projectLevelCount > 1 ? "s" : ""} projet`
+            : null,
+          data.summary.lastActivityAt
+            ? `Dernière activité : ${new Date(data.summary.lastActivityAt).toLocaleDateString("fr-FR", { timeZone: "UTC" })}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(" · ")}
       </p>
 
       <div className="mb-3 flex flex-wrap items-center gap-2 border border-border bg-surface p-2">
@@ -219,7 +262,7 @@ export function ProjectDocumentsIndex({
                       Version
                     </th>
                   )}
-                  <th className="w-24 px-2 py-2 text-right font-semibold">
+                  <th className="w-12 px-2 py-2 text-right font-semibold">
                     <span className="sr-only">Actions</span>
                   </th>
                 </tr>
@@ -230,17 +273,14 @@ export function ProjectDocumentsIndex({
                     key={file.id}
                     className="border-b border-border/80 last:border-0 transition-colors duration-150 hover:bg-muted/40"
                   >
-                    <td className="max-w-64 px-3 py-2">
+                    <td className="max-w-72 px-3 py-2">
                       <button
                         type="button"
                         onClick={() => setPreview(file)}
-                        className="flex max-w-full items-center gap-2.5 text-left"
+                        className="flex max-w-full items-center gap-3 text-left"
+                        aria-label={`Aperçu ${file.displayName}`}
                       >
-                        {file.storageProvider === "CLOUDINARY" ? (
-                          <ImageIcon className="size-4 shrink-0 text-muted-foreground" />
-                        ) : (
-                          <FileText className="size-4 shrink-0 text-muted-foreground" />
-                        )}
+                        <DocumentFileGlyph file={file} />
                         <span
                           className="truncate text-[13px] font-medium"
                           title={file.displayName}
@@ -276,22 +316,13 @@ export function ProjectDocumentsIndex({
                       </td>
                     )}
                     <td className="px-2 py-2">
-                      <div className="flex justify-end gap-1">
-                        <button
-                          type="button"
-                          className="inline-flex size-7 items-center justify-center text-muted-foreground hover:text-primary"
-                          aria-label={`Aperçu ${file.displayName}`}
-                          onClick={() => setPreview(file)}
-                        >
-                          <Eye className="size-3.5" />
-                        </button>
-                        <a
-                          href={`/api/files/${file.id}/content?download=1`}
-                          className="inline-flex size-7 items-center justify-center text-muted-foreground hover:text-primary"
-                        >
-                          <ArrowDownToLine className="size-3.5" />
-                        </a>
-                      </div>
+                      <DocumentRowActions
+                        file={file}
+                        canDownload={canDownload}
+                        canDelete={canDelete}
+                        onPreview={() => setPreview(file)}
+                        onDeleted={removeDocument}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -301,7 +332,13 @@ export function ProjectDocumentsIndex({
         </div>
       )}
 
-      <FilePreviewModal file={preview} onClose={() => setPreview(null)} />
+      <FilePreviewModal
+        file={preview}
+        files={filtered}
+        onClose={() => setPreview(null)}
+        onNavigate={setPreview}
+        canDownload={canDownload}
+      />
     </div>
   );
 }

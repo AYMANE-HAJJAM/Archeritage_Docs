@@ -1,0 +1,37 @@
+# Example Render Blueprint — Docker runtime with system ffmpeg.
+# In the Render dashboard you can also set Runtime = Docker and point at ./Dockerfile.
+services:
+  - type: web
+    name: archeritage-docs
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /login
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Optional override; otherwise /usr/bin/ffmpeg from the image is used.
+      - key: FFMPEG_PATH
+        value: /usr/bin/ffmpeg
+      - key: DATABASE_URL
+        sync: false
+      - key: AUTH_SECRET
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: B2_ENDPOINT
+        sync: false
+      - key: B2_REGION
+        sync: false
+      - key: B2_BUCKET_NAME
+        sync: false
+      - key: B2_KEY_ID
+        sync: false
+      - key: B2_APPLICATION_KEY
+        sync: false

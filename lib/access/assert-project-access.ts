@@ -53,6 +53,7 @@ export async function getProjectMembership(
       canView: true,
       canUpload: true,
       canDownload: true,
+      canDeleteDocuments: true,
       canEditDossier: true,
       canManageStructure: true,
       canReclassifyDocuments: true,
@@ -123,6 +124,13 @@ export async function assertCanDownload(
   projectId: string,
 ): Promise<void> {
   await assertProjectPermission(user, projectId, "canDownload");
+}
+
+export async function assertCanDeleteDocuments(
+  user: AccessUser,
+  projectId: string,
+): Promise<void> {
+  await assertProjectPermission(user, projectId, "canDeleteDocuments");
 }
 
 export async function assertCanManageStructure(

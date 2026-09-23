@@ -1,8 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowDownToLine, Eye, FileText, ImageIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { FileText } from "lucide-react";
 
+import { DocumentFileGlyph } from "@/components/documents/document-file-glyph";
+import { DocumentRowActions } from "@/components/documents/document-row-actions";
 import { FilePreviewModal } from "@/components/documents/file-preview";
 import {
   ContextualUpload,
@@ -38,12 +41,15 @@ export function SectionDocumentsList({
   title = "Documents",
   uploadContext,
   canDownload = true,
+  canDelete = false,
 }: {
   documents: SectionDocument[];
   title?: string;
   uploadContext?: UploadContextPayload;
   canDownload?: boolean;
+  canDelete?: boolean;
 }) {
+  const router = useRouter();
   const [documents, setDocuments] = useState(initialDocuments);
   const [docsSource, setDocsSource] = useState(initialDocuments);
   if (initialDocuments !== docsSource) {
@@ -51,11 +57,27 @@ export function SectionDocumentsList({
     setDocuments(initialDocuments);
   }
   const [preview, setPreview] = useState<SectionDocument | null>(null);
+
   function appendDocument(doc: SectionDocument) {
     setDocuments((prev) => {
       if (prev.some((d) => d.id === doc.id)) return prev;
       return [doc, ...prev];
     });
+  }
+
+  function removeDocument(fileId: string) {
+    setDocuments((prev) => {
+      const index = prev.findIndex((d) => d.id === fileId);
+      const next = prev.filter((d) => d.id !== fileId);
+      setPreview((current) => {
+        if (!current || current.id !== fileId) return current;
+        if (next.length === 0) return null;
+        if (index >= 0 && index < next.length) return next[index];
+        return next[next.length - 1] ?? null;
+      });
+      return next;
+    });
+    router.refresh();
   }
 
   const showStatus = useMemo(
@@ -124,7 +146,7 @@ export function SectionDocumentsList({
                   {showStatus && (
                     <th className="hidden w-28 lg:table-cell">Statut</th>
                   )}
-                  <th className="w-[7.5rem] text-right">
+                  <th className="w-12 text-right">
                     <span className="sr-only">Actions</span>
                   </th>
                 </tr>
@@ -132,17 +154,14 @@ export function SectionDocumentsList({
               <tbody>
                 {documents.map((file) => (
                   <tr key={file.id} className="group/row">
-                    <td className="max-w-72">
+                    <td className="max-w-80">
                       <button
                         type="button"
                         onClick={() => setPreview(file)}
-                        className="flex max-w-full items-center gap-2.5 text-left"
+                        className="flex max-w-full items-center gap-3 text-left"
+                        aria-label={`Aperçu ${file.displayName}`}
                       >
-                        {file.storageProvider === "CLOUDINARY" ? (
-                          <ImageIcon className="size-4 shrink-0 text-muted-foreground" />
-                        ) : (
-                          <FileText className="size-4 shrink-0 text-muted-foreground" />
-                        )}
+                        <DocumentFileGlyph file={file} />
                         <span className="min-w-0">
                           <span
                             className="block truncate text-[13px] font-medium text-foreground group-hover/row:text-accent"
@@ -180,25 +199,13 @@ export function SectionDocumentsList({
                       </td>
                     )}
                     <td className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <button
-                          type="button"
-                          className="inline-flex h-7 items-center gap-1 border border-transparent px-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/50 hover:text-foreground"
-                          onClick={() => setPreview(file)}
-                        >
-                          <Eye className="size-3.5" aria-hidden />
-                          <span className="hidden sm:inline">Aperçu</span>
-                        </button>
-                        {canDownload ? (
-                          <a
-                            href={`/api/files/${file.id}/content?download=1`}
-                            className="inline-flex h-7 items-center gap-1 border border-transparent px-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/50 hover:text-foreground"
-                          >
-                            <ArrowDownToLine className="size-3.5" aria-hidden />
-                            <span className="hidden sm:inline">Télécharger</span>
-                          </a>
-                        ) : null}
-                      </div>
+                      <DocumentRowActions
+                        file={file}
+                        canDownload={canDownload}
+                        canDelete={canDelete}
+                        onPreview={() => setPreview(file)}
+                        onDeleted={removeDocument}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -208,7 +215,13 @@ export function SectionDocumentsList({
         </div>
       )}
 
-      <FilePreviewModal file={preview} onClose={() => setPreview(null)} />
+      <FilePreviewModal
+        file={preview}
+        files={documents}
+        onClose={() => setPreview(null)}
+        onNavigate={setPreview}
+        canDownload={canDownload}
+      />
     </div>
   );
 }

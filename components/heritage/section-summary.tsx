@@ -32,7 +32,7 @@ export function SectionSummaryBar({
       value: String(sectionSummary?.fileCount ?? 0),
     },
     {
-      label: "Sous-dossiers",
+      label: "Dossiers",
       value: String(sectionSummary?.subfolderCount ?? 0),
     },
     {

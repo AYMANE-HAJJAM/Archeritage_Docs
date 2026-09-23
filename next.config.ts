@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
   output: "standalone",
+  // Keep native binaries out of Turbopack/webpack bundling so the ffmpeg
+  // executable path from ffmpeg-static resolves on disk at runtime.
+  serverExternalPackages: ["ffmpeg-static"],
   async headers() {
     return [{ source: "/:path*", headers: [
       { key: "X-Content-Type-Options", value: "nosniff" },

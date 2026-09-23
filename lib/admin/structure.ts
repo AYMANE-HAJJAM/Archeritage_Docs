@@ -160,6 +160,7 @@ export async function updateSection(
   const updated = await db.heritageSection.update({
     where: { id: sectionId },
     data: {
+      // PATCH: undefined means leave unchanged; null groupId is an explicit ungroup.
       ...(data.title !== undefined ? { title: data.title } : {}),
       ...(data.description !== undefined ? { description: data.description } : {}),
       ...(data.slug !== undefined ? { slug: data.slug } : {}),

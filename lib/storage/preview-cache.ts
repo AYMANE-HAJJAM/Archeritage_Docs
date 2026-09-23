@@ -9,6 +9,7 @@ import {
   PreviewConversionError,
 } from "@/lib/documents/converter";
 import {
+  deleteCachedPreviewObject,
   getCachedPreviewObject,
   putCachedPreviewObject,
   readRawObjectBytes,
@@ -33,11 +34,15 @@ function getDiskCacheDir(): string {
   return path.join(process.cwd(), ".cache", "previews");
 }
 
+function getVideoDiskCacheDir(): string {
+  return path.join(process.cwd(), ".cache", "video-previews");
+}
+
 function isValidPdfBuffer(bytes: Buffer): boolean {
   return bytes.length >= 5 && bytes.subarray(0, 5).toString("utf8") === "%PDF-";
 }
 
-/** Remove only the derived preview cache for one file (disk + best-effort ignore B2). */
+/** Remove derived preview caches for one file (PDF + video disk/B2, best-effort). */
 export async function invalidatePreviewCacheForFile(
   file: Pick<
     StoredFile,
@@ -46,12 +51,19 @@ export async function invalidatePreviewCacheForFile(
 ): Promise<{ cacheKey: string; diskRemoved: boolean }> {
   const cacheKey = computePreviewCacheKey(file);
   const diskCachePath = path.join(getDiskCacheDir(), `${cacheKey}.pdf`);
+  const videoDiskPath = path.join(getVideoDiskCacheDir(), `${cacheKey}.mp4`);
   let diskRemoved = false;
   if (existsSync(diskCachePath)) {
     await fs.unlink(diskCachePath);
     diskRemoved = true;
   }
+  if (existsSync(videoDiskPath)) {
+    await fs.unlink(videoDiskPath);
+    diskRemoved = true;
+  }
   inFlightConversions.delete(cacheKey);
+  await deleteCachedPreviewObject(`archeritage/previews/${cacheKey}.pdf`);
+  await deleteCachedPreviewObject(`archeritage/previews/${cacheKey}.mp4`);
   return { cacheKey, diskRemoved };
 }
 

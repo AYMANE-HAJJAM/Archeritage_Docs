@@ -1,9 +1,12 @@
 import { HeritageCard } from "@/components/heritage/heritage-card";
 import { EmptyState, PageHeader } from "@/components/layout/page-header";
+import { PlatformsManager } from "@/components/manage/platforms-manager";
 import {
+  canManagePlatform,
   listViewableProjectIds,
   requireActiveUser,
 } from "@/lib/access";
+import { listAdminTerritoires } from "@/lib/admin/territoires";
 import { db } from "@/lib/db";
 
 export const metadata = {
@@ -12,6 +15,32 @@ export const metadata = {
 
 export default async function ProjectsPage() {
   const user = await requireActiveUser();
+
+  // ADMIN: management landing with create / archive / structure actions.
+  if (canManagePlatform(user)) {
+    const platforms = await listAdminTerritoires();
+    return (
+      <PlatformsManager
+        cardHrefMode="browse"
+        eyebrow="ARCHERITAGE Docs"
+        description="Sélectionnez une plateforme patrimoniale ou créez un nouveau projet."
+        platforms={platforms.map((p) => ({
+          id: p.id,
+          name: p.name,
+          code: p.code,
+          slug: p.slug,
+          description: p.description,
+          isActive: p.isActive,
+          dossierCount: p.dossierCount,
+          sectionCount: p.sectionCount,
+          fileCount: p.fileCount,
+          lastActivityAt: p.lastActivityAt.toISOString(),
+        }))}
+      />
+    );
+  }
+
+  // USER: browsable platforms they can access — no create action.
   const viewable = await listViewableProjectIds(user);
 
   const territoires = await db.territoire.findMany({
