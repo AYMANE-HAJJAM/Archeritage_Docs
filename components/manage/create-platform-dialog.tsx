@@ -49,9 +49,9 @@ export function CreatePlatformDialog({
         <DialogTitle className="pr-10 text-lg font-medium tracking-tight">
           Nouveau projet
         </DialogTitle>
-        <DialogDescription className="mt-1.5 text-sm text-muted-foreground">
-          Crée une plateforme patrimoniale. Code et URL sont générés
-          automatiquement.
+        <DialogDescription className="mt-1.5 text-sm leading-6 text-muted-foreground">
+          Créez une plateforme patrimoniale regroupant plusieurs dossiers. Le
+          code et l’adresse web sont proposés automatiquement à partir du nom.
         </DialogDescription>
         {open ? (
           <CreatePlatformForm
@@ -102,7 +102,7 @@ function CreatePlatformForm({
   return (
     <form action={action} className="mt-6 space-y-4">
       <label className="block text-xs">
-        <span className="text-muted-foreground">Nom</span>
+        <span className="text-muted-foreground">Nom du projet</span>
         <input
           name="name"
           required
@@ -112,6 +112,9 @@ function CreatePlatformForm({
           placeholder="Essaouira Patrimoine"
           className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
         />
+        <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
+          Intitulé visible dans l’administration et sur la page d’accueil.
+        </span>
       </label>
 
       {name.trim() ? (
@@ -127,6 +130,7 @@ function CreatePlatformForm({
         <textarea
           name="description"
           rows={3}
+          placeholder="Contexte et objectifs de cette plateforme patrimoniale"
           className="mt-1 w-full resize-y rounded-md border border-border bg-background px-2 py-2 text-sm leading-5"
         />
       </label>

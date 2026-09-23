@@ -1,14 +1,18 @@
 import { HeritageCard } from "@/components/heritage/heritage-card";
 import { EmptyState, PageHeader } from "@/components/layout/page-header";
-import { requireUser } from "@/lib/auth";
+import {
+  listViewableProjectIds,
+  requireActiveUser,
+} from "@/lib/access";
 import { db } from "@/lib/db";
 
 export const metadata = {
-  title: "Choisir un projet",
+  title: "Projets",
 };
 
 export default async function ProjectsPage() {
-  await requireUser();
+  const user = await requireActiveUser();
+  const viewable = await listViewableProjectIds(user);
 
   const territoires = await db.territoire.findMany({
     where: { isActive: true },
@@ -18,44 +22,61 @@ export default async function ProjectsPage() {
       code: true,
       name: true,
       description: true,
-      _count: { select: { projects: true } },
       projects: {
-        select: { _count: { select: { files: true } } },
+        where: { isActive: true },
+        select: {
+          id: true,
+          _count: { select: { files: true } },
+        },
       },
     },
   });
+
+  const visibleTerritoires = territoires
+    .map((territoire) => {
+      const projects =
+        viewable === "ALL"
+          ? territoire.projects
+          : territoire.projects.filter((p) => viewable.includes(p.id));
+      if (projects.length === 0) return null;
+      const fileCount = projects.reduce((n, p) => n + p._count.files, 0);
+      return {
+        id: territoire.id,
+        code: territoire.code,
+        name: territoire.name,
+        description: territoire.description,
+        dossierCount: projects.length,
+        fileCount,
+      };
+    })
+    .filter((row): row is NonNullable<typeof row> => row !== null);
 
   return (
     <section className="pb-4">
       <PageHeader
         eyebrow="ARCHERITAGE Docs"
-        title="Choisir un projet"
-        description="Ouvrez une plateforme patrimoniale pour consulter ses dossiers et documents."
+        title="Projets"
+        description="Sélectionnez une plateforme patrimoniale pour accéder à ses dossiers, rubriques et documents."
       />
 
-      {territoires.length === 0 ? (
+      {visibleTerritoires.length === 0 ? (
         <EmptyState
           title="Aucun projet accessible"
-          description="Contactez un administrateur si vous pensez devoir avoir accès à un projet."
+          description="Votre compte n’a pas encore accès à une plateforme. Contactez un administrateur si vous pensez devoir en avoir un."
         />
       ) : (
         <div
           className={
-            territoires.length === 1
+            visibleTerritoires.length === 1
               ? "grid max-w-xl grid-cols-1 gap-4"
               : "grid gap-4 lg:grid-cols-2"
           }
         >
-          {territoires.map((territoire) => {
-            const fileCount = territoire.projects.reduce(
-              (n, p) => n + p._count.files,
-              0,
-            );
-            const dossiers = territoire._count.projects;
+          {visibleTerritoires.map((territoire) => {
             const dossierLabel =
-              dossiers === 1
+              territoire.dossierCount === 1
                 ? "1 dossier patrimonial"
-                : `${dossiers} dossiers patrimoniaux`;
+                : `${territoire.dossierCount} dossiers patrimoniaux`;
             const description =
               territoire.description?.trim() ||
               "Plateforme de connaissance et de suivi patrimonial.";
@@ -67,7 +88,13 @@ export default async function ProjectsPage() {
                 code={territoire.code}
                 title={territoire.name}
                 description={description}
-                meta={`${dossierLabel}${fileCount ? ` · ${fileCount} document${fileCount > 1 ? "s" : ""}` : ""} · Actif`}
+                meta={`${dossierLabel}${
+                  territoire.fileCount
+                    ? ` · ${territoire.fileCount} document${
+                        territoire.fileCount > 1 ? "s" : ""
+                      }`
+                    : ""
+                } · Actif`}
               />
             );
           })}

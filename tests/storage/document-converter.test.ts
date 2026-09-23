@@ -112,6 +112,12 @@ test("convertOfficeToPdf rejects unsupported formats", async () => {
   }, /Format de document non convertible/);
 });
 
+test("convertOfficeToPdf rejects invalid DOCX ZIP containers", async () => {
+  await assert.rejects(async () => {
+    await convertOfficeToPdf(Buffer.from("not-a-zip"), "docx");
+  }, /ZIP valide|archive ZIP/);
+});
+
 test("convertOfficeToPdf fails clearly when LibreOffice is missing", async (t) => {
   resetSofficeBinaryCache();
   if (isLibreOfficeAvailable()) {
@@ -120,6 +126,12 @@ test("convertOfficeToPdf fails clearly when LibreOffice is missing", async (t) =
   }
 
   await assert.rejects(async () => {
-    await convertOfficeToPdf(Buffer.from("not-a-real-docx"), "docx");
+    // Minimal PK zip header so we pass OOXML gate and hit missing-binary path
+    const pk = Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x00, 0x00]);
+    const named = Buffer.concat([
+      pk,
+      Buffer.from("[Content_Types].xml word/document.xml"),
+    ]);
+    await convertOfficeToPdf(named, "docx");
   }, /LibreOffice/);
 });

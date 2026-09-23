@@ -21,28 +21,33 @@
   --font-sans: var(--font-ui), "Source Sans 3", system-ui, sans-serif;
   --font-serif: var(--font-display), "Source Serif 4", Georgia, serif;
   --font-heading: var(--font-display), "Source Serif 4", Georgia, serif;
-  --radius-sm: 2px;
-  --shadow-panel: 0 1px 0 rgba(28, 27, 25, 0.04), 0 8px 24px rgba(28, 27, 25, 0.04);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --shadow-panel: 0 1px 2px rgba(28, 27, 25, 0.04), 0 10px 28px rgba(28, 27, 25, 0.05);
+  --shadow-card-hover: 0 2px 4px rgba(28, 27, 25, 0.04), 0 14px 36px rgba(28, 27, 25, 0.08);
 }
 
 :root {
-  /* Limestone page · soft surface · charcoal text · terracotta accent */
-  --background: #f4f1ea;
-  --surface: #fffcf7;
-  --foreground: #1c1b19;
-  --primary: #2a2926;
-  --primary-foreground: #fffcf7;
-  --accent: #9c4a2f;
-  --accent-foreground: #fffcf7;
-  --muted: #ebe6dc;
-  --muted-foreground: #5f5a52;
-  --border: #ddd6c8;
-  --ring: #9c4a2f;
+  /*
+   * ARCHERITAGE Docs — 2026 enterprise tokens
+   * Limestone canvas · chalk surfaces · charcoal type · terracotta accent
+   */
+  --background: #f3f0e9;
+  --surface: #fffcf8;
+  --foreground: #1a1917;
+  --primary: #242320;
+  --primary-foreground: #fffcf8;
+  --accent: #9a472c;
+  --accent-foreground: #fffcf8;
+  --muted: #e9e4da;
+  --muted-foreground: #5c574f;
+  --border: #d9d2c4;
+  --ring: #9a472c;
   --destructive: #a7352b;
-  --success: #3f6b4a;
-  --sidebar: #2a2926;
-  --sidebar-foreground: #f4f1ea;
-  --sidebar-muted: #9a948a;
+  --success: #3d6848;
+  --sidebar: #1f1e1c;
+  --sidebar-foreground: #f3f0e9;
+  --sidebar-muted: #8f8a81;
   --header-height: 3.5rem;
 }
 
@@ -56,7 +61,13 @@ html {
 
 body {
   margin: 0;
-  background: var(--background);
+  background:
+    radial-gradient(
+      1200px 480px at 12% -10%,
+      color-mix(in srgb, var(--accent) 5%, transparent),
+      transparent 55%
+    ),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-ui), "Source Sans 3", system-ui, sans-serif;
   font-size: 15px;
@@ -96,15 +107,15 @@ textarea:focus-visible,
 .archive-title {
   font-family: var(--font-display), "Source Serif 4", Georgia, serif;
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
 }
 
 .page-eyebrow {
   margin: 0;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
@@ -112,17 +123,17 @@ textarea:focus-visible,
 .page-title {
   font-family: var(--font-display), "Source Serif 4", Georgia, serif;
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
   color: var(--foreground);
-  font-size: clamp(1.65rem, 2.2vw, 2.15rem);
+  font-size: clamp(1.7rem, 2.1vw, 2.05rem);
 }
 
 .page-lede {
   margin: 0;
-  max-width: 40rem;
+  max-width: 38rem;
   font-size: 0.9375rem;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--muted-foreground);
 }
 
@@ -130,7 +141,7 @@ textarea:focus-visible,
   margin: 0;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
@@ -140,11 +151,13 @@ textarea:focus-visible,
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
 }
 
 .panel-elevated {
   background: var(--surface);
   border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-panel);
 }
 
@@ -153,13 +166,14 @@ textarea:focus-visible,
 .status-pill {
   display: inline-flex;
   align-items: center;
-  height: 1.4rem;
+  height: 1.35rem;
   padding: 0 0.5rem;
   border: 1px solid var(--border);
+  border-radius: 999px;
   background: var(--muted);
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
@@ -199,21 +213,21 @@ textarea:focus-visible,
 
 .data-table thead {
   border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--muted) 55%, var(--surface));
+  background: color-mix(in srgb, var(--muted) 45%, var(--surface));
 }
 
 .data-table th {
-  padding: 0.55rem 0.75rem;
+  padding: 0.65rem 0.85rem;
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
 
 .data-table td {
-  padding: 0.7rem 0.75rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  padding: 0.8rem 0.85rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
   vertical-align: middle;
 }
 
@@ -222,7 +236,7 @@ textarea:focus-visible,
 }
 
 .data-table tbody tr:hover {
-  background: color-mix(in srgb, var(--muted) 40%, transparent);
+  background: color-mix(in srgb, var(--muted) 35%, transparent);
 }
 
 .data-table tbody tr:last-child td {
@@ -241,7 +255,7 @@ textarea:focus-visible,
 
 .control {
   display: flex;
-  height: 2.25rem;
+  height: 2.35rem;
   width: 100%;
   align-items: center;
   border: 1px solid var(--border);
@@ -256,7 +270,7 @@ textarea:focus-visible,
 
 .control:focus-visible {
   border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 25%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 18%, transparent);
 }
 
 ::selection {

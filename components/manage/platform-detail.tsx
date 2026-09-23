@@ -13,6 +13,7 @@ import {
   HeritageCardAdminMenu,
 } from "@/components/heritage/heritage-card";
 import { CreateDossierDialog } from "@/components/manage/create-dossier-dialog";
+import { EmptyState } from "@/components/layout/page-header";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
 import { SAFI_PROJECTS } from "@/lib/heritage/config/structure";
@@ -189,22 +190,29 @@ export function PlatformDetailView({
 
         <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-[15px]">
           {platform.description?.trim() ||
-            "Plateforme de connaissance et de suivi patrimonial — Château de Mer et Murailles portugaises."}
+            "Plateforme de connaissance et de suivi patrimonial."}
         </p>
 
-        <p className="mt-3 text-[11px] font-medium tracking-wide text-muted-foreground">
+        <p className="mt-3 text-xs font-medium tracking-wide text-muted-foreground">
           {subtleMeta}
         </p>
 
-        <div className="mt-6">
-          <button
-            type="button"
-            onClick={() => setCreateOpen(true)}
-            className="inline-flex h-9 items-center rounded-sm bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_srgb,var(--primary)_88%,white)]"
-          >
-            Ajouter un dossier patrimonial
-          </button>
-        </div>
+        <p className="mt-4 max-w-2xl text-xs leading-5 text-muted-foreground">
+          Ajoutez des dossiers (Château, Murailles, etc.), puis organisez leur
+          structure depuis « Gérer la structure ».
+        </p>
+
+        {dossiers.length > 0 ? (
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={() => setCreateOpen(true)}
+              className="inline-flex h-9 items-center rounded-sm bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_srgb,var(--primary)_88%,white)]"
+            >
+              Ajouter un dossier patrimonial
+            </button>
+          </div>
+        ) : null}
       </header>
 
       <CreateDossierDialog
@@ -318,10 +326,19 @@ export function PlatformDetailView({
       ) : null}
 
       {dossiers.length === 0 ? (
-        <p className="border border-dashed border-border px-4 py-12 text-center text-sm text-muted-foreground">
-          Aucun dossier patrimonial. Ajoutez Château, Murailles, ou un autre
-          dossier.
-        </p>
+        <EmptyState
+          title="Aucun dossier patrimonial"
+          description="Créez votre premier dossier pour commencer à y ranger documents et rubriques."
+          action={
+            <button
+              type="button"
+              onClick={() => setCreateOpen(true)}
+              className="inline-flex h-9 items-center rounded-sm bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_srgb,var(--primary)_88%,white)]"
+            >
+              Ajouter un dossier patrimonial
+            </button>
+          }
+        />
       ) : (
         <div className="grid gap-3 md:grid-cols-2">
           {dossiers.map((dossier) => {

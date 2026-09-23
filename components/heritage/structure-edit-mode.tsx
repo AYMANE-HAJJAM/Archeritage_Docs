@@ -6,14 +6,17 @@ import { MoreHorizontal, Plus, X } from "lucide-react";
 import {
   createGroupAction,
   createSectionAction,
-  deleteGroupAction,
   deleteSectionAction,
   renameGroupAction,
   reorderGroupsAction,
   reorderSectionsAction,
   updateSectionAction,
+  type LiveSection,
 } from "@/app/(private)/manage/actions";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { SectionRemoveControl } from "@/components/manage/section-remove-control";
+import { GroupRemoveControl } from "@/components/manage/group-remove-control";
+import { useToast } from "@/components/ui/toast";
 
 export type EditableGroup = {
   id: string;
@@ -33,6 +36,7 @@ export type EditableSection = {
   isActive: boolean;
   documentCount: number;
   codeLocked: boolean;
+  hasLinkedContent: boolean;
 };
 
 type StructureEditModeProps = {
@@ -45,13 +49,30 @@ type StructureEditModeProps = {
 
 export function StructureEditMode({
   projectId,
-  groups,
-  sections,
+  groups: initialGroups,
+  sections: initialSections,
   onExit,
 }: StructureEditModeProps) {
   const router = useRouter();
+  const { pushToast } = useToast();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [groups, setGroups] = useState(initialGroups);
+  const [sections, setSections] = useState(initialSections);
+  const [source, setSource] = useState({
+    groups: initialGroups,
+    sections: initialSections,
+  });
+
+  if (
+    initialGroups !== source.groups ||
+    initialSections !== source.sections
+  ) {
+    setSource({ groups: initialGroups, sections: initialSections });
+    setGroups(initialGroups);
+    setSections(initialSections);
+  }
+
   const orderedGroups = [...groups].sort((a, b) => a.sortOrder - b.sortOrder);
 
   const [addGroupOpen, setAddGroupOpen] = useState(false);
@@ -64,24 +85,77 @@ export function StructureEditMode({
     null,
   );
 
-  function refresh() {
-    router.refresh();
+  function upsertSection(row: EditableSection | LiveSection) {
+    setSections((prev) => {
+      const mapped: EditableSection = {
+        id: row.id,
+        code: row.code,
+        slug: row.slug,
+        title: row.title,
+        description: row.description,
+        kind: row.kind,
+        groupId: row.groupId,
+        sortOrder: row.sortOrder,
+        isActive: row.isActive,
+        documentCount: row.documentCount,
+        codeLocked: row.codeLocked,
+        hasLinkedContent: row.hasLinkedContent,
+      };
+      const idx = prev.findIndex((s) => s.id === mapped.id);
+      if (idx === -1) return [...prev, mapped];
+      const next = [...prev];
+      next[idx] = mapped;
+      return next;
+    });
+  }
+
+  function removeSection(id: string) {
+    setSections((prev) => prev.filter((s) => s.id !== id));
+    setMenuSectionId((prev) => (prev === id ? null : prev));
+  }
+
+  function upsertGroup(row: EditableGroup) {
+    setGroups((prev) => {
+      const idx = prev.findIndex((g) => g.id === row.id);
+      if (idx === -1) return [...prev, row];
+      const next = [...prev];
+      next[idx] = row;
+      return next;
+    });
+  }
+
+  function removeGroup(id: string) {
+    setGroups((prev) => prev.filter((g) => g.id !== id));
   }
 
   function runAction(
-    action: (prev: { ok?: boolean; error?: string }, form: FormData) => Promise<{ ok?: boolean; error?: string }>,
+    action: (
+      prev: { ok?: boolean; error?: string; section?: LiveSection; group?: EditableGroup; deletedId?: string },
+      form: FormData,
+    ) => Promise<{
+      ok?: boolean;
+      error?: string;
+      section?: LiveSection;
+      group?: EditableGroup;
+      deletedId?: string;
+    }>,
     form: FormData,
-    onOk?: () => void,
+    onOk?: (result: {
+      section?: LiveSection;
+      group?: EditableGroup;
+      deletedId?: string;
+    }) => void,
   ) {
     setError(null);
     startTransition(async () => {
       const result = await action({}, form);
       if (result.error) {
         setError(result.error);
+        pushToast(result.error, "error");
         return;
       }
-      onOk?.();
-      refresh();
+      onOk?.(result);
+      router.refresh();
     });
   }
 
@@ -100,10 +174,21 @@ export function StructureEditMode({
     if (idx < 0 || swap < 0 || swap >= ordered.length) return;
     const next = [...ordered];
     [next[idx], next[swap]] = [next[swap], next[idx]];
+    setSections((prev) => {
+      const byId = new Map(prev.map((s) => [s.id, s]));
+      return next
+        .map((id, sortOrder) => {
+          const row = byId.get(id);
+          return row ? { ...row, sortOrder } : null;
+        })
+        .filter((s): s is EditableSection => Boolean(s));
+    });
     const fd = new FormData();
     fd.set("projectId", projectId);
     fd.set("orderedIds", next.join(","));
-    runAction(reorderSectionsAction, fd);
+    runAction(reorderSectionsAction, fd, () => {
+      pushToast("Ordre des rubriques mis à jour.", "success");
+    });
   }
 
   function moveGroupInList(groupId: string, direction: -1 | 1) {
@@ -113,17 +198,29 @@ export function StructureEditMode({
     if (idx < 0 || swap < 0 || swap >= ordered.length) return;
     const next = [...ordered];
     [next[idx], next[swap]] = [next[swap], next[idx]];
+    setGroups((prev) => {
+      const byId = new Map(prev.map((g) => [g.id, g]));
+      return next
+        .map((id, sortOrder) => {
+          const row = byId.get(id);
+          return row ? { ...row, sortOrder } : null;
+        })
+        .filter((g): g is EditableGroup => Boolean(g));
+    });
     const fd = new FormData();
     fd.set("projectId", projectId);
     fd.set("orderedIds", next.join(","));
-    runAction(reorderGroupsAction, fd);
+    runAction(reorderGroupsAction, fd, () => {
+      pushToast("Ordre des groupes mis à jour.", "success");
+    });
   }
 
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-2 border border-border bg-muted/30 px-3 py-2">
         <p className="text-xs text-muted-foreground">
-          Mode structure — les codes existants restent stables.
+          Mode structure — ajoutez, réordonnez ou retirez des rubriques. Les codes
+          existants restent stables.
         </p>
         <div className="flex flex-wrap gap-2">
           <button
@@ -164,9 +261,11 @@ export function StructureEditMode({
                     onSubmit={(e) => {
                       e.preventDefault();
                       const fd = new FormData(e.currentTarget);
-                      runAction(renameGroupAction, fd, () =>
-                        setRenameGroupId(null),
-                      );
+                      runAction(renameGroupAction, fd, (result) => {
+                        if (result.group) upsertGroup(result.group);
+                        setRenameGroupId(null);
+                        pushToast("Groupe renommé.", "success");
+                      });
                     }}
                   >
                     <input type="hidden" name="groupId" value={group.id} />
@@ -207,20 +306,11 @@ export function StructureEditMode({
                 >
                   ↓
                 </button>
-                {rows.length === 0 ? (
-                  <button
-                    type="button"
-                    disabled={pending}
-                    className="text-[10px] text-destructive hover:underline"
-                    onClick={() => {
-                      const fd = new FormData();
-                      fd.set("groupId", group.id);
-                      runAction(deleteGroupAction, fd);
-                    }}
-                  >
-                    Retirer
-                  </button>
-                ) : null}
+                <GroupRemoveControl
+                  groupId={group.id}
+                  sectionCount={rows.length}
+                  onDeleted={removeGroup}
+                />
               </div>
               <button
                 type="button"
@@ -242,7 +332,7 @@ export function StructureEditMode({
                       Docs
                     </th>
                     <th className="w-28 px-3 py-2 font-semibold">Statut</th>
-                    <th className="w-20 px-2 py-2 text-right font-semibold">
+                    <th className="w-24 px-2 py-2 text-right font-semibold">
                       <span className="sr-only">Actions</span>
                     </th>
                   </tr>
@@ -277,19 +367,27 @@ export function StructureEditMode({
                           {section.isActive ? "Active" : "Inactive"}
                         </span>
                       </td>
-                      <td className="relative px-2 py-2 text-right">
-                        <button
-                          type="button"
-                          className="inline-flex size-7 items-center justify-center text-muted-foreground hover:text-foreground"
-                          aria-label="Actions rubrique"
-                          onClick={() =>
-                            setMenuSectionId((id) =>
-                              id === section.id ? null : section.id,
-                            )
-                          }
-                        >
-                          <MoreHorizontal className="size-4" />
-                        </button>
+                      <td className="relative px-2 py-2">
+                        <div className="flex items-center justify-end gap-0.5">
+                          <SectionRemoveControl
+                            projectId={projectId}
+                            section={section}
+                            onDeleted={removeSection}
+                            onDeactivated={upsertSection}
+                          />
+                          <button
+                            type="button"
+                            className="inline-flex size-7 items-center justify-center text-muted-foreground hover:text-foreground"
+                            aria-label="Autres actions rubrique"
+                            onClick={() =>
+                              setMenuSectionId((id) =>
+                                id === section.id ? null : section.id,
+                              )
+                            }
+                          >
+                            <MoreHorizontal className="size-4" />
+                          </button>
+                        </div>
                         {menuSectionId === section.id ? (
                           <SectionActionMenu
                             section={section}
@@ -307,9 +405,16 @@ export function StructureEditMode({
                               const fd = new FormData();
                               fd.set("sectionId", section.id);
                               fd.set("isActive", section.isActive ? "0" : "1");
-                              runAction(updateSectionAction, fd, () =>
-                                setMenuSectionId(null),
-                              );
+                              runAction(updateSectionAction, fd, (result) => {
+                                if (result.section) upsertSection(result.section);
+                                setMenuSectionId(null);
+                                pushToast(
+                                  section.isActive
+                                    ? "Rubrique désactivée."
+                                    : "Rubrique activée.",
+                                  "success",
+                                );
+                              });
                             }}
                             onDelete={() => {
                               setPendingDelete(section);
@@ -346,7 +451,11 @@ export function StructureEditMode({
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
               fd.set("projectId", projectId);
-              runAction(createGroupAction, fd, () => setAddGroupOpen(false));
+              runAction(createGroupAction, fd, (result) => {
+                if (result.group) upsertGroup(result.group);
+                setAddGroupOpen(false);
+                pushToast("Groupe ajouté.", "success");
+              });
             }}
           >
             <Field name="label" label="Libellé" required />
@@ -372,9 +481,11 @@ export function StructureEditMode({
               fd.set("projectId", projectId);
               fd.set("groupId", addSectionGroupId);
               fd.set("kind", "documentary");
-              runAction(createSectionAction, fd, () =>
-                setAddSectionGroupId(null),
-              );
+              runAction(createSectionAction, fd, (result) => {
+                if (result.section) upsertSection(result.section);
+                setAddSectionGroupId(null);
+                pushToast("Rubrique ajoutée.", "success");
+              });
             }}
           >
             <Field name="title" label="Titre" required />
@@ -406,7 +517,11 @@ export function StructureEditMode({
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
               fd.set("sectionId", editSection.id);
-              runAction(updateSectionAction, fd, () => setEditSection(null));
+              runAction(updateSectionAction, fd, (result) => {
+                if (result.section) upsertSection(result.section);
+                setEditSection(null);
+                pushToast("Rubrique enregistrée.", "success");
+              });
             }}
           >
             <Field
@@ -444,7 +559,11 @@ export function StructureEditMode({
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
               fd.set("sectionId", moveSection.id);
-              runAction(updateSectionAction, fd, () => setMoveSection(null));
+              runAction(updateSectionAction, fd, (result) => {
+                if (result.section) upsertSection(result.section);
+                setMoveSection(null);
+                pushToast("Rubrique déplacée.", "success");
+              });
             }}
           >
             <label className="block text-xs">
@@ -471,35 +590,54 @@ export function StructureEditMode({
         </Modal>
       ) : null}
 
+      {/* Menu « Supprimer » uses the same confirmation rules as the row trash. */}
       <ConfirmDialog
         open={Boolean(pendingDelete)}
         onOpenChange={(open) => {
           if (!open) setPendingDelete(null);
         }}
         title={
-          pendingDelete
-            ? pendingDelete.documentCount > 0 || pendingDelete.codeLocked
-              ? "Suppression probablement refusée"
-              : `Supprimer « ${pendingDelete.title} » ?`
-            : "Supprimer ?"
+          pendingDelete?.hasLinkedContent
+            ? "Cette rubrique ne peut pas être supprimée"
+            : "Supprimer cette rubrique ?"
         }
         description={
-          pendingDelete &&
-          (pendingDelete.documentCount > 0 || pendingDelete.codeLocked)
-            ? "Cette rubrique contient du contenu. La suppression sera refusée — préférez la désactivation."
-            : "Cette action est définitive pour une rubrique vide."
+          pendingDelete?.hasLinkedContent
+            ? "Cette rubrique contient des documents ou des données liées. Elle ne peut pas être supprimée définitivement."
+            : "Cette action supprimera définitivement la rubrique."
         }
-        confirmLabel="Supprimer"
-        destructive
+        confirmLabel={
+          pendingDelete?.hasLinkedContent
+            ? pendingDelete.isActive
+              ? "Désactiver la rubrique"
+              : "Compris"
+            : "Supprimer"
+        }
+        destructive={
+          !pendingDelete?.hasLinkedContent || Boolean(pendingDelete?.isActive)
+        }
         pending={pending}
         onConfirm={() => {
           if (!pendingDelete) return;
-          const fd = new FormData();
-          fd.set("sectionId", pendingDelete.id);
           const target = pendingDelete;
           setPendingDelete(null);
+          if (target.hasLinkedContent) {
+            if (!target.isActive) return;
+            const fd = new FormData();
+            fd.set("sectionId", target.id);
+            fd.set("isActive", "0");
+            runAction(updateSectionAction, fd, (result) => {
+              if (result.section) upsertSection(result.section);
+              pushToast("Rubrique désactivée.", "success");
+            });
+            return;
+          }
+          // Same mutation as row trash.
+          const fd = new FormData();
+          fd.set("sectionId", target.id);
           runAction(deleteSectionAction, fd, () => {
-            if (menuSectionId === target.id) setMenuSectionId(null);
+            removeSection(target.id);
+            pushToast("Rubrique supprimée.", "success");
           });
         }}
       />

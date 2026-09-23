@@ -8,6 +8,9 @@ import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 
+/** Soft ceiling for Office → PDF (large DOCX with images can exceed 90s under load). */
+export const OFFICE_CONVERSION_TIMEOUT_MS = 180_000;
+
 export const SUPPORTED_OFFICE_EXTENSIONS = new Set([
   "docx",
   "doc",
@@ -20,6 +23,29 @@ export const SUPPORTED_OFFICE_EXTENSIONS = new Set([
   "odp",
   "rtf",
 ]);
+
+export type PreviewFailureReason =
+  | "invalid_docx"
+  | "unsupported_format"
+  | "libreoffice_missing"
+  | "libreoffice_conversion_failed"
+  | "conversion_timeout"
+  | "output_missing"
+  | "invalid_pdf_output"
+  | "storage_read_failed"
+  | "cache_corrupt";
+
+export class PreviewConversionError extends Error {
+  readonly reason: PreviewFailureReason;
+  readonly detail?: string;
+
+  constructor(reason: PreviewFailureReason, message: string, detail?: string) {
+    super(message);
+    this.name = "PreviewConversionError";
+    this.reason = reason;
+    this.detail = detail;
+  }
+}
 
 export function isConvertibleOfficeDocument(extension: string): boolean {
   return SUPPORTED_OFFICE_EXTENSIONS.has(
@@ -82,13 +108,8 @@ function resolveFromPath(commandNames: string[]): string | null {
  *
  * On Windows, prefer `soffice.com` when both `.com` and `.exe` exist — the
  * `.com` shim waits for headless conversion to finish (`.exe` can return early).
- *
- * Absolute install paths are always re-checked so installing LibreOffice mid-session
- * (without restarting Node) still works. PATH lookups are cached on miss to avoid
- * repeated `where`/`which` cost.
  */
 export function findSofficeBinary(): string | null {
-  // Always honor a live env override (including after a previous miss).
   if (isUsableBinary(process.env.SOFFICE_PATH)) {
     cachedSofficePath = process.env.SOFFICE_PATH;
     return cachedSofficePath;
@@ -102,7 +123,6 @@ export function findSofficeBinary(): string | null {
 
   const installCandidates: string[] = isWindows
     ? [
-        // Prefer .com for reliable headless wait behavior
         "C:\\Program Files\\LibreOffice\\program\\soffice.com",
         "C:\\Program Files (x86)\\LibreOffice\\program\\soffice.com",
         "C:\\Program Files\\LibreOffice\\program\\soffice.exe",
@@ -123,7 +143,6 @@ export function findSofficeBinary(): string | null {
     }
   }
 
-  // Avoid hammering PATH lookups on every request when LO is absent.
   if (cachedSofficePath === null) {
     return null;
   }
@@ -143,18 +162,54 @@ export function findSofficeBinary(): string | null {
   return null;
 }
 
+/** Quick structural check for OOXML (.docx/.xlsx/.pptx) ZIP packages. */
+export function assertValidOfficeZipContainer(
+  inputBuffer: Buffer,
+  extension: string,
+): void {
+  const ext = extension.toLowerCase().replace(/^\./, "").trim();
+  if (!["docx", "xlsx", "pptx"].includes(ext)) return;
+
+  if (inputBuffer.length < 4 || inputBuffer[0] !== 0x50 || inputBuffer[1] !== 0x4b) {
+    throw new PreviewConversionError(
+      "invalid_docx",
+      "Le fichier Office n’est pas une archive ZIP valide (en-tête PK manquant).",
+      `extension=${ext} size=${inputBuffer.length}`,
+    );
+  }
+
+  if (ext === "docx") {
+    const asLatin1 = inputBuffer.toString("binary");
+    const hasContentTypes = asLatin1.includes("[Content_Types].xml");
+    const hasDocument = asLatin1.includes("word/document.xml");
+    if (!hasContentTypes || !hasDocument) {
+      throw new PreviewConversionError(
+        "invalid_docx",
+        "Le fichier DOCX est incomplet ou corrompu (entrées OOXML manquantes).",
+        `hasContentTypes=${hasContentTypes} hasDocument=${hasDocument}`,
+      );
+    }
+  }
+}
+
 export async function convertOfficeToPdf(
   inputBuffer: Buffer,
   extension: string,
 ): Promise<Buffer> {
   const cleanExt = extension.toLowerCase().replace(/^\./, "").trim();
   if (!isConvertibleOfficeDocument(cleanExt)) {
-    throw new Error(`Format de document non convertible : ${cleanExt}`);
+    throw new PreviewConversionError(
+      "unsupported_format",
+      `Format de document non convertible : ${cleanExt}`,
+    );
   }
+
+  assertValidOfficeZipContainer(inputBuffer, cleanExt);
 
   const sofficeBin = findSofficeBinary();
   if (!sofficeBin) {
-    throw new Error(
+    throw new PreviewConversionError(
+      "libreoffice_missing",
       "LibreOffice n’est pas installé. L’aperçu des documents Office est indisponible. Installez LibreOffice ou définissez SOFFICE_PATH.",
     );
   }
@@ -169,7 +224,6 @@ export async function convertOfficeToPdf(
     await fs.mkdir(profileDir, { recursive: true });
     await fs.writeFile(inputPath, inputBuffer);
 
-    // Isolated UserInstallation avoids profile locks when multiple conversions run.
     const normalizedProfile = profileDir.replace(/\\/g, "/");
     const profileUrl = normalizedProfile.startsWith("/")
       ? `file://${normalizedProfile}`
@@ -191,24 +245,38 @@ export async function convertOfficeToPdf(
     ];
 
     console.info(
-      `[preview] Converting .${cleanExt} via LibreOffice (${sofficeBin})`,
+      `[preview] Converting .${cleanExt} via LibreOffice (${sofficeBin}) timeout=${OFFICE_CONVERSION_TIMEOUT_MS}ms`,
     );
 
     try {
       await execFileAsync(sofficeBin, args, {
-        timeout: 90_000,
+        timeout: OFFICE_CONVERSION_TIMEOUT_MS,
         windowsHide: true,
         maxBuffer: 20 * 1024 * 1024,
       });
     } catch (spawnError) {
       const detail =
         spawnError instanceof Error ? spawnError.message : String(spawnError);
+      const timedOut =
+        /ETIMEDOUT|timed out|TIMEOUT/i.test(detail) ||
+        (spawnError instanceof Error &&
+          "killed" in spawnError &&
+          Boolean((spawnError as { killed?: boolean }).killed));
+
       console.error("[preview] LibreOffice spawn/convert failed:", {
+        reason: timedOut ? "conversion_timeout" : "libreoffice_conversion_failed",
         sofficeBin,
         extension: cleanExt,
         detail,
       });
-      throw new Error(`Échec de la conversion du document en PDF (${detail})`);
+
+      throw new PreviewConversionError(
+        timedOut ? "conversion_timeout" : "libreoffice_conversion_failed",
+        timedOut
+          ? "La conversion du document a dépassé le délai autorisé."
+          : `Échec de la conversion du document en PDF (${detail})`,
+        detail,
+      );
     }
 
     const expectedPdfName = "document.pdf";
@@ -221,7 +289,8 @@ export async function convertOfficeToPdf(
       const files = await fs.readdir(outDir);
       const pdfFile = files.find((f) => f.toLowerCase().endsWith(".pdf"));
       if (!pdfFile) {
-        throw new Error(
+        throw new PreviewConversionError(
+          "output_missing",
           "La conversion n’a produit aucun fichier PDF (LibreOffice n’a rien écrit dans le dossier de sortie).",
         );
       }
@@ -231,15 +300,27 @@ export async function convertOfficeToPdf(
     validatePdfBuffer(pdfBytes);
     return pdfBytes;
   } catch (error) {
+    if (error instanceof PreviewConversionError) {
+      console.error("[preview] Office to PDF conversion failed:", {
+        reason: error.reason,
+        sofficeBin,
+        extension: cleanExt,
+        detail: error.detail ?? error.message,
+      });
+      throw error;
+    }
     const detail = error instanceof Error ? error.message : "Unknown error";
     console.error("[preview] Office to PDF conversion failed:", {
+      reason: "libreoffice_conversion_failed",
       sofficeBin,
       extension: cleanExt,
       detail,
     });
-    // Preserve specific messages for upstream logging / 422 handling
-    if (error instanceof Error) throw error;
-    throw new Error("Échec de la conversion du document en PDF.");
+    throw new PreviewConversionError(
+      "libreoffice_conversion_failed",
+      "Échec de la conversion du document en PDF.",
+      detail,
+    );
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});
   }
@@ -247,6 +328,9 @@ export async function convertOfficeToPdf(
 
 function validatePdfBuffer(bytes: Buffer): void {
   if (bytes.length < 5 || bytes.subarray(0, 5).toString("utf8") !== "%PDF-") {
-    throw new Error("Le fichier généré n’est pas un document PDF valide.");
+    throw new PreviewConversionError(
+      "invalid_pdf_output",
+      "Le fichier généré n’est pas un document PDF valide.",
+    );
   }
 }

@@ -60,7 +60,6 @@ export function UserRowActions({
   user,
   platforms,
   projectAccess,
-  territoireAccess,
 }: {
   user: {
     id: string;
@@ -72,7 +71,6 @@ export function UserRowActions({
   };
   platforms: AccessPlatform[];
   projectAccess: Record<string, ProjectAccessFlags>;
-  territoireAccess: Record<string, { canCreateDossier: boolean }>;
 }) {
   const [open, setOpen] = useState(false);
   const [confirmDisable, setConfirmDisable] = useState(false);
@@ -135,7 +133,6 @@ export function UserRowActions({
           userRole={user.role}
           platforms={platforms}
           projectAccess={projectAccess}
-          territoireAccess={territoireAccess}
         />
       ) : null}
 

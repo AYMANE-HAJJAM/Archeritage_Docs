@@ -47,7 +47,7 @@ export default async function ProjectDocumentsPage({
   const initialQuery = (query.q || "").trim().slice(0, 180);
 
   return (
-    <div>
+    <section className="mx-auto max-w-6xl pb-10 pt-2 sm:pt-4">
       <nav
         aria-label="Fil d’Ariane"
         className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground"
@@ -60,10 +60,23 @@ export default async function ProjectDocumentsPage({
           {overviewLabel}
         </Link>
         <ChevronRight className="size-3 shrink-0" />
-        <span className="text-foreground">Tous les documents du projet</span>
+        <span className="text-foreground">Tous les documents</span>
       </nav>
 
+      <header className="mb-6 border-b border-border pb-5">
+        <p className="page-eyebrow">
+          {index.project.territoireCode
+            ? `${index.project.territoireCode} · ${overviewLabel}`
+            : overviewLabel}
+        </p>
+        <h1 className="page-title mt-1">Tous les documents</h1>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          Consultez, filtrez et téléchargez l&apos;ensemble des fichiers du dossier{" "}
+          {overviewLabel}, classés par rubrique.
+        </p>
+      </header>
+
       <ProjectDocumentsIndex data={index} initialQuery={initialQuery} />
-    </div>
+    </section>
   );
 }

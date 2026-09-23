@@ -3,7 +3,6 @@
 import { useActionState } from "react";
 import {
   updateUserProjectAccessAction,
-  updateUserTerritoireAccessAction,
   type ManageUserActionState,
 } from "@/app/(private)/manage/user-actions";
 
@@ -34,13 +33,11 @@ export function UserAccessPanel({
   userRole,
   platforms,
   projectAccess,
-  territoireAccess,
 }: {
   userId: string;
   userRole: "ADMIN" | "USER";
   platforms: AccessPlatform[];
   projectAccess: Record<string, ProjectAccessFlags>;
-  territoireAccess: Record<string, { canCreateDossier: boolean }>;
 }) {
   if (userRole === "ADMIN") {
     return (
@@ -61,21 +58,14 @@ export function UserAccessPanel({
           Accès
         </p>
         <p className="mt-1 text-[11px] text-muted-foreground">
-          Permissions explicites par dossier. Défaut : aucun accès.
+          Permissions explicites par dossier. Défaut : aucun accès. La création
+          de dossiers est réservée aux administrateurs.
         </p>
       </div>
 
       {platforms.map((platform) => (
         <div key={platform.id} className="space-y-3">
           <p className="text-sm font-medium">{platform.name}</p>
-
-          <TerritoireAccessForm
-            userId={userId}
-            territoireId={platform.id}
-            canCreateDossier={
-              territoireAccess[platform.id]?.canCreateDossier ?? false
-            }
-          />
 
           <div className="space-y-2">
             {platform.dossiers.map((dossier) => (
@@ -98,53 +88,6 @@ export function UserAccessPanel({
         </div>
       ))}
     </div>
-  );
-}
-
-function TerritoireAccessForm({
-  userId,
-  territoireId,
-  canCreateDossier,
-}: {
-  userId: string;
-  territoireId: string;
-  canCreateDossier: boolean;
-}) {
-  const [state, action, pending] = useActionState(
-    updateUserTerritoireAccessAction,
-    initial,
-  );
-
-  return (
-    <form
-      action={action}
-      className="flex flex-wrap items-center gap-3 rounded border border-border/70 bg-muted/15 px-2 py-2"
-    >
-      <input type="hidden" name="userId" value={userId} />
-      <input type="hidden" name="territoireId" value={territoireId} />
-      <label className="inline-flex items-center gap-1.5 text-xs">
-        <input
-          type="checkbox"
-          name="canCreateDossier"
-          value="1"
-          defaultChecked={canCreateDossier}
-        />
-        Créer des dossiers patrimoniaux
-      </label>
-      <button
-        type="submit"
-        disabled={pending}
-        className="ml-auto text-[11px] font-medium underline-offset-2 hover:underline disabled:opacity-60"
-      >
-        {pending ? "…" : "Enregistrer"}
-      </button>
-      {state.error ? (
-        <p className="w-full text-[11px] text-destructive">{state.error}</p>
-      ) : null}
-      {state.ok ? (
-        <p className="w-full text-[11px] text-muted-foreground">Enregistré.</p>
-      ) : null}
-    </form>
   );
 }
 

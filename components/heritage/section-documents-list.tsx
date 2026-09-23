@@ -19,6 +19,20 @@ const STATUT_LABEL: Record<string, string> = {
   OBSOLETE: "Obsolète",
 };
 
+function docStatutTone(statut: string | null | undefined): string {
+  switch (statut) {
+    case "VALIDE":
+      return "documented";
+    case "EN_REVISION":
+    case "SOUMIS":
+      return "invited";
+    case "OBSOLETE":
+      return "archived";
+    default:
+      return "empty";
+  }
+}
+
 export function SectionDocumentsList({
   documents: initialDocuments,
   title = "Documents",
@@ -48,21 +62,16 @@ export function SectionDocumentsList({
     () => documents.some((file) => Boolean(file.docStatut)),
     [documents],
   );
-  const showVersion = useMemo(
-    () => documents.some((file) => Boolean(file.docVersion)),
-    [documents],
-  );
 
   return (
     <div>
-      <div className="mb-2 flex flex-wrap items-end justify-between gap-3">
+      <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-foreground">{title}</h3>
           {documents.length > 0 && (
-            <p className="mt-1 text-xs text-muted-foreground">
-              {documents.length} fichier{documents.length > 1 ? "s" : ""}
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {documents.length} fichier{documents.length > 1 ? "s" : ""} dans
+              cette rubrique
             </p>
           )}
         </div>
@@ -75,62 +84,55 @@ export function SectionDocumentsList({
       </div>
 
       {documents.length === 0 ? (
-        <div className="border border-dashed border-border bg-surface px-4 py-8 text-center">
+        <div className="border border-dashed border-border bg-surface px-5 py-10 text-center">
+          <FileText
+            className="mx-auto mb-3 size-8 text-muted-foreground/60"
+            aria-hidden
+          />
           <p className="text-sm font-medium text-foreground">
             Aucun document dans cette rubrique
           </p>
           {uploadContext ? (
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Cliquez sur « Importer des documents » pour ajouter des fichiers
-              ici.
-            </p>
+            <>
+              <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-foreground">
+                Importez vos premiers fichiers pour commencer à documenter cette
+                rubrique.
+              </p>
+              <div className="mt-4 flex justify-center">
+                <ContextualUpload
+                  context={uploadContext}
+                  onDocumentUploaded={appendDocument}
+                />
+              </div>
+            </>
           ) : (
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Les documents classés dans cette rubrique apparaîtront ici.
+            <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-foreground">
+              Les documents classés dans cette rubrique s&apos;afficheront ici
+              dès qu&apos;ils seront ajoutés.
             </p>
           )}
         </div>
       ) : (
         <div className="overflow-hidden border border-border bg-surface">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-border bg-muted/55 text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <table className="data-table min-w-[32rem]">
+              <thead>
                 <tr>
-                  <th className="px-3 py-2 font-semibold">Nom</th>
-                  <th className="hidden w-20 px-3 py-2 font-semibold md:table-cell">
-                    Type
-                  </th>
-                  <th className="hidden w-28 px-3 py-2 font-semibold sm:table-cell">
-                    Date
-                  </th>
-                  <th className="hidden w-24 px-3 py-2 text-right font-semibold sm:table-cell">
-                    Taille
-                  </th>
-                  <th className="hidden min-w-[8rem] px-3 py-2 font-semibold lg:table-cell">
-                    Importé par
-                  </th>
+                  <th>Nom du fichier</th>
+                  <th className="hidden w-28 sm:table-cell">Ajouté le</th>
+                  <th className="hidden w-24 text-right sm:table-cell">Taille</th>
                   {showStatus && (
-                    <th className="hidden w-28 px-3 py-2 font-semibold xl:table-cell">
-                      Statut
-                    </th>
+                    <th className="hidden w-28 lg:table-cell">Statut</th>
                   )}
-                  {showVersion && (
-                    <th className="hidden w-20 px-3 py-2 font-semibold xl:table-cell">
-                      Version
-                    </th>
-                  )}
-                  <th className="w-24 px-2 py-2 text-right font-semibold">
+                  <th className="w-[7.5rem] text-right">
                     <span className="sr-only">Actions</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {documents.map((file) => (
-                  <tr
-                    key={file.id}
-                    className="group border-b border-border/80 transition-colors duration-150 last:border-0 hover:bg-muted/40"
-                  >
-                    <td className="max-w-72 px-3 py-2">
+                  <tr key={file.id} className="group/row">
+                    <td className="max-w-72">
                       <button
                         type="button"
                         onClick={() => setPreview(file)}
@@ -143,63 +145,57 @@ export function SectionDocumentsList({
                         )}
                         <span className="min-w-0">
                           <span
-                            className="block truncate text-[13px] font-medium"
+                            className="block truncate text-[13px] font-medium text-foreground group-hover/row:text-accent"
                             title={file.displayName}
                           >
                             {file.displayName}
                           </span>
                           <span className="mt-0.5 block truncate text-[11px] text-muted-foreground sm:hidden">
                             {formatSize(file.size)}
-                            {file.uploadedByName
-                              ? ` · ${file.uploadedByName}`
-                              : ""}
+                            {file.extension ? ` · ${file.extension}` : ""}
                           </span>
                         </span>
                       </button>
                     </td>
-                    <td className="hidden px-3 text-[11px] uppercase text-muted-foreground md:table-cell">
-                      {file.extension || "Fichier"}
-                    </td>
-                    <td className="hidden whitespace-nowrap px-3 text-xs text-muted-foreground sm:table-cell">
+                    <td className="hidden whitespace-nowrap text-xs tabular-nums text-muted-foreground sm:table-cell">
                       {new Date(file.createdAt).toLocaleDateString("fr-FR", {
                         timeZone: "UTC",
                       })}
                     </td>
-                    <td className="hidden whitespace-nowrap px-3 text-right text-xs tabular-nums text-muted-foreground sm:table-cell">
+                    <td className="hidden whitespace-nowrap text-right text-xs tabular-nums text-muted-foreground sm:table-cell">
                       {formatSize(file.size)}
                     </td>
-                    <td className="hidden px-3 text-xs text-muted-foreground lg:table-cell">
-                      {file.uploadedByName ?? "—"}
-                    </td>
                     {showStatus && (
-                      <td className="hidden px-3 text-xs text-muted-foreground xl:table-cell">
-                        {file.docStatut
-                          ? (STATUT_LABEL[file.docStatut] ?? file.docStatut)
-                          : "—"}
+                      <td className="hidden lg:table-cell">
+                        {file.docStatut ? (
+                          <span
+                            className="status-pill"
+                            data-tone={docStatutTone(file.docStatut)}
+                          >
+                            {STATUT_LABEL[file.docStatut] ?? file.docStatut}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
                       </td>
                     )}
-                    {showVersion && (
-                      <td className="hidden px-3 text-xs text-muted-foreground xl:table-cell">
-                        {file.docVersion ?? "—"}
-                      </td>
-                    )}
-                    <td className="px-2 py-2">
+                    <td className="text-right">
                       <div className="flex justify-end gap-1">
                         <button
                           type="button"
-                          className="inline-flex size-7 items-center justify-center text-muted-foreground hover:text-primary"
-                          aria-label={`Aperçu ${file.displayName}`}
+                          className="inline-flex h-7 items-center gap-1 border border-transparent px-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/50 hover:text-foreground"
                           onClick={() => setPreview(file)}
                         >
-                          <Eye className="size-3.5" />
+                          <Eye className="size-3.5" aria-hidden />
+                          <span className="hidden sm:inline">Aperçu</span>
                         </button>
                         {canDownload ? (
                           <a
                             href={`/api/files/${file.id}/content?download=1`}
-                            className="inline-flex size-7 items-center justify-center text-muted-foreground hover:text-primary"
-                            aria-label={`Télécharger ${file.displayName}`}
+                            className="inline-flex h-7 items-center gap-1 border border-transparent px-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:border-border hover:bg-muted/50 hover:text-foreground"
                           >
-                            <ArrowDownToLine className="size-3.5" />
+                            <ArrowDownToLine className="size-3.5" aria-hidden />
+                            <span className="hidden sm:inline">Télécharger</span>
                           </a>
                         ) : null}
                       </div>

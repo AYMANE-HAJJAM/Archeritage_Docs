@@ -178,7 +178,7 @@ test("UI flag rules: checking Importer forces Voir", () => {
   assert.equal(next.canUpload, true);
 });
 
-test("canCreateDossier denied by default for USER", () => {
+test("canCreateDossier is ADMIN-only (USER membership ignored)", () => {
   assert.equal(
     resolveCanCreateDossier({ id: "u", role: "USER" }, null),
     false,
@@ -188,10 +188,17 @@ test("canCreateDossier denied by default for USER", () => {
       { id: "u", role: "USER" },
       { canCreateDossier: true },
     ),
-    true,
+    false,
   );
   assert.equal(
     resolveCanCreateDossier({ id: "a", role: "ADMIN" }, null),
+    true,
+  );
+  assert.equal(
+    resolveCanCreateDossier(
+      { id: "a", role: "ADMIN" },
+      { canCreateDossier: false },
+    ),
     true,
   );
 });

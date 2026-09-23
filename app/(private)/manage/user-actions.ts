@@ -6,9 +6,7 @@ import { HttpError } from "@/lib/http";
 import {
   applyInviteAccessMatrix,
   listUserProjectAccess,
-  listUserTerritoireAccess,
   upsertUserProjectAccess,
-  upsertUserTerritoireAccess,
 } from "@/lib/admin/user-access";
 import {
   accessLabelsFromMap,
@@ -68,9 +66,8 @@ async function buildUserRow(userId: string): Promise<UsersTableRow | null> {
     };
   }
 
-  const [projectRows, territoireRows, names] = await Promise.all([
+  const [projectRows, names] = await Promise.all([
     listUserProjectAccess(userId),
-    listUserTerritoireAccess(userId),
     dossierNameMap(),
   ]);
 
@@ -90,12 +87,8 @@ async function buildUserRow(userId: string): Promise<UsersTableRow | null> {
     ...user,
     accessLabels: accessLabelsFromMap(user.role, projectAccess, names),
     projectAccess,
-    territoireAccess: Object.fromEntries(
-      territoireRows.map((row) => [
-        row.territoireId,
-        { canCreateDossier: row.canCreateDossier },
-      ]),
-    ),
+    // Schema field TerritoireMember.canCreateDossier kept unused (ADMIN-only create).
+    territoireAccess: {},
   };
 }
 
@@ -110,18 +103,6 @@ function projectAccessFromForm(form: FormData): Record<string, DossierFlags> {
         canDownload: flag(form, `canDownload_${projectId}`),
         canManageStructure: flag(form, `canManageStructure_${projectId}`),
       },
-    ]),
-  );
-}
-
-function territoireAccessFromForm(
-  form: FormData,
-): Record<string, { canCreateDossier: boolean }> {
-  const ids = form.getAll("territoireId").map(String).filter(Boolean);
-  return Object.fromEntries(
-    ids.map((territoireId) => [
-      territoireId,
-      { canCreateDossier: flag(form, `canCreateDossier_${territoireId}`) },
     ]),
   );
 }
@@ -152,13 +133,7 @@ export async function createUserAction(
 
     const result = await createInvitedUser(parsed.data, admin.id);
     const projectAccessList = parseProjectAccessFromForm(form);
-    const territoireAccessList = parseTerritoireAccessFromForm(form);
-    await applyInviteAccessMatrix(
-      admin,
-      result.user.id,
-      projectAccessList,
-      territoireAccessList,
-    );
+    await applyInviteAccessMatrix(admin, result.user.id, projectAccessList);
 
     const names = await dossierNameMap();
     const projectAccess = projectAccessFromForm(form);
@@ -171,7 +146,7 @@ export async function createUserAction(
       status: result.user.status,
       accessLabels: labelsFromAccess(result.user.role, projectAccess, names),
       projectAccess,
-      territoireAccess: territoireAccessFromForm(form),
+      territoireAccess: {},
     };
 
     revalidatePath("/users");
@@ -279,14 +254,6 @@ function parseProjectAccessFromForm(form: FormData) {
   }));
 }
 
-function parseTerritoireAccessFromForm(form: FormData) {
-  const ids = form.getAll("territoireId").map(String).filter(Boolean);
-  return ids.map((territoireId) => ({
-    territoireId,
-    canCreateDossier: flag(form, `canCreateDossier_${territoireId}`),
-  }));
-}
-
 export async function updateUserProjectAccessAction(
   _prev: ManageUserActionState,
   form: FormData,
@@ -316,36 +283,6 @@ export async function updateUserProjectAccessAction(
   }
 }
 
-export async function updateUserTerritoireAccessAction(
-  _prev: ManageUserActionState,
-  form: FormData,
-): Promise<ManageUserActionState> {
-  try {
-    const admin = await requireAdmin();
-    const userId = String(form.get("userId") || "");
-    const territoireId = String(form.get("territoireId") || "");
-    if (!userId || !territoireId) {
-      return { error: "Utilisateur ou plateforme manquant." };
-    }
-    await upsertUserTerritoireAccess(
-      admin,
-      userId,
-      territoireId,
-      flag(form, "canCreateDossier"),
-    );
-    const user = await buildUserRow(userId);
-    revalidatePath("/users");
-    return { ok: true, user: user ?? undefined };
-  } catch (error) {
-    return {
-      error:
-        error instanceof HttpError
-          ? error.message
-          : "Impossible de modifier les accès. Réessayez.",
-    };
-  }
-}
-
 export async function updateUserAccessMatrixAction(
   _prev: ManageUserActionState,
   form: FormData,
@@ -358,14 +295,6 @@ export async function updateUserAccessMatrixAction(
     const projectAccess = parseProjectAccessFromForm(form);
     for (const row of projectAccess) {
       await upsertUserProjectAccess(admin, userId, row);
-    }
-    for (const row of parseTerritoireAccessFromForm(form)) {
-      await upsertUserTerritoireAccess(
-        admin,
-        userId,
-        row.territoireId,
-        row.canCreateDossier,
-      );
     }
     const user = await buildUserRow(userId);
     revalidatePath("/users");

@@ -18,11 +18,11 @@ export function AppTopbar({
   onMobileOpen: () => void;
 }) {
   return (
-    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-[color-mix(in_srgb,var(--background)_88%,white)] px-4 backdrop-blur-md sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-border/80 bg-[color-mix(in_srgb,var(--background)_82%,white)] px-4 backdrop-blur-md sm:px-6 lg:px-8">
       <MobileNavTrigger open={mobileOpen} onOpen={onMobileOpen} />
 
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        <p className="truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           ARCHERITAGE Docs
         </p>
         <h1 className="truncate font-heading text-[0.95rem] tracking-tight text-foreground sm:text-base">
@@ -30,10 +30,14 @@ export function AppTopbar({
         </h1>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+      <div className="flex shrink-0 items-center gap-2.5 sm:gap-3">
         <div className="hidden min-w-0 text-right sm:block">
-          <p className="truncate text-xs font-medium text-foreground">{user.name}</p>
-          <p className="truncate text-[11px] text-muted-foreground">{user.email}</p>
+          <p className="truncate text-xs font-medium text-foreground">
+            {user.name}
+          </p>
+          <p className="truncate text-[11px] text-muted-foreground">
+            {user.email}
+          </p>
         </div>
         <form action={logout}>
           <Button

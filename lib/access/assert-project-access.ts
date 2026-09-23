@@ -11,7 +11,6 @@ import { db } from "@/lib/db";
 import { canManagePlatform, type AccessUser } from "@/lib/access/roles";
 import {
   FULL_PROJECT_PERMISSIONS,
-  resolveCanCreateDossier,
   resolveProjectPermissions,
   type ProjectPermissionFlags,
 } from "@/lib/access/permissions";
@@ -75,14 +74,12 @@ export async function getProjectPermissionsForUser(
 
 export async function canCreateDossierOnTerritoire(
   user: AccessUser,
+  /* territoireId retained for call-site compatibility */
   territoireId: string,
 ): Promise<boolean> {
-  if (canManagePlatform(user)) return true;
-  const row = await db.territoireMember.findUnique({
-    where: { userId_territoireId: { userId: user.id, territoireId } },
-    select: { canCreateDossier: true },
-  });
-  return resolveCanCreateDossier(user, row);
+  void territoireId;
+  // ADMIN-only. TerritoireMember.canCreateDossier is not consulted.
+  return canManagePlatform(user);
 }
 
 export async function assertProjectPermission(

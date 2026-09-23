@@ -26,13 +26,11 @@ export function UserRowActions({
   user,
   platforms,
   projectAccess,
-  territoireAccess,
   onUserUpdated,
 }: {
   user: UsersTableRow;
   platforms: AccessPlatform[];
   projectAccess: Record<string, DossierFlags>;
-  territoireAccess: Record<string, { canCreateDossier: boolean }>;
   onUserUpdated: (user: UsersTableRow) => void;
 }) {
   const { pushToast } = useToast();
@@ -147,7 +145,7 @@ export function UserRowActions({
       ? [
           {
             id: "access",
-            label: "Gérer les accès",
+            label: "Définir les accès aux dossiers",
             onSelect: () => setPanel("access"),
           },
         ]
@@ -156,7 +154,7 @@ export function UserRowActions({
       ? [
           {
             id: "reactivate",
-            label: "Réactiver",
+            label: "Réactiver le compte",
             onSelect: () => reactivateFormRef.current?.requestSubmit(),
             disabled: disabling,
           },
@@ -164,7 +162,7 @@ export function UserRowActions({
       : [
           {
             id: "disable",
-            label: "Désactiver",
+            label: "Désactiver le compte",
             destructive: true,
             disabled: disabling,
             onSelect: () => setConfirmDisable(true),
@@ -213,8 +211,12 @@ export function UserRowActions({
       </form>
 
       {panel === "edit" ? (
-        <SidePanel title="Modifier le profil" onClose={() => setPanel("none")}>
-          <form action={updateAction} className="space-y-3">
+        <SidePanel
+          title="Modifier le profil"
+          description="Mettez à jour l’identité et le rôle de cette personne."
+          onClose={() => setPanel("none")}
+        >
+          <form action={updateAction} className="space-y-4">
             <input type="hidden" name="userId" value={user.id} />
             <Field
               name="firstName"
@@ -245,6 +247,9 @@ export function UserRowActions({
                 <option value="USER">Utilisateur</option>
                 <option value="ADMIN">Administrateur</option>
               </select>
+              <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
+                Les administrateurs ont un accès complet à tous les dossiers.
+              </span>
             </label>
             {updateState.error ? (
               <p className="text-xs text-destructive">{updateState.error}</p>
@@ -270,13 +275,16 @@ export function UserRowActions({
       ) : null}
 
       {panel === "access" ? (
-        <SidePanel title="Gérer les accès" onClose={() => setPanel("none")}>
-          <form action={accessAction} className="space-y-3">
+        <SidePanel
+          title="Accès aux dossiers"
+          description="Choisissez ce que cette personne peut voir, importer ou télécharger."
+          onClose={() => setPanel("none")}
+        >
+          <form action={accessAction} className="space-y-4">
             <input type="hidden" name="userId" value={user.id} />
             <PermissionMatrix
               platforms={platforms}
               projectAccess={projectAccess}
-              territoireAccess={territoireAccess}
               formMode
             />
             {accessState.error ? (
@@ -313,14 +321,17 @@ export function UserRowActions({
 
 function SidePanel({
   title,
+  description,
   onClose,
   children,
 }: {
   title: string;
+  description?: string;
   onClose: () => void;
   children: React.ReactNode;
 }) {
   const titleId = useId();
+  const descId = useId();
   return (
     <div className="fixed inset-0 z-[60] flex justify-end bg-[color-mix(in_srgb,var(--foreground)_35%,transparent)]">
       <button
@@ -333,22 +344,32 @@ function SidePanel({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        aria-describedby={description ? descId : undefined}
         className="relative z-10 flex h-full w-full max-w-md flex-col border-l border-border bg-surface shadow-[var(--shadow-panel)]"
       >
-        <div className="flex items-center justify-between border-b border-border px-4 py-3">
-          <h2 id={titleId} className="text-sm font-semibold text-foreground">
-            {title}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-sm p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
-            aria-label="Fermer"
-          >
-            <X className="size-4" />
-          </button>
+        <div className="border-b border-border px-5 py-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2 id={titleId} className="text-base font-semibold text-foreground">
+                {title}
+              </h2>
+              {description ? (
+                <p id={descId} className="mt-1 text-sm leading-5 text-muted-foreground">
+                  {description}
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="shrink-0 rounded-sm p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+              aria-label="Fermer"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">{children}</div>
+        <div className="flex-1 overflow-y-auto p-5">{children}</div>
       </div>
     </div>
   );

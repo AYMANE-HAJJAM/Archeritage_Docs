@@ -6,7 +6,10 @@
  * - canUpload (Importer)
  * - canDownload (Télécharger)
  * - canManageStructure (Gérer la structure)
- * - canCreateDossier on TerritoireMember (Créer des dossiers)
+ *
+ * Dossier creation under a plateforme is ADMIN-only.
+ * TerritoireMember.canCreateDossier remains in the schema unused for USERS
+ * (future compatibility) and is ignored by authorization.
  *
  * Legacy flags kept for compatibility / future workflows:
  * - canEditDossier, canReclassifyDocuments
@@ -75,10 +78,14 @@ export function resolveProjectPermissions(
   });
 }
 
+/**
+ * Creating heritage dossiers is ADMIN-only.
+ * Membership `canCreateDossier` is ignored (schema field retained unused).
+ */
 export function resolveCanCreateDossier(
   user: AccessUser,
-  territoireMembership: { canCreateDossier: boolean } | null,
+  territoireMembership?: { canCreateDossier: boolean } | null,
 ): boolean {
-  if (canManagePlatform(user)) return true;
-  return Boolean(territoireMembership?.canCreateDossier);
+  void territoireMembership;
+  return canManagePlatform(user);
 }

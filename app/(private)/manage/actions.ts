@@ -22,12 +22,14 @@ import {
   updateTerritoireSchema,
 } from "@/lib/admin/territoires";
 import {
+  assessSectionsLinkedContent,
   createGroup,
   createGroupSchema,
   createSection,
   createSectionSchema,
   deleteGroupIfEmpty,
   deleteSectionIfEmpty,
+  listStructureAdmin,
   reclassifyDocument,
   renameGroup,
   renameGroupSchema,
@@ -77,6 +79,8 @@ export type LiveSection = {
   isActive: boolean;
   documentCount: number;
   codeLocked: boolean;
+  /** True when hard-delete must be refused (documents or linked heritage data). */
+  hasLinkedContent: boolean;
 };
 
 export type LiveGroup = {
@@ -191,13 +195,16 @@ async function toLiveSection(sectionId: string): Promise<LiveSection | null> {
     where: { id: sectionId },
   });
   if (!section) return null;
-  const documentCount = await db.file.count({
-    where: {
-      projectId: section.projectId,
-      documentScope: "PROJECT_SECTION",
-      docCategorie: section.code,
+  const linked = await assessSectionsLinkedContent(section.projectId, [
+    {
+      id: section.id,
+      code: section.code,
+      kind: section.kind,
+      tracks: section.tracks,
     },
-  });
+  ]);
+  const info = linked.get(section.id);
+  const documentCount = info?.documentCount ?? 0;
   return {
     id: section.id,
     code: section.code,
@@ -210,6 +217,7 @@ async function toLiveSection(sectionId: string): Promise<LiveSection | null> {
     isActive: section.isActive,
     documentCount,
     codeLocked: documentCount > 0,
+    hasLinkedContent: Boolean(info?.reason),
   };
 }
 
@@ -576,6 +584,53 @@ export async function reclassifyDocumentAction(
     return {
       error:
         error instanceof HttpError ? error.message : "Reclassification impossible.",
+    };
+  }
+}
+
+/** Soft-load structure for the Structure page selector (no full navigation). */
+export async function loadStructureWorkspaceAction(
+  projectId: string,
+): Promise<{
+  ok?: boolean;
+  error?: string;
+  projectId?: string;
+  groups?: LiveGroup[];
+  sections?: LiveSection[];
+}> {
+  try {
+    await requireStructureEditor(projectId);
+    if (!projectId) return { error: "Dossier manquant." };
+    const structure = await listStructureAdmin(projectId);
+    return {
+      ok: true,
+      projectId,
+      groups: structure.groups.map((g) => ({
+        id: g.id,
+        label: g.label,
+        sortOrder: g.sortOrder,
+      })),
+      sections: structure.sections.map((s) => ({
+        id: s.id,
+        code: s.code,
+        slug: s.slug,
+        title: s.title,
+        description: s.description,
+        kind: s.kind,
+        groupId: s.groupId,
+        sortOrder: s.sortOrder,
+        isActive: s.isActive,
+        documentCount: s.documentCount,
+        codeLocked: s.codeLocked,
+        hasLinkedContent: s.hasLinkedContent,
+      })),
+    };
+  } catch (error) {
+    return {
+      error:
+        error instanceof HttpError
+          ? error.message
+          : "Impossible de charger la structure.",
     };
   }
 }

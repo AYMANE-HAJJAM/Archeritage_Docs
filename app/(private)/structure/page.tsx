@@ -79,6 +79,9 @@ export default async function StructurePage({
           name: p.name,
           slug: p.slug,
           code: p.code,
+          description: p.description,
+          sectionCount: p._count.heritageSections,
+          fileCount: p._count.files,
         })),
       }))}
       initialTerritoireId={territoire.id}
@@ -100,6 +103,7 @@ export default async function StructurePage({
         isActive: s.isActive,
         documentCount: s.documentCount,
         codeLocked: s.codeLocked,
+        hasLinkedContent: s.hasLinkedContent,
       }))}
     />
   );

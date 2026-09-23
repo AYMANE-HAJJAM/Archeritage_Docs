@@ -66,10 +66,20 @@ export function UsersManagement({
     });
   }
 
+  const inviteTrigger = (
+    <button
+      type="button"
+      className="inline-flex h-9 items-center rounded-sm bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_srgb,var(--primary)_88%,white)]"
+    >
+      Inviter un collaborateur
+    </button>
+  );
+
   return (
-    <div className="space-y-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <label className="relative block min-w-0 flex-1 sm:max-w-sm">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0 flex-1 space-y-3 sm:max-w-md">
+          <label className="relative block">
           <span className="sr-only">Rechercher un utilisateur</span>
           <Search
             className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
@@ -96,17 +106,45 @@ export function UsersManagement({
             className="h-9 pl-8"
             aria-busy={pending}
           />
-        </label>
-        <InviteUserDialog platforms={platforms} onUserCreated={upsertUser} />
+          </label>
+          {users.length > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              {users.length === 1
+                ? "1 compte affiché"
+                : `${users.length} comptes affichés`}
+              {initialQuery ? ` pour « ${initialQuery} »` : ""}
+            </p>
+          ) : null}
+        </div>
+        {users.length > 0 || initialQuery ? (
+          <InviteUserDialog
+            platforms={platforms}
+            onUserCreated={upsertUser}
+            trigger={inviteTrigger}
+          />
+        ) : null}
       </div>
 
       {users.length === 0 ? (
         <EmptyState
-          title="Aucun utilisateur trouvé"
+          title={
+            initialQuery
+              ? "Aucun résultat"
+              : "Aucun collaborateur pour le moment"
+          }
           description={
             initialQuery
-              ? "Aucun compte ne correspond à cette recherche."
-              : "Invitez le premier collaborateur pour lui donner accès à la plateforme."
+              ? "Aucun compte ne correspond à cette recherche. Essayez un autre nom ou e-mail."
+              : "Invitez votre première personne pour lui donner accès aux dossiers patrimoniaux."
+          }
+          action={
+            !initialQuery ? (
+              <InviteUserDialog
+                platforms={platforms}
+                onUserCreated={upsertUser}
+                trigger={inviteTrigger}
+              />
+            ) : undefined
           }
         />
       ) : (
@@ -150,7 +188,6 @@ export function UsersManagement({
                       user={user}
                       platforms={platforms}
                       projectAccess={user.projectAccess}
-                      territoireAccess={user.territoireAccess}
                       onUserUpdated={upsertUser}
                     />
                   </td>

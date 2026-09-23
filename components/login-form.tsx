@@ -11,7 +11,7 @@ export function LoginForm() {
   const [state, action, pending] = useActionState(login, { error: "" });
 
   return (
-    <form action={action} className="mt-8 space-y-5">
+    <form action={action} className="space-y-5">
       <div className="space-y-2">
         <label htmlFor="email" className="text-sm font-medium text-foreground">
           Adresse e-mail
@@ -23,7 +23,8 @@ export function LoginForm() {
           autoComplete="username"
           required
           maxLength={254}
-          placeholder="nom@archeritage.ma"
+          placeholder="prenom.nom@archeritage.ma"
+          className="h-10"
         />
       </div>
       <div className="space-y-2">
@@ -40,6 +41,7 @@ export function LoginForm() {
           autoComplete="current-password"
           required
           maxLength={72}
+          className="h-10"
         />
       </div>
       {state.error ? (

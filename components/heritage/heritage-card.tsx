@@ -49,16 +49,17 @@ export function HeritageCard({
 
         <Link
           href={href}
+          aria-label={`Consulter ${title}`}
           className={cn(
-            "relative flex min-h-[12.5rem] flex-col border border-border bg-surface p-5 transition-[border-color,background-color,box-shadow] duration-150 sm:min-h-[13.5rem] sm:p-6",
-            "hover:border-[color-mix(in_srgb,var(--accent)_40%,var(--border))] hover:bg-[color-mix(in_srgb,var(--surface)_92%,var(--muted))] hover:shadow-[var(--shadow-panel)]",
+            "relative flex min-h-[12.5rem] flex-col rounded-md border border-border bg-surface p-5 transition-[border-color,background-color,box-shadow] duration-150 sm:min-h-[13.5rem] sm:p-6",
+            "hover:border-[color-mix(in_srgb,var(--accent)_38%,var(--border))] hover:bg-[color-mix(in_srgb,var(--surface)_90%,var(--muted))] hover:shadow-[var(--shadow-card-hover)]",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             adminActions?.length ? "pr-12 sm:pr-14" : null,
           )}
         >
           <div
             aria-hidden
-            className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-200 group-hover:scale-x-100"
+            className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 rounded-t-md bg-accent transition-transform duration-200 group-hover:scale-x-100"
           />
 
           {code ? (
@@ -80,10 +81,16 @@ export function HeritageCard({
             {description}
           </p>
 
-          <div className="mt-auto pt-6">
-            <p className="text-[11px] font-medium tracking-wide text-muted-foreground">
+          <div className="mt-auto flex items-end justify-between gap-3 pt-6">
+            <p className="text-[11px] font-medium leading-5 tracking-wide text-muted-foreground">
               {meta}
             </p>
+            <span
+              aria-hidden
+              className="shrink-0 text-[11px] font-semibold text-accent opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+            >
+              Consulter →
+            </span>
           </div>
         </Link>
       </div>
@@ -130,8 +137,8 @@ export function HeritageCardAdminMenu({
           e.stopPropagation();
           setOpen((v) => !v);
         }}
-        className={cn(
-          "inline-flex size-8 items-center justify-center border border-transparent text-muted-foreground transition-colors",
+          className={cn(
+          "inline-flex size-8 items-center justify-center rounded-md border border-transparent text-muted-foreground transition-colors",
           "hover:border-border hover:bg-background hover:text-foreground",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           open && "border-border bg-background text-foreground",
@@ -144,7 +151,7 @@ export function HeritageCardAdminMenu({
         <div
           id={menuId}
           role="menu"
-          className="absolute right-0 top-full z-30 mt-1 min-w-[10.5rem] border border-border bg-surface py-1 shadow-[var(--shadow-panel)]"
+          className="absolute right-0 top-full z-30 mt-1 min-w-[11rem] rounded-md border border-border bg-surface py-1 shadow-[var(--shadow-panel)]"
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
         >

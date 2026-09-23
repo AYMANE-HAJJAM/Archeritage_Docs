@@ -253,7 +253,14 @@ export async function listTerritoiresForStructure() {
           name: true,
           slug: true,
           code: true,
+          description: true,
           isActive: true,
+          _count: {
+            select: {
+              heritageSections: true,
+              files: true,
+            },
+          },
         },
       },
     },

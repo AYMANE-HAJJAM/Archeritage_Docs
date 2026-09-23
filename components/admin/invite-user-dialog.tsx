@@ -1,6 +1,13 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import {
+  cloneElement,
+  isValidElement,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { X } from "lucide-react";
 import {
   createUserAction,
@@ -21,9 +28,11 @@ const initial: ManageUserActionState = {};
 export function InviteUserDialog({
   platforms,
   onUserCreated,
+  trigger,
 }: {
   platforms: AccessPlatform[];
   onUserCreated: (user: UsersTableRow) => void;
+  trigger?: React.ReactNode;
 }) {
   const { pushToast } = useToast();
   const [open, setOpen] = useState(false);
@@ -70,13 +79,24 @@ export function InviteUserDialog({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="inline-flex h-9 items-center rounded-sm bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_srgb,var(--primary)_88%,white)]"
-      >
-        Ajouter un utilisateur
-      </button>
+      {trigger && isValidElement<{ onClick?: (e: React.MouseEvent) => void }>(
+        trigger,
+      ) ? (
+        cloneElement(trigger, {
+          onClick: (e: React.MouseEvent) => {
+            trigger.props.onClick?.(e);
+            setOpen(true);
+          },
+        })
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="inline-flex h-9 items-center rounded-sm bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-[color-mix(in_srgb,var(--primary)_88%,white)]"
+        >
+          Inviter un collaborateur
+        </button>
+      )}
 
       {open ? (
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[color-mix(in_srgb,var(--foreground)_40%,transparent)] p-4 backdrop-blur-[1px] sm:items-center">
@@ -92,11 +112,11 @@ export function InviteUserDialog({
                   id="invite-user-title"
                   className="font-heading text-lg tracking-tight"
                 >
-                  Ajouter un utilisateur
+                  Inviter un collaborateur
                 </h2>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  Renseignez l’identité et les accès, puis envoyez l’invitation.
-                  La personne choisira son mot de passe à l’activation.
+                <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
+                  Saisissez l’identité et les droits d’accès. Un e-mail d’invitation
+                  permettra à la personne de choisir son mot de passe.
                 </p>
               </div>
               <button
@@ -124,13 +144,16 @@ export function InviteUserDialog({
               </div>
 
               <div>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                  Accès
+                <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                  Accès aux dossiers
+                </p>
+                <p className="mb-3 text-xs leading-5 text-muted-foreground">
+                  Cochez ce que cette personne pourra faire dans chaque dossier.
+                  « Voir » est requis pour les autres actions.
                 </p>
                 <PermissionMatrix
                   platforms={platforms}
                   projectAccess={projectAccess}
-                  territoireAccess={{}}
                   formMode
                 />
               </div>

@@ -104,6 +104,7 @@ export default async function ProjectPage({
                     isActive: s.isActive,
                     documentCount: s.documentCount,
                     codeLocked: s.codeLocked,
+                    hasLinkedContent: s.hasLinkedContent,
                   })),
                 }
               : null

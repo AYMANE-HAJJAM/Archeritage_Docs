@@ -10,8 +10,17 @@ import {
 } from "@/lib/admin/allocate-identifiers";
 import { revalidateHeritageStructure } from "@/lib/heritage/queries/structure";
 import { createSectionSchema } from "@/lib/admin/schemas";
+import {
+  describeSectionLinkedContent,
+  type SectionLinkCounts,
+} from "@/lib/admin/section-linked-content";
 
 export { createSectionSchema };
+export {
+  canHardDeleteGroup,
+  canHardDeleteSection,
+  describeSectionLinkedContent,
+} from "@/lib/admin/section-linked-content";
 
 const kindSchema = z.enum(["documentary", "structured", "sequences"]);
 
@@ -63,26 +72,29 @@ export async function listStructureAdmin(projectId: string) {
     }),
   ]);
 
-  const docCounts = await db.file.groupBy({
-    by: ["docCategorie"],
-    where: {
-      projectId,
-      documentScope: "PROJECT_SECTION",
-      docCategorie: { not: null },
-    },
-    _count: { _all: true },
-  });
-  const countByCode = new Map(
-    docCounts.map((row) => [row.docCategorie!, row._count._all]),
+  const linkedById = await assessSectionsLinkedContent(
+    projectId,
+    sections.map((s) => ({
+      id: s.id,
+      code: s.code,
+      kind: s.kind,
+      tracks: s.tracks,
+    })),
   );
 
   return {
     groups,
-    sections: sections.map((s) => ({
-      ...s,
-      documentCount: countByCode.get(s.code) ?? 0,
-      codeLocked: (countByCode.get(s.code) ?? 0) > 0,
-    })),
+    sections: sections.map((s) => {
+      const linked = linkedById.get(s.id);
+      const documentCount = linked?.documentCount ?? 0;
+      const hasLinkedContent = Boolean(linked?.reason);
+      return {
+        ...s,
+        documentCount,
+        codeLocked: documentCount > 0,
+        hasLinkedContent,
+      };
+    }),
   };
 }
 
@@ -299,7 +311,7 @@ export async function deleteGroupIfEmpty(groupId: string, actorUserId: string) {
   await db.heritageSectionGroup.delete({ where: { id: groupId } });
   await writeAuditLog({
     actorUserId,
-    action: AuditActions.GROUP_UPDATED,
+    action: AuditActions.GROUP_DELETED,
     entityType: "HeritageSectionGroup",
     entityId: groupId,
     metadata: { deleted: true, label: group.label },
@@ -307,70 +319,117 @@ export async function deleteGroupIfEmpty(groupId: string, actorUserId: string) {
   revalidateHeritageStructure(await projectSlugOrThrow(group.projectId));
 }
 
-async function sectionHasBusinessContent(
+async function loadProjectLinkCounts(
   projectId: string,
-  section: { code: string; tracks: unknown; kind: string },
-): Promise<string | null> {
-  const documentCount = await db.file.count({
+): Promise<Omit<SectionLinkCounts, "documentCount"> & { sequenceIds: string[] }> {
+  const sequences = await db.sequence.findMany({
+    where: { projectId },
+    select: { id: true },
+  });
+  const sequenceIds = sequences.map((s) => s.id);
+  if (sequenceIds.length === 0) {
+    return {
+      sequenceIds,
+      sequenceCount: 0,
+      sequenceFileCount: 0,
+      elementCount: 0,
+      gateCount: 0,
+      observationCount: 0,
+      investigationCount: 0,
+      decisionCount: 0,
+      interventionCount: 0,
+    };
+  }
+
+  const [
+    sequenceFileCount,
+    elementCount,
+    gateCount,
+    observationCount,
+    investigationCount,
+    decisionCount,
+    interventionCount,
+  ] = await Promise.all([
+    db.file.count({ where: { projectId, sequenceId: { in: sequenceIds } } }),
+    db.element.count({ where: { sequenceId: { in: sequenceIds } } }),
+    db.gate.count({
+      where: {
+        OR: [{ projectId }, { sequenceId: { in: sequenceIds } }],
+      },
+    }),
+    db.observation.count({ where: { sequenceId: { in: sequenceIds } } }),
+    db.investigation.count({ where: { sequenceId: { in: sequenceIds } } }),
+    db.decision.count({ where: { sequenceId: { in: sequenceIds } } }),
+    db.intervention.count({ where: { sequenceId: { in: sequenceIds } } }),
+  ]);
+
+  return {
+    sequenceIds,
+    sequenceCount: sequenceIds.length,
+    sequenceFileCount,
+    elementCount,
+    gateCount,
+    observationCount,
+    investigationCount,
+    decisionCount,
+    interventionCount,
+  };
+}
+
+export async function assessSectionsLinkedContent(
+  projectId: string,
+  sections: Array<{ id: string; code: string; kind: string; tracks: unknown }>,
+): Promise<Map<string, { reason: string | null; documentCount: number }>> {
+  const docCounts = await db.file.groupBy({
+    by: ["docCategorie"],
     where: {
       projectId,
       documentScope: "PROJECT_SECTION",
-      docCategorie: section.code,
+      docCategorie: { not: null },
     },
+    _count: { _all: true },
   });
-  if (documentCount > 0) {
-    return `${documentCount} document(s) classé(s) dans cette rubrique`;
-  }
+  const countByCode = new Map(
+    docCounts.map((row) => [row.docCategorie!, row._count._all]),
+  );
+  const projectCounts = await loadProjectLinkCounts(projectId);
+  const result = new Map<string, { reason: string | null; documentCount: number }>();
 
-  const tracks = Array.isArray(section.tracks)
-    ? section.tracks.filter((t): t is string => typeof t === "string")
-    : [];
-  const sequenceIds = (
-    await db.sequence.findMany({
-      where: { projectId },
-      select: { id: true },
-    })
-  ).map((s) => s.id);
-
-  if (
-    (tracks.includes("sequences") ||
-      tracks.includes("tours") ||
-      tracks.includes("portes") ||
-      tracks.includes("bab-el-kasbah") ||
-      section.kind === "sequences") &&
-    sequenceIds.length > 0
-  ) {
-    return "des séquences / ouvrages liés au projet";
-  }
-
-  if (sequenceIds.length === 0) return null;
-
-  if (tracks.includes("observations")) {
-    const n = await db.observation.count({
-      where: { sequenceId: { in: sequenceIds } },
+  for (const section of sections) {
+    const documentCount = countByCode.get(section.code) ?? 0;
+    const counts: SectionLinkCounts = {
+      documentCount,
+      sequenceCount: projectCounts.sequenceCount,
+      sequenceFileCount: projectCounts.sequenceFileCount,
+      elementCount: projectCounts.elementCount,
+      gateCount: projectCounts.gateCount,
+      observationCount: projectCounts.observationCount,
+      investigationCount: projectCounts.investigationCount,
+      decisionCount: projectCounts.decisionCount,
+      interventionCount: projectCounts.interventionCount,
+    };
+    result.set(section.id, {
+      documentCount,
+      reason: describeSectionLinkedContent(section, counts),
     });
-    if (n > 0) return `${n} observation(s)`;
-  }
-  if (tracks.includes("investigations")) {
-    const n = await db.investigation.count({
-      where: { sequenceId: { in: sequenceIds } },
-    });
-    if (n > 0) return `${n} investigation(s)`;
-  }
-  if (tracks.includes("decisions")) {
-    const n = await db.decision.count({
-      where: { sequenceId: { in: sequenceIds } },
-    });
-    if (n > 0) return `${n} décision(s)`;
-  }
-  if (tracks.includes("interventions")) {
-    const n = await db.intervention.count({
-      where: { sequenceId: { in: sequenceIds } },
-    });
-    if (n > 0) return `${n} intervention(s)`;
   }
 
-  return null;
+  return result;
+}
+
+async function sectionHasBusinessContent(
+  projectId: string,
+  section: { id?: string; code: string; tracks: unknown; kind: string },
+): Promise<string | null> {
+  const map = await assessSectionsLinkedContent(projectId, [
+    {
+      id: section.id ?? section.code,
+      code: section.code,
+      kind: section.kind,
+      tracks: section.tracks,
+    },
+  ]);
+  return map.get(section.id ?? section.code)?.reason ?? null;
 }
 
 export async function deleteSectionIfEmpty(sectionId: string, actorUserId: string) {

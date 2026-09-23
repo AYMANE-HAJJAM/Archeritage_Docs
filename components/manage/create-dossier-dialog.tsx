@@ -51,9 +51,9 @@ export function CreateDossierDialog({
         <DialogTitle className="pr-10 text-lg font-medium tracking-tight">
           Nouveau dossier patrimonial
         </DialogTitle>
-        <DialogDescription className="mt-1.5 text-sm text-muted-foreground">
-          Ajoute un dossier sous cette plateforme. Code et URL sont générés
-          automatiquement.
+        <DialogDescription className="mt-1.5 text-sm leading-6 text-muted-foreground">
+          Créez un dossier patrimonial rattaché à cette plateforme. Le code et
+          l’adresse web sont proposés automatiquement à partir du nom.
         </DialogDescription>
         {open ? (
           <CreateDossierForm
@@ -109,7 +109,7 @@ function CreateDossierForm({
       <input type="hidden" name="territoireId" value={territoireId} />
 
       <label className="block text-xs">
-        <span className="text-muted-foreground">Nom</span>
+        <span className="text-muted-foreground">Nom du dossier</span>
         <input
           name="name"
           required
@@ -119,6 +119,9 @@ function CreateDossierForm({
           placeholder="Château de Mer"
           className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
         />
+        <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
+          Nom affiché aux collaborateurs et visiteurs.
+        </span>
       </label>
 
       {name.trim() ? (
@@ -134,21 +137,22 @@ function CreateDossierForm({
         <textarea
           name="description"
           rows={3}
+          placeholder="Résumé du périmètre patrimonial couvert par ce dossier"
           className="mt-1 w-full resize-y rounded-md border border-border bg-background px-2 py-2 text-sm leading-5"
         />
       </label>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block text-xs">
-          <span className="text-muted-foreground">Type</span>
+          <span className="text-muted-foreground">Type de site</span>
           <select
             name="type"
             defaultValue="AUTRE"
             className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
           >
-            <option value="CHATEAU">CHATEAU</option>
-            <option value="MURAILLE">MURAILLE</option>
-            <option value="AUTRE">AUTRE</option>
+            <option value="CHATEAU">Château</option>
+            <option value="MURAILLE">Muraille</option>
+            <option value="AUTRE">Autre</option>
           </select>
         </label>
         <label className="block text-xs">

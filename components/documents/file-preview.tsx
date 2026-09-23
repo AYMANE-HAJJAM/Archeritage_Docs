@@ -171,8 +171,10 @@ function DocumentPreviewGate({
         const response = await fetch(`/api/files/${fileId}/preview`, {
           method: "GET",
           credentials: "include",
-          headers: { Range: "bytes=0-1023" },
+          // Full GET (no Range): Office conversion must finish before any bytes
+          // exist; a tiny Range probe previously raced poorly with long converts.
           signal: controller.signal,
+          cache: "no-store",
         });
 
         if (cancelled) return;
@@ -182,10 +184,27 @@ function DocumentPreviewGate({
           return;
         }
 
+        // Prefer server reason code in console for diagnosis; UI stays simple.
+        try {
+          const body = (await response.json()) as { code?: string; error?: string };
+          console.error("[preview] unavailable", {
+            fileId,
+            status: response.status,
+            code: body.code,
+            error: body.error,
+          });
+        } catch {
+          console.error("[preview] unavailable", {
+            fileId,
+            status: response.status,
+          });
+        }
+
         setStatus("unavailable");
       } catch (error) {
         if (cancelled) return;
         if (error instanceof DOMException && error.name === "AbortError") return;
+        console.error("[preview] probe failed", { fileId, error });
         setStatus("unavailable");
       }
     }
@@ -217,11 +236,11 @@ function DocumentPreviewGate({
         <FileText className="size-14 stroke-1 text-zinc-500" aria-hidden />
         <div>
           <p className="text-base font-medium">
-            Aperçu indisponible pour ce fichier.
+            Impossible de générer l’aperçu de ce document.
           </p>
           <p className="mt-1 max-w-sm text-xs text-zinc-400">
             {isOfficeDocument(extension)
-              ? "La conversion Office → PDF n’est pas disponible sur cet environnement. Téléchargez le document original pour l’ouvrir."
+              ? "Téléchargez le document original pour l’ouvrir sur votre poste."
               : "Vous pouvez télécharger le document original pour le consulter."}
           </p>
         </div>

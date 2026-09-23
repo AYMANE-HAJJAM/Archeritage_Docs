@@ -48,7 +48,7 @@ export function PlatformsManager({
       <PageHeader
         eyebrow="Administration"
         title="Projets"
-        description="Gérez les plateformes patrimoniales. Ouvrez une fiche pour ajouter ou organiser les dossiers."
+        description="Consultez vos plateformes patrimoniales, ouvrez une fiche pour ajouter des dossiers ou organisez leur structure documentaire."
         actions={
           <Button type="button" onClick={() => setCreateOpen(true)}>
             Ajouter un projet
@@ -65,7 +65,7 @@ export function PlatformsManager({
       {platforms.length === 0 ? (
         <EmptyState
           title="Aucun projet pour le moment"
-          description="Créez une plateforme patrimoniale pour y rattacher des dossiers et des documents."
+          description="Créez votre première plateforme pour y rattacher des dossiers patrimoniaux et leurs documents."
           action={
             <Button type="button" onClick={() => setCreateOpen(true)}>
               Ajouter un projet

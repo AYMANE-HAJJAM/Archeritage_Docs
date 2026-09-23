@@ -1,8 +1,5 @@
 import { requireAdmin } from "@/lib/access";
-import {
-  listUserProjectAccess,
-  listUserTerritoireAccess,
-} from "@/lib/admin/user-access";
+import { listUserProjectAccess } from "@/lib/admin/user-access";
 import { listUsers } from "@/lib/admin/users";
 import { UsersManagement } from "@/components/admin/users-management";
 import {
@@ -66,10 +63,7 @@ export default async function UsersPage({
         };
       }
 
-      const [projectRows, territoireRows] = await Promise.all([
-        listUserProjectAccess(user.id),
-        listUserTerritoireAccess(user.id),
-      ]);
+      const projectRows = await listUserProjectAccess(user.id);
 
       const projectAccess = Object.fromEntries(
         projectRows.map((row) => [
@@ -98,12 +92,7 @@ export default async function UsersPage({
         status: user.status,
         accessLabels,
         projectAccess,
-        territoireAccess: Object.fromEntries(
-          territoireRows.map((row) => [
-            row.territoireId,
-            { canCreateDossier: row.canCreateDossier },
-          ]),
-        ),
+        territoireAccess: {},
       };
     }),
   );

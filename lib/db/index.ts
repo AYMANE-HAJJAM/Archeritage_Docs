@@ -1,12 +1,13 @@
 import "server-only";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/generated/prisma/client";
+import { normalizeDatabaseUrl } from "@/lib/db/connection-string";
 
 /**
  * Bump when Prisma schema fields change so a long-lived `npm run dev`
  * process does not keep a stale client after `prisma generate`.
  */
-const PRISMA_CLIENT_REV = "20260922-canDownload";
+const PRISMA_CLIENT_REV = "20260922-ssl-verify-full";
 
 const globalDb = globalThis as unknown as {
   prisma?: PrismaClient;
@@ -22,7 +23,7 @@ export const db =
   globalDb.prisma ??
   new PrismaClient({
     adapter: new PrismaPg({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: normalizeDatabaseUrl(process.env.DATABASE_URL),
       max: 10,
       connectionTimeoutMillis: 5000,
     }),

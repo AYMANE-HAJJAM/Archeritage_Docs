@@ -28,6 +28,7 @@ type Section = {
   isActive: boolean;
   documentCount: number;
   codeLocked: boolean;
+  hasLinkedContent?: boolean;
 };
 
 export function StructureEditor({

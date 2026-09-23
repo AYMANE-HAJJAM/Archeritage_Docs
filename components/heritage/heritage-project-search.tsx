@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { FilePreviewModal } from "@/components/documents/file-preview";
 import type { HeritageProjectSearchResult } from "@/lib/heritage/queries/project-search";
+import { cn } from "@/lib/utils";
 
 type PreviewFile = {
   id: string;
@@ -222,15 +223,18 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
 
   return (
     <>
-      <div ref={rootRef} className="relative min-w-0 flex-1 sm:min-w-[14rem]">
-        <label className="relative block">
-          <span className="sr-only">Rechercher dans le dossier</span>
+      <div ref={rootRef} className="relative z-30 min-w-0 flex-1 overflow-visible sm:min-w-[14rem]">
+        <label htmlFor={`${listId}-input`} className="sr-only">
+          Rechercher une rubrique ou un document
+        </label>
+        <div className="relative">
           <Search
-            className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
+            className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
             aria-hidden
           />
           <input
-            type="text"
+            id={`${listId}-input`}
+            type="search"
             role="combobox"
             aria-expanded={showPanel}
             aria-controls={listId}
@@ -244,11 +248,11 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
               if (query.trim().length >= 2) setOpen(true);
             }}
             onKeyDown={onKeyDown}
-            placeholder="Rechercher dans le dossier…"
+            placeholder="Rechercher une rubrique ou un document…"
             autoComplete="off"
-            className="h-9 w-full border border-border bg-background pl-8 pr-8 text-xs text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-9 w-full border border-border bg-background py-2 pl-9 pr-9 text-xs text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
-          <span className="pointer-events-none absolute right-2 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center">
+          <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center">
             {loading ? (
               <Loader2
                 className="size-3.5 animate-spin text-muted-foreground"
@@ -257,34 +261,40 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
             ) : query ? (
               <button
                 type="button"
-                className="pointer-events-auto rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex size-6 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label="Effacer la recherche"
                 onClick={clearSearch}
               >
                 <X className="size-3.5" aria-hidden />
               </button>
             ) : null}
-          </span>
-        </label>
+          </div>
+        </div>
 
         {showPanel ? (
           <div
             id={listId}
             role="listbox"
-            className="absolute left-0 right-0 z-40 mt-1 max-h-[min(24rem,70vh)] overflow-y-auto border border-border bg-surface shadow-md"
+            className="absolute left-0 right-0 z-50 mt-1.5 max-h-[min(26rem,70vh)] overflow-y-auto overscroll-contain border border-border bg-surface shadow-[var(--shadow-panel)]"
           >
             {loading && !result ? (
-              <p className="px-3 py-3 text-xs text-muted-foreground">
-                Recherche…
+              <p className="px-4 py-4 text-xs text-muted-foreground">
+                Recherche en cours…
               </p>
             ) : !hasHits ? (
-              <p className="px-3 py-3 text-xs text-muted-foreground">
-                Aucun résultat
-              </p>
+              <div className="px-4 py-4">
+                <p className="text-sm font-medium text-foreground">
+                  Aucun résultat pour « {query.trim()} »
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Essayez un autre mot-clé, un code de rubrique ou le nom d&apos;un
+                  document.
+                </p>
+              </div>
             ) : (
               <>
                 {result!.sections.length > 0 ? (
-                  <ResultGroup title="Rubriques">
+                  <ResultGroup title="Rubriques" count={result!.totals.sections}>
                     {result!.sections.map((s, i) => {
                       const idx = sectionOffset + i;
                       return (
@@ -295,6 +305,7 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
                           icon={<Layers className="size-3.5" />}
                           label={`${s.code} ${s.title}`}
                           meta={s.groupLabel}
+                          hint="Ouvrir la rubrique"
                           onSelect={() => activate(flatItems[idx]!)}
                           onHover={() => setActiveIndex(idx)}
                         />
@@ -304,7 +315,7 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
                 ) : null}
 
                 {result!.documents.length > 0 ? (
-                  <ResultGroup title="Documents">
+                  <ResultGroup title="Documents" count={result!.totals.documents}>
                     {result!.documents.map((d, i) => {
                       const idx = documentOffset + i;
                       return (
@@ -319,6 +330,7 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
                               ? `${d.sectionCode}${d.sectionTitle ? ` · ${d.sectionTitle}` : ""}`
                               : undefined
                           }
+                          hint="Aperçu"
                           onSelect={() => activate(flatItems[idx]!)}
                           onHover={() => setActiveIndex(idx)}
                         />
@@ -328,7 +340,7 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
                 ) : null}
 
                 {result!.folders.length > 0 ? (
-                  <ResultGroup title="Dossiers">
+                  <ResultGroup title="Dossiers" count={result!.totals.folders}>
                     {result!.folders.map((f, i) => {
                       const idx = folderOffset + i;
                       return (
@@ -338,6 +350,7 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
                           active={activeIndex === idx}
                           icon={<Folder className="size-3.5" />}
                           label={f.name}
+                          hint="Ouvrir le dossier"
                           onSelect={() => activate(flatItems[idx]!)}
                           onHover={() => setActiveIndex(idx)}
                         />
@@ -349,7 +362,7 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
                 {hasMore ? (
                   <button
                     type="button"
-                    className="block w-full border-t border-border px-3 py-2 text-left text-xs font-medium text-accent hover:bg-muted/50"
+                    className="block w-full border-t border-border px-4 py-2.5 text-left text-xs font-semibold text-accent transition-colors hover:bg-muted/50"
                     onClick={() => {
                       setOpen(false);
                       router.push(
@@ -357,7 +370,7 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
                       );
                     }}
                   >
-                    Voir tous les résultats
+                    Voir tous les résultats dans la liste complète
                   </button>
                 ) : null}
               </>
@@ -373,17 +386,26 @@ export function HeritageProjectSearch({ projectSlug }: HeritageProjectSearchProp
 
 function ResultGroup({
   title,
+  count,
   children,
 }: {
   title: string;
+  count?: number;
   children: React.ReactNode;
 }) {
   return (
     <div className="border-b border-border/80 last:border-0">
-      <p className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-        {title}
-      </p>
-      <ul className="pb-1">{children}</ul>
+      <div className="flex items-baseline justify-between gap-2 px-4 pt-2.5 pb-1">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          {title}
+        </p>
+        {count !== undefined && count > 0 ? (
+          <p className="text-[10px] tabular-nums text-muted-foreground">
+            {count}
+          </p>
+        ) : null}
+      </div>
+      <ul className="pb-1.5">{children}</ul>
     </div>
   );
 }
@@ -394,6 +416,7 @@ function ResultRow({
   icon,
   label,
   meta,
+  hint,
   onSelect,
   onHover,
 }: {
@@ -402,6 +425,7 @@ function ResultRow({
   icon: React.ReactNode;
   label: string;
   meta?: string | null;
+  hint?: string;
   onSelect: () => void;
   onHover: () => void;
 }) {
@@ -409,14 +433,15 @@ function ResultRow({
     <li role="option" id={id} aria-selected={active}>
       <button
         type="button"
-        className={`flex w-full items-start gap-2 px-3 py-1.5 text-left text-xs transition-colors ${
-          active ? "bg-muted" : "hover:bg-muted/60"
-        }`}
+        className={cn(
+          "flex w-full items-start gap-2.5 px-4 py-2 text-left text-xs transition-colors",
+          active ? "bg-muted" : "hover:bg-muted/60",
+        )}
         onMouseEnter={onHover}
         onClick={onSelect}
       >
-        <span className="mt-0.5 shrink-0 text-muted-foreground">{icon}</span>
-        <span className="min-w-0">
+        <span className="mt-0.5 shrink-0 text-accent/80">{icon}</span>
+        <span className="min-w-0 flex-1">
           <span className="block truncate font-medium text-foreground">
             {label}
           </span>
@@ -426,6 +451,11 @@ function ResultRow({
             </span>
           ) : null}
         </span>
+        {hint ? (
+          <span className="mt-0.5 shrink-0 text-[10px] font-medium text-muted-foreground">
+            {hint}
+          </span>
+        ) : null}
       </button>
     </li>
   );

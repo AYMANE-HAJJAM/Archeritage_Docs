@@ -150,7 +150,6 @@ export async function applyInviteAccessMatrix(
   actor: AccessUser,
   targetUserId: string,
   projectAccess: ProjectAccessInput[],
-  territoireAccess: { territoireId: string; canCreateDossier: boolean }[],
 ) {
   requireAdminApi(actor);
   for (const row of projectAccess) {
@@ -161,16 +160,6 @@ export async function applyInviteAccessMatrix(
       row.canManageStructure
     ) {
       await upsertUserProjectAccess(actor, targetUserId, row);
-    }
-  }
-  for (const row of territoireAccess) {
-    if (row.canCreateDossier) {
-      await upsertUserTerritoireAccess(
-        actor,
-        targetUserId,
-        row.territoireId,
-        true,
-      );
     }
   }
 }

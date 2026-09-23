@@ -54,10 +54,8 @@ export function applyFlagChange(
 type PermissionMatrixProps = {
   platforms: AccessPlatform[];
   projectAccess: Record<string, DossierFlags>;
-  territoireAccess: Record<string, { canCreateDossier: boolean }>;
   /** Controlled mode — when provided, parent owns state. */
   onProjectChange?: (projectId: string, flags: DossierFlags) => void;
-  onTerritoireChange?: (territoireId: string, canCreateDossier: boolean) => void;
   /** Uncontrolled / form mode — renders named checkboxes for FormData. */
   formMode?: boolean;
   disabled?: boolean;
@@ -66,21 +64,33 @@ type PermissionMatrixProps = {
 export function PermissionMatrix({
   platforms,
   projectAccess,
-  territoireAccess,
   onProjectChange,
-  onTerritoireChange,
   formMode = true,
   disabled = false,
 }: PermissionMatrixProps) {
+  if (!platforms.length) {
+    return (
+      <p className="rounded-sm border border-dashed border-border px-3 py-4 text-xs leading-5 text-muted-foreground">
+        Aucun dossier disponible. Créez d’abord un projet et des dossiers
+        patrimoniaux.
+      </p>
+    );
+  }
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {platforms.map((platform) => (
         <div key={platform.id} className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            {platform.name}
-          </p>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground">
+              {platform.name}
+            </p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              Dossiers de cette plateforme
+            </p>
+          </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {platform.dossiers.map((dossier) => {
               const flags = projectAccess[dossier.id] ?? emptyFlags();
               return (
@@ -99,33 +109,6 @@ export function PermissionMatrix({
               );
             })}
           </div>
-
-          <label className="flex items-center gap-2 border border-border/70 bg-muted/15 px-2.5 py-2 text-xs">
-            {formMode ? (
-              <>
-                <input type="hidden" name="territoireId" value={platform.id} />
-                <input
-                  type="checkbox"
-                  name={`canCreateDossier_${platform.id}`}
-                  value="1"
-                  defaultChecked={
-                    territoireAccess[platform.id]?.canCreateDossier ?? false
-                  }
-                  disabled={disabled}
-                />
-              </>
-            ) : (
-              <input
-                type="checkbox"
-                checked={territoireAccess[platform.id]?.canCreateDossier ?? false}
-                disabled={disabled}
-                onChange={(e) =>
-                  onTerritoireChange?.(platform.id, e.target.checked)
-                }
-              />
-            )}
-            Créer des dossiers
-          </label>
         </div>
       ))}
     </div>
@@ -160,9 +143,9 @@ function DossierPermissionRow({
   const viewOff = !current.canView;
 
   return (
-    <div className="space-y-2 border border-border bg-background/40 px-3 py-2.5">
+    <div className="space-y-2.5 border border-border bg-background/40 px-3 py-3">
       {formMode ? <input type="hidden" name="projectId" value={dossier.id} /> : null}
-      <p className="text-xs font-semibold text-foreground">
+      <p className="text-sm font-medium text-foreground">
         {dossier.name}
         {dossier.code ? (
           <span className="ml-1.5 font-normal text-muted-foreground">
@@ -170,7 +153,7 @@ function DossierPermissionRow({
           </span>
         ) : null}
       </p>
-      <div className="flex flex-wrap gap-x-5 gap-y-2">
+      <div className="flex flex-wrap gap-x-4 gap-y-2.5">
         <Perm
           label="Voir"
           name={formMode ? `canView_${dossier.id}` : undefined}

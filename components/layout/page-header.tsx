@@ -24,7 +24,7 @@ export function PageHeader({
   return (
     <header
       className={cn(
-        "mb-8 flex flex-col gap-5 border-b border-border pb-8 sm:mb-10 sm:flex-row sm:items-end sm:justify-between",
+        "mb-8 flex flex-col gap-5 border-b border-border/80 pb-8 sm:mb-10 sm:flex-row sm:items-end sm:justify-between",
         className,
       )}
     >
@@ -62,12 +62,12 @@ export function PageBreadcrumb({
             {item.href && !last ? (
               <Link
                 href={item.href}
-                className="hover:text-foreground hover:underline"
+                className="transition-colors hover:text-foreground hover:underline"
               >
                 {item.label}
               </Link>
             ) : (
-              <span className={last ? "text-foreground" : undefined}>
+              <span className={last ? "font-medium text-foreground" : undefined}>
                 {item.label}
               </span>
             )}
@@ -88,14 +88,33 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="border border-dashed border-border bg-surface px-5 py-10 text-center">
+    <div className="rounded-md border border-dashed border-border bg-surface px-5 py-12 text-center shadow-[var(--shadow-panel)]">
       <p className="text-sm font-medium text-foreground">{title}</p>
       {description ? (
-        <p className="mx-auto mt-1.5 max-w-md text-sm text-muted-foreground">
+        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
           {description}
         </p>
       ) : null}
       {action ? <div className="mt-5 flex justify-center">{action}</div> : null}
     </div>
+  );
+}
+
+/** Compact horizontal metrics under a heritage/dossier header. */
+export function MetaStrip({
+  items,
+}: {
+  items: { label: string; value: string }[];
+}) {
+  if (!items.length) return null;
+  return (
+    <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[12px] text-muted-foreground">
+      {items.map((item) => (
+        <div key={item.label} className="inline-flex items-baseline gap-1.5">
+          <dt className="font-medium text-foreground/80">{item.value}</dt>
+          <dd>{item.label}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }

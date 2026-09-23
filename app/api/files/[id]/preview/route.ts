@@ -3,14 +3,45 @@ import { authenticate, apiError, HttpError } from "@/lib/http";
 import { assertFileReadable } from "@/lib/access";
 import { contentDisposition } from "@/lib/validation/file";
 import { readObject } from "@/lib/storage";
-import { isConvertibleOfficeDocument } from "@/lib/documents/converter";
+import {
+  isConvertibleOfficeDocument,
+  PreviewConversionError,
+  type PreviewFailureReason,
+} from "@/lib/documents/converter";
 import { getOrGeneratePreviewPdf } from "@/lib/storage/preview-cache";
 
 export const runtime = "nodejs";
 
+function classifyPreviewError(error: unknown): {
+  reason: PreviewFailureReason | "preview_failed";
+  message: string;
+} {
+  if (error instanceof PreviewConversionError) {
+    return { reason: error.reason, message: error.message };
+  }
+  const message =
+    error instanceof Error ? error.message : "Aperçu indisponible pour ce fichier.";
+  if (/LibreOffice/i.test(message)) {
+    return { reason: "libreoffice_missing", message };
+  }
+  if (/ETIMEDOUT|timed out|délai/i.test(message)) {
+    return { reason: "conversion_timeout", message };
+  }
+  if (/ZIP|OOXML|corrompu|PK manquant/i.test(message)) {
+    return { reason: "invalid_docx", message };
+  }
+  if (/aucun fichier PDF|output/i.test(message)) {
+    return { reason: "output_missing", message };
+  }
+  if (/stockage|storage|S3|NoSuchKey/i.test(message)) {
+    return { reason: "storage_read_failed", message };
+  }
+  return { reason: "preview_failed", message };
+}
+
 export async function GET(
   request: Request,
-  context: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await authenticate(request);
@@ -73,10 +104,20 @@ export async function GET(
           const total = pdfBuffer.length;
           const start = startStr ? parseInt(startStr, 10) : 0;
           const end = endStr ? parseInt(endStr, 10) : total - 1;
-          if (start < total && end < total && start <= end) {
+          if (
+            Number.isFinite(start) &&
+            Number.isFinite(end) &&
+            start >= 0 &&
+            end >= start &&
+            start < total
+          ) {
+            const safeEnd = Math.min(end, total - 1);
             status = 206;
-            responseBuffer = pdfBuffer.subarray(start, end + 1);
-            headers.set("Content-Range", `bytes ${start}-${end}/${total}`);
+            responseBuffer = pdfBuffer.subarray(start, safeEnd + 1);
+            headers.set(
+              "Content-Range",
+              `bytes ${start}-${safeEnd}/${total}`,
+            );
           }
         }
 
@@ -87,25 +128,25 @@ export async function GET(
           headers,
         });
       } catch (conversionError) {
-        const message =
-          conversionError instanceof Error
-            ? conversionError.message
-            : "Aperçu indisponible pour ce fichier.";
-        const missingLibreOffice = /LibreOffice/i.test(message);
-        console.error(
-          `[preview] Document conversion failed for file ${file.id} (${file.displayName}):`,
+        const { reason, message } = classifyPreviewError(conversionError);
+        console.error("[preview] Document conversion failed", {
+          reason,
+          fileId: file.id,
+          displayName: file.displayName,
+          extension: file.extension,
+          size: file.size,
+          storageKey: file.storageKey,
           message,
-          missingLibreOffice
-            ? "(install LibreOffice or set SOFFICE_PATH)"
-            : "",
-        );
+          detail:
+            conversionError instanceof PreviewConversionError
+              ? conversionError.detail
+              : undefined,
+        });
         return Response.json(
           {
             error:
-              "Aperçu indisponible pour ce fichier. Téléchargez l’original pour le consulter.",
-            code: missingLibreOffice
-              ? "PREVIEW_LIBREOFFICE_MISSING"
-              : "PREVIEW_CONVERSION_FAILED",
+              "Impossible de générer l’aperçu de ce document. Téléchargez l’original pour le consulter.",
+            code: reason,
           },
           { status: 422 },
         );
@@ -114,8 +155,11 @@ export async function GET(
 
     // 3. Unsupported format
     return Response.json(
-      { error: "Aperçu indisponible pour ce fichier." },
-      { status: 415 }
+      {
+        error: "Impossible de générer l’aperçu de ce document.",
+        code: "unsupported_format",
+      },
+      { status: 415 },
     );
   } catch (error) {
     return apiError(error);

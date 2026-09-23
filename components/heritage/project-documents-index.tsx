@@ -75,11 +75,7 @@ export function ProjectDocumentsIndex({
 
   return (
     <div>
-      <header className="mb-4 border-b border-border pb-4">
-        <h1 className="text-xl font-semibold text-foreground">
-          Tous les documents du projet
-        </h1>
-        <p className="mt-1.5 text-xs text-muted-foreground">
+      <p className="mb-4 text-xs text-muted-foreground" aria-live="polite">
           {[
             `${data.summary.total} document${data.summary.total > 1 ? "s" : ""}`,
             data.summary.totalBytes > 0
@@ -95,8 +91,7 @@ export function ProjectDocumentsIndex({
           ]
             .filter(Boolean)
             .join(" · ")}
-        </p>
-      </header>
+      </p>
 
       <div className="mb-3 flex flex-wrap items-center gap-2 border border-border bg-surface p-2">
         <Input
