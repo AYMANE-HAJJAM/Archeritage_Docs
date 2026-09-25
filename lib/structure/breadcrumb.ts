@@ -41,11 +41,8 @@ export function buildProjectBreadcrumb(input: {
   }
 
   if (input.section) {
-    const label = input.section.code
-      ? `${input.section.code} ${input.section.name}`
-      : input.section.name;
     items.push({
-      label,
+      label: input.section.name,
       href: `/projects/${input.project.slug}?sectionId=${input.section.id}`,
     });
   }

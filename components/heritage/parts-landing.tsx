@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { formatSize } from "@/lib/utils";
 
 export type PartCardModel = {
   id: string;
   slug: string;
   name: string;
   fileCount: number;
+  totalBytes: number;
 };
 
 /** Grid of Part entry points shown at the root of a subdivided project. */
@@ -33,8 +35,10 @@ export function PartsGrid({
             <h3 className="font-serif text-xl leading-snug text-foreground">
               {part.name}
             </h3>
-            <p className="mt-3 text-xs text-muted-foreground">
-              {part.fileCount} document{part.fileCount === 1 ? "" : "s"}
+            <p className="mt-3 text-xs tabular-nums text-muted-foreground">
+              {`${part.fileCount} document${part.fileCount === 1 ? "" : "s"}${
+                part.totalBytes > 0 ? ` · ${formatSize(part.totalBytes)}` : ""
+              }`}
             </p>
             <span className="mt-auto inline-flex items-center gap-1 pt-6 text-xs font-medium text-accent">
               Ouvrir

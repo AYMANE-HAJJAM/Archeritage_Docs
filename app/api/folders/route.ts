@@ -38,7 +38,10 @@ export async function POST(request: Request) {
     const projectId = await getProjectIdForSection(sectionId);
     await assertCanManageStructure(user, projectId);
 
-    const folder = await createFolder({ sectionId, parentId, name });
+    const folder = await createFolder(
+      { sectionId, parentId, name },
+      user.id,
+    );
     return Response.json(folder, { status: 201 });
   } catch (error) {
     return apiError(error);

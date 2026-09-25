@@ -26,6 +26,11 @@ export const AuditActions = {
   GROUP_DELETED: "GROUP_DELETED",
   DOCUMENT_RECLASSIFIED: "DOCUMENT_RECLASSIFIED",
   DOCUMENT_DELETED: "DOCUMENT_DELETED",
+  DOCUMENT_UPLOADED: "file.uploaded",
+  FOLDER_CREATED: "folder.created",
+  FOLDER_RENAMED: "folder.renamed",
+  FOLDER_MOVED: "folder.moved",
+  FOLDER_DELETED: "folder.deleted",
   USER_ACCESS_UPDATED: "USER_ACCESS_UPDATED",
 } as const;
 

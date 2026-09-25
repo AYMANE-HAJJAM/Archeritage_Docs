@@ -16,6 +16,7 @@ import {
 import { useToast } from "@/components/ui/toast";
 import { SectionDocumentsList } from "@/components/heritage/section-documents-list";
 import type { SectionFile } from "@/lib/structure/queries";
+import { formatShortDate, formatSize } from "@/lib/utils";
 
 export type FolderCard = {
   id: string;
@@ -23,6 +24,10 @@ export type FolderCard = {
   parentId: string | null;
   childFolderCount: number;
   documentCount: number;
+  totalBytes: number;
+  createdByName: string;
+  createdAt: string;
+  lastActivityAt: string;
 };
 
 export type MoveTarget = { id: string | null; label: string };
@@ -35,22 +40,6 @@ async function apiJson<T>(url: string, init: RequestInit): Promise<T> {
   const payload = (await res.json().catch(() => ({}))) as { error?: string } & T;
   if (!res.ok) throw new Error(payload.error || "L’opération a échoué.");
   return payload;
-}
-
-function folderMetaLine(folder: FolderCard): string {
-  const parts = [
-    folder.childFolderCount > 0
-      ? folder.childFolderCount === 1
-        ? "1 sous-dossier"
-        : `${folder.childFolderCount} sous-dossiers`
-      : null,
-    folder.documentCount > 0
-      ? folder.documentCount === 1
-        ? "1 document"
-        : `${folder.documentCount} documents`
-      : null,
-  ].filter(Boolean);
-  return parts.join(" · ");
 }
 
 function FolderNameDialog({
@@ -131,6 +120,7 @@ export function DocumentaryFolderBrowser({
   projectSlug,
   sectionId,
   currentFolderId,
+  sectionBasePath,
   folders,
   documents,
   moveTargets,
@@ -142,6 +132,7 @@ export function DocumentaryFolderBrowser({
   projectSlug: string;
   sectionId: string;
   currentFolderId: string | null;
+  sectionBasePath?: string;
   folders: FolderCard[];
   documents: SectionFile[];
   moveTargets: MoveTarget[];
@@ -196,7 +187,8 @@ export function DocumentaryFolderBrowser({
   const locationLabel = currentFolderId ? "ce dossier" : "cette rubrique";
 
   function folderHref(folderId: string) {
-    return `/projects/${projectSlug}?sectionId=${sectionId}&folderId=${folderId}`;
+    const base = sectionBasePath ?? `/projects/${projectSlug}`;
+    return `${base}?sectionId=${sectionId}&folderId=${folderId}`;
   }
 
   return (
@@ -218,68 +210,100 @@ export function DocumentaryFolderBrowser({
       {sortedFolders.length > 0 ? (
         <div>
           <h3 className="mb-3 text-sm font-semibold text-foreground">Dossiers</h3>
-          <ul className="divide-y divide-border border border-border bg-surface">
-            {sortedFolders.map((folder) => {
-              const meta = folderMetaLine(folder);
-              return (
-                <li key={folder.id} className="group/folder relative">
-                  <Link
-                    href={folderHref(folder.id)}
-                    scroll={false}
-                    className="flex items-start gap-3 px-4 py-3.5 transition-colors hover:bg-muted/40"
-                  >
-                    <Folder
-                      className="mt-0.5 size-4 shrink-0 text-accent"
-                      aria-hidden
-                    />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13px] font-medium text-foreground group-hover/folder:text-accent">
-                        {folder.name}
-                      </span>
-                      <span className="mt-0.5 block text-[11px] text-muted-foreground">
-                        {meta || "Vide"}
-                      </span>
-                    </span>
-                  </Link>
-                  {canManage ? (
-                    <div className="absolute right-2 top-2 flex gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover/folder:opacity-100">
-                      <button
-                        type="button"
-                        className="rounded-sm px-1.5 py-1 text-[10px] text-muted-foreground hover:bg-muted hover:text-foreground"
-                        onClick={() => setRenameTarget(folder)}
+          <div className="overflow-hidden border border-border bg-surface">
+            <div className="overflow-x-auto">
+              <table className="data-table min-w-[52rem]">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th className="w-24 text-right">Fichiers</th>
+                    <th className="w-24 text-right">Taille</th>
+                    <th className="w-48">Créé par</th>
+                    <th className="w-28">Créé le</th>
+                    <th className="w-36">Dernière activité</th>
+                    {canManage ? (
+                      <th className="w-36 text-right">
+                        <span className="sr-only">Actions</span>
+                      </th>
+                    ) : null}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedFolders.map((folder) => (
+                    <tr key={folder.id} className="group/folder">
+                      <td className="max-w-64">
+                        <Link
+                          href={folderHref(folder.id)}
+                          scroll={false}
+                          className="flex min-w-0 items-center gap-2 text-foreground group-hover/folder:text-accent"
+                        >
+                          <Folder className="size-3.5 shrink-0 text-accent" aria-hidden />
+                          <span className="truncate text-[13px] font-medium">
+                            {folder.name}
+                          </span>
+                        </Link>
+                      </td>
+                      <td className="text-right text-[13px] tabular-nums text-muted-foreground">
+                        {folder.documentCount}
+                      </td>
+                      <td className="text-right text-[13px] tabular-nums text-muted-foreground">
+                        {formatSize(folder.totalBytes)}
+                      </td>
+                      <td
+                        className="max-w-48 truncate text-[13px] text-muted-foreground"
+                        title={folder.createdByName}
                       >
-                        Renommer
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-sm px-1.5 py-1 text-[10px] text-muted-foreground hover:bg-muted hover:text-foreground"
-                        onClick={() => openCreate(folder.id)}
-                      >
-                        Sous-dossier
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-sm px-1.5 py-1 text-[10px] text-muted-foreground hover:bg-muted hover:text-foreground"
-                        onClick={() => {
-                          setMoveTarget(folder);
-                          setMoveParentId(folder.parentId ?? "");
-                        }}
-                      >
-                        Déplacer
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-sm px-1.5 py-1 text-[10px] text-destructive hover:bg-muted"
-                        onClick={() => setDeleteTarget(folder)}
-                      >
-                        Supprimer
-                      </button>
-                    </div>
-                  ) : null}
-                </li>
-              );
-            })}
-          </ul>
+                        {folder.createdByName}
+                      </td>
+                      <td className="whitespace-nowrap text-[13px] tabular-nums text-muted-foreground">
+                        {formatShortDate(folder.createdAt)}
+                      </td>
+                      <td className="whitespace-nowrap text-[13px] tabular-nums text-muted-foreground">
+                        {formatShortDate(folder.lastActivityAt)}
+                      </td>
+                      {canManage ? (
+                        <td className="text-right">
+                          <div className="flex justify-end gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover/folder:opacity-100">
+                            <button
+                              type="button"
+                              className="rounded-sm px-1.5 py-1 text-[10px] text-muted-foreground hover:bg-muted hover:text-foreground"
+                              onClick={() => setRenameTarget(folder)}
+                            >
+                              Renommer
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded-sm px-1.5 py-1 text-[10px] text-muted-foreground hover:bg-muted hover:text-foreground"
+                              onClick={() => openCreate(folder.id)}
+                            >
+                              Sous-dossier
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded-sm px-1.5 py-1 text-[10px] text-muted-foreground hover:bg-muted hover:text-foreground"
+                              onClick={() => {
+                                setMoveTarget(folder);
+                                setMoveParentId(folder.parentId ?? "");
+                              }}
+                            >
+                              Déplacer
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded-sm px-1.5 py-1 text-[10px] text-destructive hover:bg-muted"
+                              onClick={() => setDeleteTarget(folder)}
+                            >
+                              Supprimer
+                            </button>
+                          </div>
+                        </td>
+                      ) : null}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       ) : null}
 

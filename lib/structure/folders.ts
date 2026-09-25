@@ -13,6 +13,9 @@ import "server-only";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { HttpError } from "@/lib/http";
+import { AuditActions, writeAuditLog } from "@/lib/admin/audit";
+import { formatPersonName } from "@/lib/users/display-name";
+import { rollupFolderSubtrees } from "@/lib/structure/overview";
 import {
   assertFolderMoveAllowed,
   FolderMoveError,
@@ -34,7 +37,10 @@ async function assertSectionExists(sectionId: string) {
   if (!section) throw new HttpError(404, "Section introuvable.");
 }
 
-export async function createFolder(input: z.infer<typeof createFolderSchema>) {
+export async function createFolder(
+  input: z.infer<typeof createFolderSchema>,
+  actorUserId?: string | null,
+) {
   const data = createFolderSchema.parse(input);
   await assertSectionExists(data.sectionId);
 
@@ -54,17 +60,34 @@ export async function createFolder(input: z.infer<typeof createFolderSchema>) {
     _max: { sortOrder: true },
   });
 
-  return db.folder.create({
+  const folder = await db.folder.create({
     data: {
       name: data.name,
       sectionId: data.sectionId,
       parentId: data.parentId ?? null,
       sortOrder: (maxOrder._max.sortOrder ?? -1) + 1,
+      createdById: actorUserId || null,
     },
   });
+
+  if (actorUserId) {
+    await writeAuditLog({
+      actorUserId,
+      action: AuditActions.FOLDER_CREATED,
+      entityType: "Folder",
+      entityId: folder.id,
+      metadata: { sectionId: data.sectionId, parentId: data.parentId ?? null, name: data.name },
+    });
+  }
+
+  return folder;
 }
 
-export async function renameFolder(folderId: string, name: string) {
+export async function renameFolder(
+  folderId: string,
+  name: string,
+  actorUserId?: string | null,
+) {
   const trimmed = name.trim();
   if (!trimmed) throw new HttpError(400, "Nom requis.");
 
@@ -72,10 +95,22 @@ export async function renameFolder(folderId: string, name: string) {
   if (!folder) throw new HttpError(404, "Dossier introuvable.");
 
   // Display rename only — parentId / sectionId / sortOrder unchanged.
-  return db.folder.update({
+  const updated = await db.folder.update({
     where: { id: folderId },
     data: { name: trimmed },
   });
+
+  if (actorUserId) {
+    await writeAuditLog({
+      actorUserId,
+      action: AuditActions.FOLDER_RENAMED,
+      entityType: "Folder",
+      entityId: folderId,
+      metadata: { name: trimmed, sectionId: folder.sectionId },
+    });
+  }
+
+  return updated;
 }
 
 /** Collect descendant folder IDs (BFS). */
@@ -100,7 +135,11 @@ export async function collectDescendantFolderIds(
   return descendants;
 }
 
-export async function moveFolder(folderId: string, newParentId: string | null) {
+export async function moveFolder(
+  folderId: string,
+  newParentId: string | null,
+  actorUserId?: string | null,
+) {
   const folder = await db.folder.findUnique({ where: { id: folderId } });
   if (!folder) throw new HttpError(404, "Dossier introuvable.");
 
@@ -128,13 +167,32 @@ export async function moveFolder(folderId: string, newParentId: string | null) {
     throw error;
   }
 
-  return db.folder.update({
+  const updated = await db.folder.update({
     where: { id: folderId },
     data: { parentId: newParentId },
   });
+
+  if (actorUserId) {
+    await writeAuditLog({
+      actorUserId,
+      action: AuditActions.FOLDER_MOVED,
+      entityType: "Folder",
+      entityId: folderId,
+      metadata: {
+        sectionId: folder.sectionId,
+        fromParentId: folder.parentId,
+        toParentId: newParentId,
+      },
+    });
+  }
+
+  return updated;
 }
 
-export async function deleteFolderIfEmpty(folderId: string) {
+export async function deleteFolderIfEmpty(
+  folderId: string,
+  actorUserId?: string | null,
+) {
   const folder = await db.folder.findUnique({
     where: { id: folderId },
     include: {
@@ -147,6 +205,94 @@ export async function deleteFolderIfEmpty(folderId: string) {
   }
 
   await db.folder.delete({ where: { id: folderId } });
+
+  if (actorUserId) {
+    await writeAuditLog({
+      actorUserId,
+      action: AuditActions.FOLDER_DELETED,
+      entityType: "Folder",
+      entityId: folderId,
+      metadata: { sectionId: folder.sectionId, name: folder.name },
+    });
+  }
+}
+
+const PERSON_SELECT = {
+  name: true,
+  firstName: true,
+  lastName: true,
+  email: true,
+} as const;
+
+export type FolderOverview = {
+  id: string;
+  name: string;
+  parentId: string | null;
+  childFolderCount: number;
+  documentCount: number;
+  totalBytes: number;
+  createdByName: string;
+  createdAt: string;
+  lastActivityAt: string;
+};
+
+/**
+ * Immediate child folders of one location, with subtree file totals.
+ * Two queries for the whole section: folder metadata and file aggregates.
+ */
+export async function listFolderOverviews(
+  sectionId: string,
+  parentId: string | null,
+): Promise<FolderOverview[]> {
+  const [folders, fileGroups] = await Promise.all([
+    db.folder.findMany({
+      where: { sectionId },
+      select: {
+        id: true,
+        name: true,
+        parentId: true,
+        createdAt: true,
+        updatedAt: true,
+        createdBy: { select: PERSON_SELECT },
+      },
+    }),
+    db.file.groupBy({
+      by: ["folderId"],
+      where: { sectionId },
+      _count: { _all: true },
+      _sum: { size: true },
+      _max: { createdAt: true, updatedAt: true },
+    }),
+  ]);
+
+  const stats = rollupFolderSubtrees(
+    folders,
+    fileGroups.map((row) => ({
+      folderId: row.folderId,
+      fileCount: row._count._all,
+      totalBytes: row._sum.size ?? 0,
+      createdAt: row._max.createdAt,
+      updatedAt: row._max.updatedAt,
+    })),
+  );
+
+  return folders
+    .filter((folder) => folder.parentId === parentId)
+    .map((folder) => {
+      const subtree = stats.get(folder.id);
+      return {
+        id: folder.id,
+        name: folder.name,
+        parentId: folder.parentId,
+        childFolderCount: subtree?.childFolderCount ?? 0,
+        documentCount: subtree?.fileCount ?? 0,
+        totalBytes: subtree?.totalBytes ?? 0,
+        createdByName: formatPersonName(folder.createdBy),
+        createdAt: folder.createdAt.toISOString(),
+        lastActivityAt: (subtree?.lastActivityAt ?? folder.updatedAt).toISOString(),
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, "fr", { sensitivity: "base" }));
 }
 
 export async function listFolderChildren(sectionId: string, parentId: string | null) {

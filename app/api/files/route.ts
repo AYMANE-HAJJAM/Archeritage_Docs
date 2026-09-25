@@ -4,6 +4,7 @@ import {
   resolveMaxUploadMb,
 } from "@/lib/validation/file";
 import { createUploadedFile } from "@/lib/files/create-uploaded-file";
+import { formatPersonName } from "@/lib/users/display-name";
 
 export const runtime = "nodejs";
 export const maxDuration = 600;
@@ -106,14 +107,8 @@ export async function POST(request: Request) {
         sectionId: record.sectionId,
         folderId: record.folderId,
         createdAt: record.createdAt.toISOString(),
-        uploadedById: record.uploadedById,
-        uploadedByName: record.uploadedBy?.name ?? null,
-        location: [
-          record.section.code
-            ? `${record.section.code} ${record.section.name}`
-            : record.section.name,
-          record.folder?.name,
-        ]
+        uploadedByName: formatPersonName(record.uploadedBy),
+        location: [record.section.name, record.folder?.name]
           .filter(Boolean)
           .join(" › "),
       },

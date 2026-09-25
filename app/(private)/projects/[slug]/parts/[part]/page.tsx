@@ -39,7 +39,7 @@ export default async function ProjectPartPage({
   });
   if (!workspace) notFound();
 
-  const { structure, groups, fileCounts, summary, selection } = workspace;
+  const { structure, groups, sectionStats, summary, selection } = workspace;
 
   const breadcrumb = buildProjectBreadcrumb({
     territoire: structure.project.territoire,
@@ -59,7 +59,8 @@ export default async function ProjectPartPage({
       title={currentLabel}
       projectSlug={slug}
       groups={groups}
-      fileCounts={fileCounts}
+      sectionStats={sectionStats}
+      sectionBasePath={`/projects/${slug}/parts/${part.slug}`}
       summary={summary}
       selectedSection={selection?.section ?? null}
       documents={selection?.documents ?? []}

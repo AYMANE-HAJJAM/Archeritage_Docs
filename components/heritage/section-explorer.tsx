@@ -2,18 +2,30 @@
 
 import Link from "next/link";
 import { FolderOpen } from "lucide-react";
-import type { StructureGroup } from "@/lib/structure/queries";
+import type { SectionOperationalStats, StructureGroup } from "@/lib/structure/queries";
+import { formatShortDate, formatSize } from "@/lib/utils";
+
+const EMPTY_STATS: SectionOperationalStats = {
+  folderCount: 0,
+  fileCount: 0,
+  totalBytes: 0,
+  createdAt: "",
+  createdByName: "—",
+  lastActivityAt: "",
+};
 
 /** Groups → sections table, driven entirely by the DB structure. */
 export function SectionExplorer({
   projectSlug,
   groups,
-  fileCounts,
+  sectionStats,
+  sectionBasePath,
 }: {
   projectSlug: string;
   groups: StructureGroup[];
-  /** sectionId → number of files. */
-  fileCounts: Record<string, number>;
+  sectionStats: Record<string, SectionOperationalStats>;
+  /** Path that keeps the current Part when opening a rubrique. */
+  sectionBasePath?: string;
 }) {
   const visibleGroups = groups.filter((group) => group.sections.length > 0);
 
@@ -39,33 +51,25 @@ export function SectionExplorer({
 
           <div className="overflow-hidden border border-border bg-surface">
             <div className="overflow-x-auto">
-              <table className="data-table min-w-[32rem]">
+              <table className="data-table min-w-[56rem]">
                 <thead>
                   <tr>
-                    <th className="w-16">Code</th>
                     <th>Rubrique</th>
-                    <th className="w-24 text-right">Fichiers</th>
-                    <th className="hidden w-20 lg:table-cell">
-                      <span className="sr-only">Action</span>
-                    </th>
+                    <th className="w-24 text-right">Dossiers</th>
+                    <th className="w-20 text-right">Fichiers</th>
+                    <th className="w-24 text-right">Taille</th>
+                    <th className="w-52">Créé par</th>
+                    <th className="w-28">Créé le</th>
+                    <th className="w-36">Dernière activité</th>
                   </tr>
                 </thead>
                 <tbody>
                   {group.sections.map((section) => {
-                    const fileCount = fileCounts[section.id] ?? 0;
-                    const href = `/projects/${projectSlug}?sectionId=${section.id}`;
+                    const stats = sectionStats[section.id] ?? EMPTY_STATS;
+                    const href = `${sectionBasePath ?? `/projects/${projectSlug}`}?sectionId=${section.id}`;
                     return (
                       <tr key={section.id} className="group/row">
-                        <td>
-                          <Link
-                            href={href}
-                            scroll={false}
-                            className="block text-[12px] font-semibold tabular-nums text-accent"
-                          >
-                            {section.code ?? "—"}
-                          </Link>
-                        </td>
-                        <td>
+                        <td className="max-w-64">
                           <Link
                             href={href}
                             scroll={false}
@@ -74,23 +78,34 @@ export function SectionExplorer({
                             {section.name}
                           </Link>
                         </td>
+                        <td className="text-right text-[13px] tabular-nums text-muted-foreground">
+                          {stats.folderCount}
+                        </td>
                         <td className="text-right">
                           <Link
                             href={href}
                             scroll={false}
                             className="block text-[13px] tabular-nums text-muted-foreground"
                           >
-                            {fileCount}
+                            {stats.fileCount}
                           </Link>
                         </td>
-                        <td className="hidden text-right lg:table-cell">
-                          <Link
-                            href={href}
-                            scroll={false}
-                            className="text-[11px] font-semibold text-accent opacity-0 transition-opacity group-hover/row:opacity-100"
-                          >
-                            Ouvrir →
-                          </Link>
+                        <td className="text-right text-[13px] tabular-nums text-muted-foreground">
+                          {formatSize(stats.totalBytes)}
+                        </td>
+                        <td
+                          className="max-w-52 truncate text-[13px] text-muted-foreground"
+                          title={stats.createdByName}
+                        >
+                          {stats.createdByName}
+                        </td>
+                        <td className="whitespace-nowrap text-[13px] tabular-nums text-muted-foreground">
+                          {stats.createdAt ? formatShortDate(stats.createdAt) : "—"}
+                        </td>
+                        <td className="whitespace-nowrap text-[13px] tabular-nums text-muted-foreground">
+                          {stats.lastActivityAt
+                            ? formatShortDate(stats.lastActivityAt)
+                            : "—"}
                         </td>
                       </tr>
                     );

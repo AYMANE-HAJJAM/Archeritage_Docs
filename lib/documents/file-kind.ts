@@ -45,6 +45,8 @@ export type PreviewableFile = {
   mimeType: string;
   size: number;
   storageProvider: "CLOUDINARY" | "BACKBLAZE_B2";
+  createdAt?: string;
+  uploadedByName?: string | null;
 };
 
 export function normalizeExtension(extension: string): string {

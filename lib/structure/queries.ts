@@ -5,6 +5,8 @@
 import "server-only";
 
 import { db } from "@/lib/db";
+import { formatPersonName, type PersonNameSource } from "@/lib/users/display-name";
+import { latestTimestamp, rollupFilesByPart, type PartFileRollup } from "@/lib/structure/overview";
 
 async function noStore() {
   const { unstable_noStore } = await import("next/cache");
@@ -149,6 +151,13 @@ export type SectionFile = {
   location: string;
 };
 
+const PERSON_SELECT = {
+  name: true,
+  firstName: true,
+  lastName: true,
+  email: true,
+} as const;
+
 const FILE_SELECT = {
   id: true,
   displayName: true,
@@ -160,7 +169,7 @@ const FILE_SELECT = {
   sectionId: true,
   folderId: true,
   createdAt: true,
-  uploadedBy: { select: { name: true } },
+  uploadedBy: { select: PERSON_SELECT },
   folder: { select: { name: true } },
   section: { select: { name: true, code: true } },
 } as const;
@@ -176,15 +185,13 @@ type RawFile = {
   sectionId: string;
   folderId: string | null;
   createdAt: Date;
-  uploadedBy: { name: string } | null;
+  uploadedBy: PersonNameSource | null;
   folder: { name: string } | null;
   section: { name: string; code: string | null };
 };
 
 function toSectionFile(file: RawFile): SectionFile {
-  const sectionLabel = file.section.code
-    ? `${file.section.code} ${file.section.name}`
-    : file.section.name;
+  const uploader = formatPersonName(file.uploadedBy);
   return {
     id: file.id,
     displayName: file.displayName,
@@ -196,8 +203,8 @@ function toSectionFile(file: RawFile): SectionFile {
     sectionId: file.sectionId,
     folderId: file.folderId,
     createdAt: file.createdAt.toISOString(),
-    uploadedByName: file.uploadedBy?.name ?? null,
-    location: [sectionLabel, file.folder?.name].filter(Boolean).join(" › "),
+    uploadedByName: uploader === "—" ? null : uploader,
+    location: [file.section.name, file.folder?.name].filter(Boolean).join(" › "),
   };
 }
 
@@ -228,17 +235,142 @@ export async function listProjectFiles(
   return files.map(toSectionFile);
 }
 
-/** File counts keyed by sectionId, for structure tables. */
-export async function countFilesBySection(
+export type SectionOperationalStats = {
+  folderCount: number;
+  fileCount: number;
+  totalBytes: number;
+  createdAt: string;
+  createdByName: string;
+  lastActivityAt: string;
+};
+
+export type WorkspaceMetrics = {
+  sectionStats: Record<string, SectionOperationalStats>;
+  fileCount: number;
+  totalBytes: number;
+  partRollups: Record<string, PartFileRollup>;
+};
+
+const SECTION_CREATED_ACTIONS = ["section.created", "SECTION_CREATED"] as const;
+
+/**
+ * Aggregated overview numbers for one project, optionally one Part.
+ * When `partId` is null, only project-level (global) groups are included.
+ * When omitted, every group of the project is included.
+ */
+export async function getWorkspaceMetrics(
   projectId: string,
-): Promise<Record<string, number>> {
+  partId?: string | null,
+): Promise<WorkspaceMetrics> {
   await noStore();
-  const rows = await db.file.groupBy({
-    by: ["sectionId"],
-    where: { section: { group: { projectId } } },
-    _count: { _all: true },
-  });
-  return Object.fromEntries(rows.map((r) => [r.sectionId, r._count._all]));
+  const groupWhere = {
+    projectId,
+    ...(partId !== undefined ? { partId } : {}),
+  };
+
+  const [sections, fileGroups, folderGroups] = await Promise.all([
+    db.section.findMany({
+      where: { group: groupWhere },
+      select: {
+        id: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+        createdBy: { select: PERSON_SELECT },
+        group: { select: { partId: true } },
+      },
+    }),
+    db.file.groupBy({
+      by: ["sectionId"],
+      where: { section: { group: groupWhere } },
+      _count: { _all: true },
+      _sum: { size: true },
+      _max: { createdAt: true, updatedAt: true },
+    }),
+    db.folder.groupBy({
+      by: ["sectionId"],
+      where: { section: { group: groupWhere } },
+      _count: { _all: true },
+      _max: { createdAt: true, updatedAt: true },
+    }),
+  ]);
+
+  const fileBySection = new Map(fileGroups.map((row) => [row.sectionId, row]));
+  const folderBySection = new Map(folderGroups.map((row) => [row.sectionId, row]));
+
+  const missingCreatorIds = sections
+    .filter((section) => section.isActive && !section.createdBy)
+    .map((section) => section.id);
+
+  const creationLogs = missingCreatorIds.length
+    ? await db.auditLog.findMany({
+        where: {
+          entityType: "Section",
+          entityId: { in: missingCreatorIds },
+          action: { in: [...SECTION_CREATED_ACTIONS] },
+        },
+        orderBy: { createdAt: "asc" },
+        select: {
+          entityId: true,
+          actor: { select: PERSON_SELECT },
+        },
+      })
+    : [];
+
+  const creatorFromAudit = new Map<string, PersonNameSource | null>();
+  for (const log of creationLogs) {
+    if (!log.entityId || creatorFromAudit.has(log.entityId)) continue;
+    creatorFromAudit.set(log.entityId, log.actor);
+  }
+
+  const sectionStats: Record<string, SectionOperationalStats> = {};
+  for (const section of sections) {
+    if (!section.isActive) continue;
+    const files = fileBySection.get(section.id);
+    const folders = folderBySection.get(section.id);
+    const lastActivity = latestTimestamp([
+      section.updatedAt,
+      files?._max.createdAt,
+      files?._max.updatedAt,
+      folders?._max.createdAt,
+      folders?._max.updatedAt,
+    ]);
+    const createdByName = section.createdBy
+      ? formatPersonName(section.createdBy)
+      : formatPersonName(creatorFromAudit.get(section.id));
+    sectionStats[section.id] = {
+      folderCount: folders?._count._all ?? 0,
+      fileCount: files?._count._all ?? 0,
+      totalBytes: files?._sum.size ?? 0,
+      createdAt: section.createdAt.toISOString(),
+      createdByName,
+      lastActivityAt: (lastActivity ?? section.updatedAt).toISOString(),
+    };
+  }
+
+  let fileCount = 0;
+  let totalBytes = 0;
+  const fileRows: { sectionId: string; fileCount: number; totalBytes: number }[] = [];
+  for (const row of fileGroups) {
+    const bytes = row._sum.size ?? 0;
+    fileCount += row._count._all;
+    totalBytes += bytes;
+    fileRows.push({
+      sectionId: row.sectionId,
+      fileCount: row._count._all,
+      totalBytes: bytes,
+    });
+  }
+
+  return {
+    sectionStats,
+    fileCount,
+    totalBytes,
+    partRollups: rollupFilesByPart(
+      fileRows,
+      new Map(sections.map((section) => [section.id, section.group.partId])),
+    ),
+  };
 }
 
 export async function getSectionById(sectionId: string) {

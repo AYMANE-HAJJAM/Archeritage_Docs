@@ -66,7 +66,6 @@ export async function searchProject(
       select: {
         id: true,
         name: true,
-        code: true,
         group: {
           select: {
             name: true,
@@ -152,7 +151,7 @@ export async function searchProject(
     hits.push({
       type: "section",
       id: section.id,
-      name: section.code ? `${section.code} ${section.name}` : section.name,
+      name: section.name,
       path: [project.name, partName, section.group.name, section.name]
         .filter(Boolean)
         .join(" / "),

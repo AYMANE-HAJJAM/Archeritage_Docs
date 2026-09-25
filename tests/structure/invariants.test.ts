@@ -131,7 +131,7 @@ test("breadcrumb includes territoire → project → part → section → folder
   assert.equal(items[0]?.href, "/territoires/SAF");
   assert.equal(items[1]?.href, "/projects/dossier");
   assert.equal(items[2]?.href, "/projects/dossier/parts/part-a");
-  assert.ok(items.some((i) => i.label.includes("01.1")));
+  assert.ok(items.some((i) => i.label === "Rubrique"));
   assert.ok(items.some((i) => i.label === "Plans"));
   assert.ok(items.some((i) => i.label === "Topo"));
 });

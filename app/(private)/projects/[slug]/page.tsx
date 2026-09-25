@@ -8,7 +8,7 @@ import {
 } from "@/lib/access";
 import { buildProjectBreadcrumb } from "@/lib/structure/breadcrumb";
 import { getProjectBySlug } from "@/lib/structure/queries";
-import { loadWorkspace, partFileCount } from "@/lib/structure/workspace";
+import { loadWorkspace } from "@/lib/structure/workspace";
 
 type ProjectQuery = { sectionId?: string; folderId?: string };
 
@@ -35,7 +35,8 @@ export default async function ProjectPage({
   });
   if (!workspace) notFound();
 
-  const { structure, groups, fileCounts, summary, selection } = workspace;
+  const { structure, groups, sectionStats, partRollups, summary, selection } =
+    workspace;
 
   const breadcrumb = buildProjectBreadcrumb({
     territoire: structure.project.territoire,
@@ -63,9 +64,10 @@ export default async function ProjectPage({
         id: part.id,
         slug: part.slug,
         name: part.name,
-        fileCount: partFileCount(groups, part.id, fileCounts),
+        fileCount: partRollups[part.id]?.fileCount ?? 0,
+        totalBytes: partRollups[part.id]?.totalBytes ?? 0,
       }))}
-      fileCounts={fileCounts}
+      sectionStats={sectionStats}
       summary={summary}
       selectedSection={selection?.section ?? null}
       documents={selection?.documents ?? []}

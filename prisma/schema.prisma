@@ -40,11 +40,14 @@ model User {
   status       AccountStatus @default(ACTIVE)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  files        File[]
-  sessions     Session[]
-  memberships  ProjectMember[]
-  invitations  InvitationToken[]
-  auditLogs    AuditLog[]    @relation("AuditActor")
+  files                File[]
+  sessions             Session[]
+  memberships          ProjectMember[]
+  invitations          InvitationToken[]
+  auditLogs            AuditLog[]     @relation("AuditActor")
+  createdSectionGroups SectionGroup[] @relation("SectionGroupCreator")
+  createdSections      Section[]      @relation("SectionCreator")
+  createdFolders       Folder[]       @relation("FolderCreator")
 }
 
 model Session {
@@ -161,20 +164,23 @@ model Part {
 }
 
 model SectionGroup {
-  id        String    @id @default(cuid())
-  projectId String
+  id          String    @id @default(cuid())
+  projectId   String
   /// When set, must belong to the same project (enforced in app + migration check).
-  partId    String?
-  name      String
-  sortOrder Int       @default(0)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  part      Part?     @relation(fields: [partId], references: [id], onDelete: Cascade)
-  sections  Section[]
+  partId      String?
+  name        String
+  sortOrder   Int       @default(0)
+  createdById String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  part        Part?     @relation(fields: [partId], references: [id], onDelete: Cascade)
+  createdBy   User?     @relation("SectionGroupCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  sections    Section[]
 
   @@index([projectId, sortOrder])
   @@index([partId])
+  @@index([createdById])
 }
 
 model Section {
@@ -184,26 +190,31 @@ model Section {
   /// Optional display code (e.g. 01.1). Not a relational identity.
   code      String?
   sortOrder Int          @default(0)
-  isActive  Boolean      @default(true)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  group     SectionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  folders   Folder[]
-  files     File[]
+  isActive    Boolean      @default(true)
+  createdById String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  group       SectionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdBy   User?        @relation("SectionCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  folders     Folder[]
+  files       File[]
 
   @@index([groupId, sortOrder])
   @@index([groupId, isActive])
+  @@index([createdById])
 }
 
 model Folder {
   id        String   @id @default(cuid())
   name      String
   sectionId String
-  parentId  String?
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  parentId    String?
+  sortOrder   Int      @default(0)
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  section     Section  @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  createdBy   User?    @relation("FolderCreator", fields: [createdById], references: [id], onDelete: SetNull)
   parent    Folder?  @relation("FolderTree", fields: [parentId, sectionId], references: [id, sectionId], onDelete: Restrict, onUpdate: Restrict)
   children  Folder[] @relation("FolderTree")
   files     File[]
@@ -211,6 +222,7 @@ model Folder {
   @@unique([id, sectionId])
   @@index([sectionId, parentId])
   @@index([parentId])
+  @@index([createdById])
 }
 
 model File {

@@ -8,17 +8,19 @@ import "server-only";
 import { db } from "@/lib/db";
 import {
   getFolderAncestry,
-  listFolderChildren,
+  listFolderOverviews,
   listSectionFolderPaths,
 } from "@/lib/structure/folders";
 import {
-  countFilesBySection,
   getProjectStructure,
+  getWorkspaceMetrics,
   listSectionFiles,
   type ProjectStructure,
   type SectionFile,
+  type SectionOperationalStats,
   type StructureGroup,
 } from "@/lib/structure/queries";
+import type { PartFileRollup } from "@/lib/structure/overview";
 import type { FolderCard, MoveTarget } from "@/components/heritage/documentary-folder-browser";
 
 export type WorkspaceSelection = {
@@ -34,7 +36,8 @@ export type WorkspaceSelection = {
 export type WorkspaceData = {
   structure: ProjectStructure;
   groups: StructureGroup[];
-  fileCounts: Record<string, number>;
+  sectionStats: Record<string, SectionOperationalStats>;
+  partRollups: Record<string, PartFileRollup>;
   summary: { sectionCount: number; fileCount: number; totalBytes: number };
   selection: WorkspaceSelection | null;
 };
@@ -51,32 +54,19 @@ export async function loadWorkspace(
     folderId?: string | null;
   } = {},
 ): Promise<WorkspaceData | null> {
-  const structure = await getProjectStructure(projectId, {
-    ...(options.partId !== undefined ? { partId: options.partId } : {}),
-  });
-  if (!structure) return null;
-
-  const [fileCounts, totals] = await Promise.all([
-    countFilesBySection(projectId),
-    db.file.aggregate({
-      where: {
-        section: {
-          group: {
-            projectId,
-            ...(options.partId !== undefined ? { partId: options.partId } : {}),
-          },
-        },
-      },
-      _count: { _all: true },
-      _sum: { size: true },
-    }),
+  const structureFilter =
+    options.partId !== undefined ? { partId: options.partId } : {};
+  const [structure, metrics] = await Promise.all([
+    getProjectStructure(projectId, structureFilter),
+    getWorkspaceMetrics(projectId, options.partId),
   ]);
+  if (!structure) return null;
 
   const groups = structure.groups;
   const summary = {
     sectionCount: groups.reduce((n, g) => n + g.sections.length, 0),
-    fileCount: totals._count._all,
-    totalBytes: totals._sum.size ?? 0,
+    fileCount: metrics.fileCount,
+    totalBytes: metrics.totalBytes,
   };
 
   let selection: WorkspaceSelection | null = null;
@@ -95,7 +85,14 @@ export async function loadWorkspace(
       },
     });
     if (!section || !section.isActive || section.group.projectId !== projectId) {
-      return { structure, groups, fileCounts, summary, selection: null };
+      return {
+        structure,
+        groups,
+        sectionStats: metrics.sectionStats,
+        partRollups: metrics.partRollups,
+        summary,
+        selection: null,
+      };
     }
 
     let currentFolderId: string | null = null;
@@ -110,7 +107,7 @@ export async function loadWorkspace(
     }
 
     const [children, documents, folderPaths] = await Promise.all([
-      listFolderChildren(section.id, currentFolderId),
+      listFolderOverviews(section.id, currentFolderId),
       listSectionFiles(section.id, currentFolderId),
       listSectionFolderPaths(section.id),
     ]);
@@ -129,13 +126,7 @@ export async function loadWorkspace(
       },
       folderTrail,
       currentFolderId,
-      folders: children.map((folder) => ({
-        id: folder.id,
-        name: folder.name,
-        parentId: folder.parentId,
-        childFolderCount: folder._count.children,
-        documentCount: folder._count.files,
-      })),
+      folders: children,
       documents,
       moveTargets: [
         { id: null, label: "Racine de la rubrique" },
@@ -144,17 +135,12 @@ export async function loadWorkspace(
     };
   }
 
-  return { structure, groups, fileCounts, summary, selection };
-}
-
-/** Number of files under every section of a Part. */
-export function partFileCount(
-  groups: StructureGroup[],
-  partId: string,
-  fileCounts: Record<string, number>,
-): number {
-  return groups
-    .filter((group) => group.partId === partId)
-    .flatMap((group) => group.sections)
-    .reduce((n, section) => n + (fileCounts[section.id] ?? 0), 0);
+  return {
+    structure,
+    groups,
+    sectionStats: metrics.sectionStats,
+    partRollups: metrics.partRollups,
+    summary,
+    selection,
+  };
 }

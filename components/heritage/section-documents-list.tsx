@@ -134,8 +134,9 @@ export function SectionDocumentsList({
               <thead>
                 <tr>
                   <th>Nom du fichier</th>
-                  <th className="hidden w-28 sm:table-cell">Ajouté le</th>
                   <th className="hidden w-24 text-right sm:table-cell">Taille</th>
+                  <th className="hidden w-36 md:table-cell">Ajouté par</th>
+                  <th className="hidden w-28 sm:table-cell">Ajouté le</th>
                   <th className="w-12 text-right">
                     <span className="sr-only">Actions</span>
                   </th>
@@ -161,18 +162,21 @@ export function SectionDocumentsList({
                           </span>
                           <span className="mt-0.5 block truncate text-[11px] text-muted-foreground sm:hidden">
                             {formatSize(file.size)}
-                            {file.extension ? ` · ${file.extension}` : ""}
+                            {file.uploadedByName ? ` · ${file.uploadedByName}` : ""}
                           </span>
                         </span>
                       </button>
+                    </td>
+                    <td className="hidden whitespace-nowrap text-right text-xs tabular-nums text-muted-foreground sm:table-cell">
+                      {formatSize(file.size)}
+                    </td>
+                    <td className="hidden max-w-36 truncate text-xs text-muted-foreground md:table-cell">
+                      {file.uploadedByName ?? "—"}
                     </td>
                     <td className="hidden whitespace-nowrap text-xs tabular-nums text-muted-foreground sm:table-cell">
                       {new Date(file.createdAt).toLocaleDateString("fr-FR", {
                         timeZone: "UTC",
                       })}
-                    </td>
-                    <td className="hidden whitespace-nowrap text-right text-xs tabular-nums text-muted-foreground sm:table-cell">
-                      {formatSize(file.size)}
                     </td>
                     <td className="text-right">
                       <DocumentRowActions

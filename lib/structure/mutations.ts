@@ -206,6 +206,7 @@ export async function createSectionGroup(
       partId: data.partId ?? null,
       name: data.name,
       sortOrder: data.sortOrder ?? (maxOrder._max.sortOrder ?? -1) + 1,
+      createdById: actorUserId,
     },
   });
 
@@ -324,6 +325,7 @@ export async function createSection(
       name: data.name,
       code: data.code?.trim() || null,
       sortOrder: data.sortOrder ?? (maxOrder._max.sortOrder ?? -1) + 1,
+      createdById: actorUserId,
     },
   });
 

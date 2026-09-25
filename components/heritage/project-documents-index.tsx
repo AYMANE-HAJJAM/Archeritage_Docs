@@ -105,8 +105,9 @@ export function ProjectDocumentsIndex({
                 <tr>
                   <th>Nom du fichier</th>
                   <th className="hidden md:table-cell">Emplacement</th>
-                  <th className="hidden w-28 sm:table-cell">Ajouté le</th>
                   <th className="hidden w-24 text-right sm:table-cell">Taille</th>
+                  <th className="hidden w-36 lg:table-cell">Ajouté par</th>
+                  <th className="hidden w-28 sm:table-cell">Ajouté le</th>
                   <th className="w-12 text-right">
                     <span className="sr-only">Actions</span>
                   </th>
@@ -139,13 +140,16 @@ export function ProjectDocumentsIndex({
                     <td className="hidden max-w-64 truncate text-xs text-muted-foreground md:table-cell">
                       {file.location}
                     </td>
+                    <td className="hidden whitespace-nowrap text-right text-xs tabular-nums text-muted-foreground sm:table-cell">
+                      {formatSize(file.size)}
+                    </td>
+                    <td className="hidden max-w-36 truncate text-xs text-muted-foreground lg:table-cell">
+                      {file.uploadedByName ?? "—"}
+                    </td>
                     <td className="hidden whitespace-nowrap text-xs tabular-nums text-muted-foreground sm:table-cell">
                       {new Date(file.createdAt).toLocaleDateString("fr-FR", {
                         timeZone: "UTC",
                       })}
-                    </td>
-                    <td className="hidden whitespace-nowrap text-right text-xs tabular-nums text-muted-foreground sm:table-cell">
-                      {formatSize(file.size)}
                     </td>
                     <td className="text-right">
                       <DocumentRowActions

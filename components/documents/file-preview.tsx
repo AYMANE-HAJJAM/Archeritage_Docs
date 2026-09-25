@@ -157,7 +157,18 @@ export function FilePreviewModal<T extends PreviewableFile>({
               </span>
             </div>
             <DialogDescription className="mt-0.5 text-xs text-muted-foreground">
-              {[formatSize(file.size), positionLabel].filter(Boolean).join(" · ")}
+              {[
+                formatSize(file.size),
+                file.uploadedByName,
+                file.createdAt
+                  ? new Date(file.createdAt).toLocaleDateString("fr-FR", {
+                      timeZone: "UTC",
+                    })
+                  : null,
+                positionLabel,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
             </DialogDescription>
           </div>
           <div className="flex shrink-0 items-center gap-1.5">

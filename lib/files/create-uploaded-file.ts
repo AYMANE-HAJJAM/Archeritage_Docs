@@ -21,6 +21,7 @@ import {
 import { buildDocumentStoragePath } from "@/lib/storage/path-builder";
 import { resolveStorageProvider } from "@/lib/storage/provider";
 import { resolveUploadContext } from "@/lib/structure/upload-context";
+import { AuditActions, writeAuditLog } from "@/lib/admin/audit";
 import {
   classifyStorageFailure,
   UploadError,
@@ -219,8 +220,9 @@ export async function createUploadedFile(input: CreateUploadedFileInput) {
     throw classifyStorageFailure(storageProvider, error);
   }
 
+  let record;
   try {
-    return await db.file.create({
+    record = await db.file.create({
       data: {
         extension: metadata.extension,
         mimeType: metadata.mimeType,
@@ -247,7 +249,9 @@ export async function createUploadedFile(input: CreateUploadedFileInput) {
         folderId: true,
         createdAt: true,
         uploadedById: true,
-        uploadedBy: { select: { name: true } },
+        uploadedBy: {
+          select: { name: true, firstName: true, lastName: true, email: true },
+        },
         folder: { select: { name: true } },
         section: { select: { name: true, code: true } },
       },
@@ -265,6 +269,29 @@ export async function createUploadedFile(input: CreateUploadedFileInput) {
     }
     throw error;
   }
+
+  try {
+    await writeAuditLog({
+      actorUserId: actor.id,
+      action: AuditActions.DOCUMENT_UPLOADED,
+      entityType: "File",
+      entityId: record.id,
+      metadata: {
+        displayName: record.displayName,
+        sectionId: record.sectionId,
+        folderId: record.folderId,
+        size: record.size,
+        projectId: ctx.projectId,
+      },
+    });
+  } catch (error) {
+    console.error("[createUploadedFile] audit failed", {
+      fileId: record.id,
+      message: error instanceof Error ? error.message.slice(0, 300) : String(error),
+    });
+  }
+
+  return record;
 }
 
 async function streamToBuffer(stream: Readable): Promise<Buffer> {

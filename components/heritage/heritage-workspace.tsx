@@ -13,7 +13,11 @@ import {
 import { StickyContextNav } from "@/components/heritage/sticky-context-nav";
 import type { ProjectPermissionFlags } from "@/lib/access/permissions";
 import type { BreadcrumbItem } from "@/lib/structure/breadcrumb";
-import type { SectionFile, StructureGroup } from "@/lib/structure/queries";
+import type {
+  SectionFile,
+  SectionOperationalStats,
+  StructureGroup,
+} from "@/lib/structure/queries";
 import { formatSize } from "@/lib/utils";
 
 export type SelectedSection = {
@@ -35,7 +39,8 @@ export function HeritageWorkspace({
   projectSlug,
   groups,
   parts = [],
-  fileCounts,
+  sectionStats,
+  sectionBasePath,
   summary,
   selectedSection = null,
   documents = [],
@@ -50,7 +55,8 @@ export function HeritageWorkspace({
   projectSlug: string;
   groups: StructureGroup[];
   parts?: PartCardModel[];
-  fileCounts: Record<string, number>;
+  sectionStats: Record<string, SectionOperationalStats>;
+  sectionBasePath?: string;
   summary: ProjectSummary;
   selectedSection?: SelectedSection | null;
   documents?: SectionFile[];
@@ -85,6 +91,7 @@ export function HeritageWorkspace({
             projectSlug={projectSlug}
             sectionId={selectedSection.id}
             currentFolderId={currentFolderId}
+            sectionBasePath={sectionBasePath}
             folders={folders}
             documents={documents}
             moveTargets={moveTargets}
@@ -100,7 +107,8 @@ export function HeritageWorkspace({
               <SectionExplorer
                 projectSlug={projectSlug}
                 groups={groups}
-                fileCounts={fileCounts}
+                sectionStats={sectionStats}
+                sectionBasePath={sectionBasePath}
               />
             )}
           </>

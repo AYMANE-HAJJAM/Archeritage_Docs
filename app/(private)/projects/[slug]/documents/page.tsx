@@ -39,9 +39,7 @@ export default async function ProjectDocumentsPage({
   const sections = structure.groups.flatMap((group) =>
     group.sections.map((section) => ({
       id: section.id,
-      label: section.code
-        ? `${section.code} ${section.name}`
-        : `${group.name} · ${section.name}`,
+      label: `${group.name} · ${section.name}`,
     })),
   );
 

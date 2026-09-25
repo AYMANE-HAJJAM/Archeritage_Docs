@@ -26,20 +26,20 @@ async function authorizeFolder(request: Request, folderId: string) {
   if (!folder) throw new HttpError(404, "Dossier introuvable.");
   const projectId = await getProjectIdForSection(folder.sectionId);
   await assertCanManageStructure(user, projectId);
-  return folder;
+  return { folder, user };
 }
 
 export async function PATCH(request: Request, context: Context) {
   try {
     const { id } = await context.params;
-    await authorizeFolder(request, id);
+    const { user } = await authorizeFolder(request, id);
     const body = patchSchema.parse(await readJson(request));
 
     if (body.parentId !== undefined) {
-      await moveFolder(id, body.parentId);
+      await moveFolder(id, body.parentId, user.id);
     }
     if (body.name !== undefined) {
-      await renameFolder(id, body.name);
+      await renameFolder(id, body.name, user.id);
     }
     if (body.parentId === undefined && body.name === undefined) {
       throw new HttpError(400, "Aucune modification.");
@@ -58,8 +58,8 @@ export async function PATCH(request: Request, context: Context) {
 export async function DELETE(request: Request, context: Context) {
   try {
     const { id } = await context.params;
-    await authorizeFolder(request, id);
-    await deleteFolderIfEmpty(id);
+    const { user } = await authorizeFolder(request, id);
+    await deleteFolderIfEmpty(id, user.id);
     return Response.json({ ok: true });
   } catch (error) {
     return apiError(error);
