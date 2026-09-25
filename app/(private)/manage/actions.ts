@@ -2,9 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import {
-  assertCanCreateDossier,
+  assertCanCreateProject,
   assertCanManageStructure,
-  assertCanReclassify,
   requireActiveUser,
   requireAdmin,
 } from "@/lib/access";
@@ -22,23 +21,20 @@ import {
   updateTerritoireSchema,
 } from "@/lib/admin/territoires";
 import {
-  assessSectionsLinkedContent,
-  createGroup,
-  createGroupSchema,
+  createPart,
   createSection,
-  createSectionSchema,
-  deleteGroupIfEmpty,
+  createSectionGroup,
+  deletePartIfEmpty,
+  deleteSectionGroupIfEmpty,
   deleteSectionIfEmpty,
-  listStructureAdmin,
-  reclassifyDocument,
-  renameGroup,
-  renameGroupSchema,
-  reorderGroups,
+  moveSectionToGroup,
+  renamePart,
+  renameSection,
+  renameSectionGroup,
+  reorderSectionGroups,
   reorderSections,
-  updateSection,
-  updateSectionSchema,
-} from "@/lib/admin/structure";
-import { parseUpdateSectionFormData } from "@/lib/admin/section-update-form";
+  setSectionActive,
+} from "@/lib/structure/mutations";
 import { db } from "@/lib/db";
 
 /** Live UI payloads — presentation only; server remains source of truth. */
@@ -46,7 +42,6 @@ export type LivePlatform = {
   id: string;
   name: string;
   code: string;
-  slug: string;
   description: string | null;
   isActive: boolean;
   dossierCount: number;
@@ -59,35 +54,38 @@ export type LiveDossier = {
   id: string;
   name: string;
   slug: string;
-  code: string | null;
   description: string | null;
-  type: string;
   isActive: boolean;
   sectionCount: number;
   fileCount: number;
   lastActivityAt: string;
 };
 
-export type LiveSection = {
+export type LivePart = {
   id: string;
-  code: string;
+  name: string;
   slug: string;
-  title: string;
-  description: string | null;
-  kind: string;
-  groupId: string | null;
   sortOrder: number;
-  isActive: boolean;
-  documentCount: number;
-  codeLocked: boolean;
-  /** True when hard-delete must be refused (documents or linked heritage data). */
-  hasLinkedContent: boolean;
+  groupCount: number;
 };
 
 export type LiveGroup = {
   id: string;
-  label: string;
+  name: string;
+  partId: string | null;
   sortOrder: number;
+};
+
+export type LiveSection = {
+  id: string;
+  name: string;
+  code: string | null;
+  groupId: string;
+  sortOrder: number;
+  isActive: boolean;
+  documentCount: number;
+  /** True when hard-delete must be refused (documents or folders present). */
+  hasLinkedContent: boolean;
 };
 
 export type ProjectActionState = {
@@ -95,8 +93,9 @@ export type ProjectActionState = {
   ok?: boolean;
   platform?: LivePlatform;
   dossier?: LiveDossier;
-  section?: LiveSection;
+  part?: LivePart;
   group?: LiveGroup;
+  section?: LiveSection;
   deletedId?: string;
 };
 
@@ -108,7 +107,6 @@ function revalidateManage(territoireId?: string, projectSlug?: string) {
   }
   revalidatePath("/structure");
   revalidatePath("/projects");
-  revalidatePath("/territoires/saf");
   if (projectSlug) {
     revalidatePath(`/projects/${projectSlug}`);
   }
@@ -120,119 +118,105 @@ async function requireStructureEditor(projectId: string) {
   return user;
 }
 
+async function projectIdForGroup(groupId: string) {
+  const group = await db.sectionGroup.findUnique({
+    where: { id: groupId },
+    select: { projectId: true },
+  });
+  if (!group) throw new HttpError(404, "Groupe introuvable.");
+  return group.projectId;
+}
+
+async function projectIdForSection(sectionId: string) {
+  const section = await db.section.findUnique({
+    where: { id: sectionId },
+    select: { group: { select: { projectId: true } } },
+  });
+  if (!section) throw new HttpError(404, "Rubrique introuvable.");
+  return section.group.projectId;
+}
+
+function failure(error: unknown, fallback: string): ProjectActionState {
+  return { error: error instanceof HttpError ? error.message : fallback };
+}
+
 async function toLivePlatform(territoireId: string): Promise<LivePlatform | null> {
   const t = await db.territoire.findUnique({
     where: { id: territoireId },
-    include: {
-      projects: {
-        select: {
-          id: true,
-          updatedAt: true,
-          _count: { select: { files: true, heritageSections: true } },
-          files: {
-            orderBy: { updatedAt: "desc" },
-            take: 1,
-            select: { updatedAt: true },
-          },
-        },
-      },
-    },
+    include: { projects: { select: { id: true, updatedAt: true } } },
   });
   if (!t) return null;
-  const fileCount = t.projects.reduce((n, p) => n + p._count.files, 0);
-  const sectionCount = t.projects.reduce(
-    (n, p) => n + p._count.heritageSections,
-    0,
-  );
+
+  const projectIds = t.projects.map((p) => p.id);
+  const [sectionCount, fileCount] = await Promise.all([
+    db.section.count({ where: { group: { projectId: { in: projectIds } } } }),
+    db.file.count({
+      where: { section: { group: { projectId: { in: projectIds } } } },
+    }),
+  ]);
   const lastActivityAt = t.projects
-    .flatMap((p) => [
-      p.updatedAt,
-      ...(p.files[0] ? [p.files[0].updatedAt] : []),
-    ])
-    .sort((a, b) => b.getTime() - a.getTime())[0];
+    .map((p) => p.updatedAt)
+    .concat(t.updatedAt)
+    .sort((a, b) => b.getTime() - a.getTime())[0]!;
+
   return {
     id: t.id,
     name: t.name,
     code: t.code,
-    slug: t.slug,
     description: t.description,
     isActive: t.isActive,
     dossierCount: t.projects.length,
     sectionCount,
     fileCount,
-    lastActivityAt: (lastActivityAt ?? t.updatedAt).toISOString(),
+    lastActivityAt: lastActivityAt.toISOString(),
   };
 }
 
 async function toLiveDossier(projectId: string): Promise<LiveDossier | null> {
-  const p = await db.project.findUnique({
-    where: { id: projectId },
-    include: {
-      _count: { select: { files: true, heritageSections: true } },
-      files: {
-        orderBy: { updatedAt: "desc" },
-        take: 1,
-        select: { updatedAt: true },
-      },
-    },
-  });
+  const p = await db.project.findUnique({ where: { id: projectId } });
   if (!p) return null;
+
+  const [sectionCount, fileCount, lastFile] = await Promise.all([
+    db.section.count({ where: { group: { projectId } } }),
+    db.file.count({ where: { section: { group: { projectId } } } }),
+    db.file.findFirst({
+      where: { section: { group: { projectId } } },
+      orderBy: { updatedAt: "desc" },
+      select: { updatedAt: true },
+    }),
+  ]);
+
   return {
     id: p.id,
     name: p.name,
     slug: p.slug,
-    code: p.code,
     description: p.description,
-    type: p.type,
     isActive: p.isActive,
-    sectionCount: p._count.heritageSections,
-    fileCount: p._count.files,
-    lastActivityAt: (p.files[0]?.updatedAt ?? p.updatedAt).toISOString(),
+    sectionCount,
+    fileCount,
+    lastActivityAt: (lastFile?.updatedAt ?? p.updatedAt).toISOString(),
   };
 }
 
 async function toLiveSection(sectionId: string): Promise<LiveSection | null> {
-  const section = await db.heritageSection.findUnique({
+  const section = await db.section.findUnique({
     where: { id: sectionId },
+    include: { _count: { select: { files: true, folders: true } } },
   });
   if (!section) return null;
-  const linked = await assessSectionsLinkedContent(section.projectId, [
-    {
-      id: section.id,
-      code: section.code,
-      kind: section.kind,
-      tracks: section.tracks,
-    },
-  ]);
-  const info = linked.get(section.id);
-  const documentCount = info?.documentCount ?? 0;
   return {
     id: section.id,
+    name: section.name,
     code: section.code,
-    slug: section.slug,
-    title: section.title,
-    description: section.description,
-    kind: section.kind,
     groupId: section.groupId,
     sortOrder: section.sortOrder,
     isActive: section.isActive,
-    documentCount,
-    codeLocked: documentCount > 0,
-    hasLinkedContent: Boolean(info?.reason),
+    documentCount: section._count.files,
+    hasLinkedContent: section._count.files > 0 || section._count.folders > 0,
   };
 }
 
-function toLiveGroup(group: {
-  id: string;
-  label: string;
-  sortOrder: number;
-}): LiveGroup {
-  return {
-    id: group.id,
-    label: group.label,
-    sortOrder: group.sortOrder,
-  };
-}
+// ─── Territoire / Project ───────────────────────────────────────────────────
 
 export async function createTerritoireAction(
   _prev: ProjectActionState,
@@ -241,23 +225,18 @@ export async function createTerritoireAction(
   try {
     const admin = await requireAdmin();
     const advancedCode = String(form.get("code") || "").trim();
-    const advancedSlug = String(form.get("slug") || "").trim();
     const parsed = createTerritoireSchema.safeParse({
       name: form.get("name"),
-      code: advancedCode || null,
-      slug: advancedSlug || null,
+      code: advancedCode ? advancedCode.toUpperCase() : null,
       description: form.get("description") || null,
       isActive: form.get("isActive") !== "0",
     });
     if (!parsed.success) return { error: "Vérifiez les champs du projet." };
     const created = await createTerritoire(parsed.data, admin.id);
-    const platform = await toLivePlatform(created.id);
     revalidateManage();
-    return { ok: true, platform: platform ?? undefined };
+    return { ok: true, platform: (await toLivePlatform(created.id)) ?? undefined };
   } catch (error) {
-    return {
-      error: error instanceof HttpError ? error.message : "Création impossible.",
-    };
+    return failure(error, "Création impossible.");
   }
 }
 
@@ -270,10 +249,6 @@ export async function updateTerritoireAction(
     const territoireId = String(form.get("territoireId") || "");
     const parsed = updateTerritoireSchema.safeParse({
       name: form.get("name") || undefined,
-      code: form.get("code")
-        ? String(form.get("code")).toUpperCase()
-        : undefined,
-      slug: form.get("slug") || undefined,
       description: form.get("description") || null,
       isActive:
         form.get("isActive") === "0"
@@ -284,13 +259,13 @@ export async function updateTerritoireAction(
     });
     if (!territoireId || !parsed.success) return { error: "Vérifiez les champs." };
     await updateTerritoire(territoireId, parsed.data, admin.id);
-    const platform = await toLivePlatform(territoireId);
     revalidateManage(territoireId);
-    return { ok: true, platform: platform ?? undefined };
-  } catch (error) {
     return {
-      error: error instanceof HttpError ? error.message : "Mise à jour impossible.",
+      ok: true,
+      platform: (await toLivePlatform(territoireId)) ?? undefined,
     };
+  } catch (error) {
+    return failure(error, "Mise à jour impossible.");
   }
 }
 
@@ -300,28 +275,22 @@ export async function createProjectAction(
 ): Promise<ProjectActionState> {
   try {
     const user = await requireActiveUser();
+    await assertCanCreateProject(user);
     const territoireId = String(form.get("territoireId") || "");
-    await assertCanCreateDossier(user, territoireId);
-    const advancedCode = String(form.get("code") || "").trim();
     const advancedSlug = String(form.get("slug") || "").trim();
     const parsed = createProjectSchema.safeParse({
       name: form.get("name"),
       slug: advancedSlug || null,
-      code: advancedCode || null,
       description: form.get("description") || null,
-      type: form.get("type") || "AUTRE",
       territoireId,
       isActive: form.get("isActive") !== "0",
     });
     if (!parsed.success) return { error: "Vérifiez les champs du dossier." };
     const created = await createProject(parsed.data, user.id);
-    const dossier = await toLiveDossier(created.id);
     revalidateManage(territoireId);
-    return { ok: true, dossier: dossier ?? undefined };
+    return { ok: true, dossier: (await toLiveDossier(created.id)) ?? undefined };
   } catch (error) {
-    return {
-      error: error instanceof HttpError ? error.message : "Création impossible.",
-    };
+    return failure(error, "Création impossible.");
   }
 }
 
@@ -335,13 +304,8 @@ export async function updateProjectAction(
     const territoireId = String(form.get("territoireId") || "") || undefined;
     const parsed = updateProjectSchema.safeParse({
       name: form.get("name") || undefined,
-      slug: form.get("slug") || undefined,
-      code: form.get("code") || null,
       description: form.get("description") || null,
-      type: form.get("type") || undefined,
-      territoireId: form.get("territoireId")
-        ? String(form.get("territoireId"))
-        : undefined,
+      territoireId: territoireId ?? undefined,
       isActive:
         form.get("isActive") === "0"
           ? false
@@ -351,98 +315,92 @@ export async function updateProjectAction(
     });
     if (!projectId || !parsed.success) return { error: "Vérifiez les champs." };
     await updateProject(projectId, parsed.data, admin.id);
-    const dossier = await toLiveDossier(projectId);
     revalidateManage(territoireId);
-    return { ok: true, dossier: dossier ?? undefined };
+    return { ok: true, dossier: (await toLiveDossier(projectId)) ?? undefined };
   } catch (error) {
-    return {
-      error: error instanceof HttpError ? error.message : "Mise à jour impossible.",
-    };
+    return failure(error, "Mise à jour impossible.");
   }
 }
 
-export async function createSectionAction(
+// ─── Parties ────────────────────────────────────────────────────────────────
+
+export async function createPartAction(
   _prev: ProjectActionState,
   form: FormData,
 ): Promise<ProjectActionState> {
   try {
     const projectId = String(form.get("projectId") || "");
     const user = await requireStructureEditor(projectId);
-    const advancedCode = String(form.get("code") || "").trim();
-    const advancedSlug = String(form.get("slug") || "").trim();
-    const parsed = createSectionSchema.safeParse({
-      code: advancedCode || null,
-      slug: advancedSlug || null,
-      title: form.get("title"),
-      description: form.get("description") || null,
-      kind: form.get("kind") || "documentary",
-      groupId: form.get("groupId") || null,
-    });
-    if (!projectId || !parsed.success) return { error: "Vérifiez la rubrique." };
-    const created = await createSection(projectId, parsed.data, user.id);
-    const section = await toLiveSection(created.id);
-    const project = await db.project.findUnique({
-      where: { id: projectId },
-      select: { slug: true },
-    });
-    revalidateManage(undefined, project?.slug);
-    return { ok: true, section: section ?? undefined };
-  } catch (error) {
+    const created = await createPart(
+      { projectId, name: String(form.get("name") || "") },
+      user.id,
+    );
+    revalidateManage();
     return {
-      error: error instanceof HttpError ? error.message : "Création impossible.",
+      ok: true,
+      part: {
+        id: created.id,
+        name: created.name,
+        slug: created.slug,
+        sortOrder: created.sortOrder,
+        groupCount: 0,
+      },
     };
+  } catch (error) {
+    return failure(error, "Création impossible.");
   }
 }
 
-export async function updateSectionAction(
+export async function renamePartAction(
   _prev: ProjectActionState,
   form: FormData,
 ): Promise<ProjectActionState> {
   try {
-    const sectionId = String(form.get("sectionId") || "");
-    const sectionRow = await db.heritageSection.findUnique({
-      where: { id: sectionId },
+    const partId = String(form.get("partId") || "");
+    const part = await db.part.findUnique({
+      where: { id: partId },
       select: { projectId: true },
     });
-    if (!sectionRow) return { error: "Rubrique introuvable." };
-    const user = await requireStructureEditor(sectionRow.projectId);
-    // PATCH: only fields present in FormData are applied. Omitted groupId must
-    // NOT become null (that moved title-only edits into « Autres »).
-    const parsed = updateSectionSchema.safeParse(parseUpdateSectionFormData(form));
-    if (!sectionId || !parsed.success) return { error: "Vérifiez la rubrique." };
-    await updateSection(sectionId, parsed.data, user.id);
-    const section = await toLiveSection(sectionId);
+    if (!part) return { error: "Partie introuvable." };
+    const user = await requireStructureEditor(part.projectId);
+    const updated = await renamePart(partId, String(form.get("name") || ""), user.id);
     revalidateManage();
-    return { ok: true, section: section ?? undefined };
-  } catch (error) {
     return {
-      error: error instanceof HttpError ? error.message : "Mise à jour impossible.",
+      ok: true,
+      part: {
+        id: updated.id,
+        name: updated.name,
+        slug: updated.slug,
+        sortOrder: updated.sortOrder,
+        groupCount: await db.sectionGroup.count({ where: { partId } }),
+      },
     };
+  } catch (error) {
+    return failure(error, "Renommage impossible.");
   }
 }
 
-export async function deleteSectionAction(
+export async function deletePartAction(
   _prev: ProjectActionState,
   form: FormData,
 ): Promise<ProjectActionState> {
   try {
-    const sectionId = String(form.get("sectionId") || "");
-    const section = await db.heritageSection.findUnique({
-      where: { id: sectionId },
+    const partId = String(form.get("partId") || "");
+    const part = await db.part.findUnique({
+      where: { id: partId },
       select: { projectId: true },
     });
-    if (!section) return { error: "Rubrique introuvable." };
-    const user = await requireStructureEditor(section.projectId);
-    if (!sectionId) return { error: "Rubrique manquante." };
-    await deleteSectionIfEmpty(sectionId, user.id);
+    if (!part) return { error: "Partie introuvable." };
+    const user = await requireStructureEditor(part.projectId);
+    await deletePartIfEmpty(partId, user.id);
     revalidateManage();
-    return { ok: true, deletedId: sectionId };
+    return { ok: true, deletedId: partId };
   } catch (error) {
-    return {
-      error: error instanceof HttpError ? error.message : "Suppression impossible.",
-    };
+    return failure(error, "Suppression impossible.");
   }
 }
+
+// ─── Groupes ────────────────────────────────────────────────────────────────
 
 export async function createGroupAction(
   _prev: ProjectActionState,
@@ -451,15 +409,26 @@ export async function createGroupAction(
   try {
     const projectId = String(form.get("projectId") || "");
     const user = await requireStructureEditor(projectId);
-    const parsed = createGroupSchema.safeParse({ label: form.get("label") });
-    if (!projectId || !parsed.success) return { error: "Libellé de groupe requis." };
-    const created = await createGroup(projectId, parsed.data, user.id);
+    const created = await createSectionGroup(
+      {
+        projectId,
+        partId: String(form.get("partId") || "") || null,
+        name: String(form.get("name") || ""),
+      },
+      user.id,
+    );
     revalidateManage();
-    return { ok: true, group: toLiveGroup(created) };
-  } catch (error) {
     return {
-      error: error instanceof HttpError ? error.message : "Création impossible.",
+      ok: true,
+      group: {
+        id: created.id,
+        name: created.name,
+        partId: created.partId,
+        sortOrder: created.sortOrder,
+      },
     };
+  } catch (error) {
+    return failure(error, "Création impossible.");
   }
 }
 
@@ -469,21 +438,24 @@ export async function renameGroupAction(
 ): Promise<ProjectActionState> {
   try {
     const groupId = String(form.get("groupId") || "");
-    const groupRow = await db.heritageSectionGroup.findUnique({
-      where: { id: groupId },
-      select: { projectId: true },
-    });
-    if (!groupRow) return { error: "Groupe manquant." };
-    const user = await requireStructureEditor(groupRow.projectId);
-    const parsed = renameGroupSchema.safeParse({ label: form.get("label") });
-    if (!groupId || !parsed.success) return { error: "Libellé invalide." };
-    const updated = await renameGroup(groupId, parsed.data, user.id);
+    const user = await requireStructureEditor(await projectIdForGroup(groupId));
+    const updated = await renameSectionGroup(
+      groupId,
+      String(form.get("name") || ""),
+      user.id,
+    );
     revalidateManage();
-    return { ok: true, group: toLiveGroup(updated) };
-  } catch (error) {
     return {
-      error: error instanceof HttpError ? error.message : "Renommage impossible.",
+      ok: true,
+      group: {
+        id: updated.id,
+        name: updated.name,
+        partId: updated.partId,
+        sortOrder: updated.sortOrder,
+      },
     };
+  } catch (error) {
+    return failure(error, "Renommage impossible.");
   }
 }
 
@@ -493,41 +465,12 @@ export async function deleteGroupAction(
 ): Promise<ProjectActionState> {
   try {
     const groupId = String(form.get("groupId") || "");
-    const group = await db.heritageSectionGroup.findUnique({
-      where: { id: groupId },
-      select: { projectId: true },
-    });
-    if (!group) return { error: "Groupe manquant." };
-    const user = await requireStructureEditor(group.projectId);
-    await deleteGroupIfEmpty(groupId, user.id);
+    const user = await requireStructureEditor(await projectIdForGroup(groupId));
+    await deleteSectionGroupIfEmpty(groupId, user.id);
     revalidateManage();
     return { ok: true, deletedId: groupId };
   } catch (error) {
-    return {
-      error: error instanceof HttpError ? error.message : "Suppression impossible.",
-    };
-  }
-}
-
-export async function reorderSectionsAction(
-  _prev: ProjectActionState,
-  form: FormData,
-): Promise<ProjectActionState> {
-  try {
-    const projectId = String(form.get("projectId") || "");
-    const user = await requireStructureEditor(projectId);
-    const orderedIds = String(form.get("orderedIds") || "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-    if (!projectId || !orderedIds.length) return { error: "Ordre invalide." };
-    await reorderSections(projectId, orderedIds, user.id);
-    revalidateManage();
-    return { ok: true };
-  } catch (error) {
-    return {
-      error: error instanceof HttpError ? error.message : "Réordonnancement impossible.",
-    };
+    return failure(error, "Suppression impossible.");
   }
 }
 
@@ -542,86 +485,188 @@ export async function reorderGroupsAction(
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean);
-    if (!projectId || !orderedIds.length) return { error: "Ordre invalide." };
-    await reorderGroups(projectId, orderedIds, user.id);
+    if (!orderedIds.length) return { error: "Ordre invalide." };
+    await reorderSectionGroups(projectId, orderedIds, user.id);
     revalidateManage();
     return { ok: true };
   } catch (error) {
-    return {
-      error: error instanceof HttpError ? error.message : "Réordonnancement impossible.",
-    };
+    return failure(error, "Réordonnancement impossible.");
   }
 }
 
-export async function reclassifyDocumentAction(
+// ─── Rubriques ──────────────────────────────────────────────────────────────
+
+export async function createSectionAction(
   _prev: ProjectActionState,
   form: FormData,
 ): Promise<ProjectActionState> {
   try {
-    const user = await requireActiveUser();
-    const fileId = String(form.get("fileId") || "");
-    const sectionCode = String(form.get("sectionCode") || "");
-    if (!fileId || !sectionCode) return { error: "Document ou rubrique manquant." };
-    const file = await db.file.findUnique({
-      where: { id: fileId },
-      select: { projectId: true },
+    const groupId = String(form.get("groupId") || "");
+    const projectId = await projectIdForGroup(groupId);
+    const user = await requireStructureEditor(projectId);
+    const created = await createSection(
+      {
+        groupId,
+        name: String(form.get("name") || ""),
+        code: String(form.get("code") || "").trim() || null,
+      },
+      user.id,
+    );
+    const project = await db.project.findUnique({
+      where: { id: projectId },
+      select: { slug: true },
     });
-    if (!file) return { error: "Document introuvable." };
-    await assertCanReclassify(user, file.projectId);
-    await reclassifyDocument(fileId, sectionCode, user.id);
+    revalidateManage(undefined, project?.slug);
+    return { ok: true, section: (await toLiveSection(created.id)) ?? undefined };
+  } catch (error) {
+    return failure(error, "Création impossible.");
+  }
+}
+
+export async function updateSectionAction(
+  _prev: ProjectActionState,
+  form: FormData,
+): Promise<ProjectActionState> {
+  try {
+    const sectionId = String(form.get("sectionId") || "");
+    const user = await requireStructureEditor(await projectIdForSection(sectionId));
+    const rawCode = form.get("code");
+    await renameSection(
+      sectionId,
+      String(form.get("name") || ""),
+      user.id,
+      rawCode === null ? undefined : String(rawCode).trim() || null,
+    );
+    revalidateManage();
+    return { ok: true, section: (await toLiveSection(sectionId)) ?? undefined };
+  } catch (error) {
+    return failure(error, "Mise à jour impossible.");
+  }
+}
+
+export async function setSectionActiveAction(
+  _prev: ProjectActionState,
+  form: FormData,
+): Promise<ProjectActionState> {
+  try {
+    const sectionId = String(form.get("sectionId") || "");
+    const user = await requireStructureEditor(await projectIdForSection(sectionId));
+    await setSectionActive(sectionId, form.get("isActive") === "1", user.id);
+    revalidateManage();
+    return { ok: true, section: (await toLiveSection(sectionId)) ?? undefined };
+  } catch (error) {
+    return failure(error, "Mise à jour impossible.");
+  }
+}
+
+export async function moveSectionAction(
+  _prev: ProjectActionState,
+  form: FormData,
+): Promise<ProjectActionState> {
+  try {
+    const sectionId = String(form.get("sectionId") || "");
+    const user = await requireStructureEditor(await projectIdForSection(sectionId));
+    await moveSectionToGroup(sectionId, String(form.get("groupId") || ""), user.id);
+    revalidateManage();
+    return { ok: true, section: (await toLiveSection(sectionId)) ?? undefined };
+  } catch (error) {
+    return failure(error, "Déplacement impossible.");
+  }
+}
+
+export async function deleteSectionAction(
+  _prev: ProjectActionState,
+  form: FormData,
+): Promise<ProjectActionState> {
+  try {
+    const sectionId = String(form.get("sectionId") || "");
+    const user = await requireStructureEditor(await projectIdForSection(sectionId));
+    await deleteSectionIfEmpty(sectionId, user.id);
+    revalidateManage();
+    return { ok: true, deletedId: sectionId };
+  } catch (error) {
+    return failure(error, "Suppression impossible.");
+  }
+}
+
+export async function reorderSectionsAction(
+  _prev: ProjectActionState,
+  form: FormData,
+): Promise<ProjectActionState> {
+  try {
+    const groupId = String(form.get("groupId") || "");
+    const user = await requireStructureEditor(await projectIdForGroup(groupId));
+    const orderedIds = String(form.get("orderedIds") || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!orderedIds.length) return { error: "Ordre invalide." };
+    await reorderSections(groupId, orderedIds, user.id);
     revalidateManage();
     return { ok: true };
   } catch (error) {
-    return {
-      error:
-        error instanceof HttpError ? error.message : "Reclassification impossible.",
-    };
+    return failure(error, "Réordonnancement impossible.");
   }
 }
 
 /** Soft-load structure for the Structure page selector (no full navigation). */
-export async function loadStructureWorkspaceAction(
-  projectId: string,
-): Promise<{
+export async function loadStructureWorkspaceAction(projectId: string): Promise<{
   ok?: boolean;
   error?: string;
   projectId?: string;
+  parts?: LivePart[];
   groups?: LiveGroup[];
   sections?: LiveSection[];
 }> {
   try {
-    await requireStructureEditor(projectId);
     if (!projectId) return { error: "Dossier manquant." };
-    const structure = await listStructureAdmin(projectId);
+    await requireStructureEditor(projectId);
+
+    const [parts, groups, sections] = await Promise.all([
+      db.part.findMany({
+        where: { projectId },
+        orderBy: { sortOrder: "asc" },
+        include: { _count: { select: { groups: true } } },
+      }),
+      db.sectionGroup.findMany({
+        where: { projectId },
+        orderBy: { sortOrder: "asc" },
+      }),
+      db.section.findMany({
+        where: { group: { projectId } },
+        orderBy: { sortOrder: "asc" },
+        include: { _count: { select: { files: true, folders: true } } },
+      }),
+    ]);
+
     return {
       ok: true,
       projectId,
-      groups: structure.groups.map((g) => ({
+      parts: parts.map((p) => ({
+        id: p.id,
+        name: p.name,
+        slug: p.slug,
+        sortOrder: p.sortOrder,
+        groupCount: p._count.groups,
+      })),
+      groups: groups.map((g) => ({
         id: g.id,
-        label: g.label,
+        name: g.name,
+        partId: g.partId,
         sortOrder: g.sortOrder,
       })),
-      sections: structure.sections.map((s) => ({
+      sections: sections.map((s) => ({
         id: s.id,
+        name: s.name,
         code: s.code,
-        slug: s.slug,
-        title: s.title,
-        description: s.description,
-        kind: s.kind,
         groupId: s.groupId,
         sortOrder: s.sortOrder,
         isActive: s.isActive,
-        documentCount: s.documentCount,
-        codeLocked: s.codeLocked,
-        hasLinkedContent: s.hasLinkedContent,
+        documentCount: s._count.files,
+        hasLinkedContent: s._count.files > 0 || s._count.folders > 0,
       })),
     };
   } catch (error) {
-    return {
-      error:
-        error instanceof HttpError
-          ? error.message
-          : "Impossible de charger la structure.",
-    };
+    return failure(error, "Impossible de charger la structure.");
   }
 }

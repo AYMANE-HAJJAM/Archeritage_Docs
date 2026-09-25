@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FileText } from "lucide-react";
 
@@ -11,30 +11,8 @@ import {
   ContextualUpload,
   type UploadContextPayload,
 } from "@/components/heritage/contextual-upload";
-import type { SectionDocument } from "@/lib/heritage/queries/section-documents";
+import type { SectionFile } from "@/lib/structure/queries";
 import { formatSize } from "@/lib/utils";
-
-const STATUT_LABEL: Record<string, string> = {
-  BROUILLON: "Brouillon",
-  EN_REVISION: "En révision",
-  SOUMIS: "Soumis",
-  VALIDE: "Validé",
-  OBSOLETE: "Obsolète",
-};
-
-function docStatutTone(statut: string | null | undefined): string {
-  switch (statut) {
-    case "VALIDE":
-      return "documented";
-    case "EN_REVISION":
-    case "SOUMIS":
-      return "invited";
-    case "OBSOLETE":
-      return "archived";
-    default:
-      return "empty";
-  }
-}
 
 export function SectionDocumentsList({
   documents: initialDocuments,
@@ -42,12 +20,18 @@ export function SectionDocumentsList({
   uploadContext,
   canDownload = true,
   canDelete = false,
+  /** True when current location has no direct files but descendant folders do. */
+  hasDocumentsInChildFolders = false,
+  locationLabel = "cette rubrique",
 }: {
-  documents: SectionDocument[];
+  documents: SectionFile[];
   title?: string;
   uploadContext?: UploadContextPayload;
   canDownload?: boolean;
   canDelete?: boolean;
+  hasDocumentsInChildFolders?: boolean;
+  /** e.g. "cette rubrique" or "ce dossier" */
+  locationLabel?: string;
 }) {
   const router = useRouter();
   const [documents, setDocuments] = useState(initialDocuments);
@@ -56,9 +40,9 @@ export function SectionDocumentsList({
     setDocsSource(initialDocuments);
     setDocuments(initialDocuments);
   }
-  const [preview, setPreview] = useState<SectionDocument | null>(null);
+  const [preview, setPreview] = useState<SectionFile | null>(null);
 
-  function appendDocument(doc: SectionDocument) {
+  function appendDocument(doc: SectionFile) {
     setDocuments((prev) => {
       if (prev.some((d) => d.id === doc.id)) return prev;
       return [doc, ...prev];
@@ -80,11 +64,6 @@ export function SectionDocumentsList({
     router.refresh();
   }
 
-  const showStatus = useMemo(
-    () => documents.some((file) => Boolean(file.docStatut)),
-    [documents],
-  );
-
   return (
     <div>
       <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
@@ -92,8 +71,8 @@ export function SectionDocumentsList({
           <h3 className="text-sm font-semibold text-foreground">{title}</h3>
           {documents.length > 0 && (
             <p className="mt-0.5 text-xs text-muted-foreground">
-              {documents.length} fichier{documents.length > 1 ? "s" : ""} dans
-              cette rubrique
+              {documents.length} fichier{documents.length > 1 ? "s" : ""}{" "}
+              directement ici
             </p>
           )}
         </div>
@@ -111,27 +90,41 @@ export function SectionDocumentsList({
             className="mx-auto mb-3 size-8 text-muted-foreground/60"
             aria-hidden
           />
-          <p className="text-sm font-medium text-foreground">
-            Aucun document dans cette rubrique
-          </p>
-          {uploadContext ? (
+          {hasDocumentsInChildFolders ? (
             <>
-              <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-foreground">
-                Importez vos premiers fichiers pour commencer à documenter cette
-                rubrique.
+              <p className="text-sm font-medium text-foreground">
+                Aucun document directement dans {locationLabel}
               </p>
-              <div className="mt-4 flex justify-center">
-                <ContextualUpload
-                  context={uploadContext}
-                  onDocumentUploaded={appendDocument}
-                />
-              </div>
+              <p className="mx-auto mt-1.5 max-w-md text-sm text-muted-foreground">
+                Les documents sont classés dans les dossiers ci-dessus. Ouvrez un
+                dossier pour les consulter.
+              </p>
             </>
           ) : (
-            <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-foreground">
-              Les documents classés dans cette rubrique s&apos;afficheront ici
-              dès qu&apos;ils seront ajoutés.
-            </p>
+            <>
+              <p className="text-sm font-medium text-foreground">
+                Aucun document directement dans {locationLabel}
+              </p>
+              {uploadContext ? (
+                <>
+                  <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-foreground">
+                    Importez vos premiers fichiers pour commencer à documenter{" "}
+                    {locationLabel}.
+                  </p>
+                  <div className="mt-4 flex justify-center">
+                    <ContextualUpload
+                      context={uploadContext}
+                      onDocumentUploaded={appendDocument}
+                    />
+                  </div>
+                </>
+              ) : (
+                <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-foreground">
+                  Les documents classés ici s&apos;afficheront dès qu&apos;ils
+                  seront ajoutés.
+                </p>
+              )}
+            </>
           )}
         </div>
       ) : (
@@ -143,9 +136,6 @@ export function SectionDocumentsList({
                   <th>Nom du fichier</th>
                   <th className="hidden w-28 sm:table-cell">Ajouté le</th>
                   <th className="hidden w-24 text-right sm:table-cell">Taille</th>
-                  {showStatus && (
-                    <th className="hidden w-28 lg:table-cell">Statut</th>
-                  )}
                   <th className="w-12 text-right">
                     <span className="sr-only">Actions</span>
                   </th>
@@ -184,20 +174,6 @@ export function SectionDocumentsList({
                     <td className="hidden whitespace-nowrap text-right text-xs tabular-nums text-muted-foreground sm:table-cell">
                       {formatSize(file.size)}
                     </td>
-                    {showStatus && (
-                      <td className="hidden lg:table-cell">
-                        {file.docStatut ? (
-                          <span
-                            className="status-pill"
-                            data-tone={docStatutTone(file.docStatut)}
-                          >
-                            {STATUT_LABEL[file.docStatut] ?? file.docStatut}
-                          </span>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">—</span>
-                        )}
-                      </td>
-                    )}
                     <td className="text-right">
                       <DocumentRowActions
                         file={file}

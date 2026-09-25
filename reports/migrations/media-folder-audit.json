@@ -1,0 +1,213 @@
+{
+  "parts": [
+    {
+      "id": "cmufgkem50000wkuw02s4v4fy",
+      "projectId": "project-murailles-portugaises-safi",
+      "code": "FACADE",
+      "name": "Façade maritime de la Muraille",
+      "slug": "facade-maritime",
+      "sortOrder": 0,
+      "kind": "PRIMARY",
+      "isActive": true,
+      "createdAt": "2026-09-24T11:38:18.749Z",
+      "updatedAt": "2026-09-24T11:38:18.749Z"
+    },
+    {
+      "id": "cmufgkexx0001wkuwtnc6qkqz",
+      "projectId": "project-murailles-portugaises-safi",
+      "code": "PARTIE2",
+      "name": "Muraille — Partie 2",
+      "slug": "muraille-partie-2",
+      "sortOrder": 1,
+      "kind": "PRIMARY",
+      "isActive": true,
+      "createdAt": "2026-09-24T11:38:19.173Z",
+      "updatedAt": "2026-09-24T11:38:19.173Z"
+    },
+    {
+      "id": "cmufgkf7u0002wkuw12bfbp5e",
+      "projectId": "project-murailles-portugaises-safi",
+      "code": "TRANCHE_IX",
+      "name": "Tranche IX",
+      "slug": "tranche-ix",
+      "sortOrder": 2,
+      "kind": "PRIMARY",
+      "isActive": true,
+      "createdAt": "2026-09-24T11:38:19.530Z",
+      "updatedAt": "2026-09-24T11:38:19.530Z"
+    },
+    {
+      "id": "cmufgkfhp0003wkuwh56f4td1",
+      "projectId": "project-murailles-portugaises-safi",
+      "code": "GENERAL",
+      "name": "Documentation générale",
+      "slug": "general",
+      "sortOrder": 100,
+      "kind": "GENERAL",
+      "isActive": true,
+      "createdAt": "2026-09-24T11:38:19.885Z",
+      "updatedAt": "2026-09-24T11:38:19.885Z"
+    }
+  ],
+  "sections": [
+    {
+      "id": "cmufgkg510005wkuwf3k0m45p",
+      "projectId": "project-murailles-portugaises-safi",
+      "groupId": "cmufgkfuw0004wkuwg16f93qo",
+      "code": "02.21",
+      "slug": "documentation-photographique",
+      "title": "Documentation photographique",
+      "description": null,
+      "kind": "documentary",
+      "tracks": [
+        "photos",
+        "documents"
+      ],
+      "sortOrder": 20,
+      "isActive": true,
+      "createdAt": "2026-09-24T11:38:20.725Z",
+      "updatedAt": "2026-09-24T11:38:20.725Z"
+    },
+    {
+      "id": "cmufgkgc90006wkuw69we0dnw",
+      "projectId": "project-murailles-portugaises-safi",
+      "groupId": "cmufgkfuw0004wkuwg16f93qo",
+      "code": "02.22",
+      "slug": "documentation-video",
+      "title": "Documentation vidéo",
+      "description": null,
+      "kind": "documentary",
+      "tracks": [
+        "photos",
+        "documents"
+      ],
+      "sortOrder": 21,
+      "isActive": true,
+      "createdAt": "2026-09-24T11:38:20.985Z",
+      "updatedAt": "2026-09-24T11:38:20.985Z"
+    }
+  ],
+  "folders": [
+    {
+      "id": "cmuedtw1w000s7suwvqd6jr8i",
+      "name": "Vues intérieures",
+      "parentId": null,
+      "heritageSectionId": "cmufgkg510005wkuwf3k0m45p",
+      "heritagePartId": "cmufgkem50000wkuw02s4v4fy",
+      "_count": {
+        "files": 0,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmuedu1wg000t7suw4p4bjmet",
+      "name": "Vues extérieures",
+      "parentId": null,
+      "heritageSectionId": "cmufgkg510005wkuwf3k0m45p",
+      "heritagePartId": "cmufgkem50000wkuw02s4v4fy",
+      "_count": {
+        "files": 21,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmuee046d001f7suwqv73rtq9",
+      "name": "Vues extérieures",
+      "parentId": null,
+      "heritageSectionId": "cmufgkgc90006wkuw69we0dnw",
+      "heritagePartId": "cmufgkem50000wkuw02s4v4fy",
+      "_count": {
+        "files": 22,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmuee0b0r001g7suw16xhleuq",
+      "name": "Vues intérieures",
+      "parentId": null,
+      "heritageSectionId": "cmufgkgc90006wkuw69we0dnw",
+      "heritagePartId": "cmufgkem50000wkuw02s4v4fy",
+      "_count": {
+        "files": 28,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmueej926002y7suwx00fih4n",
+      "name": "Vues intérieures",
+      "parentId": null,
+      "heritageSectionId": "cmufgkg510005wkuwf3k0m45p",
+      "heritagePartId": "cmufgkexx0001wkuwtnc6qkqz",
+      "_count": {
+        "files": 34,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmueeje7o002z7suw8ftn8tg5",
+      "name": "Vues extérieures",
+      "parentId": null,
+      "heritageSectionId": "cmufgkg510005wkuwf3k0m45p",
+      "heritagePartId": "cmufgkexx0001wkuwtnc6qkqz",
+      "_count": {
+        "files": 47,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmueeslh400597suwgymr222h",
+      "name": "Vues extérieures",
+      "parentId": null,
+      "heritageSectionId": "cmufgkgc90006wkuw69we0dnw",
+      "heritagePartId": "cmufgkexx0001wkuwtnc6qkqz",
+      "_count": {
+        "files": 17,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmueesr4p005a7suwml5dlox5",
+      "name": "Vues intérieures",
+      "parentId": null,
+      "heritageSectionId": "cmufgkgc90006wkuw69we0dnw",
+      "heritagePartId": "cmufgkexx0001wkuwtnc6qkqz",
+      "_count": {
+        "files": 17,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmuef0x4400697suwc8nqj5pf",
+      "name": "Potiers",
+      "parentId": null,
+      "heritageSectionId": "cmufgkg510005wkuwf3k0m45p",
+      "heritagePartId": "cmufgkexx0001wkuwtnc6qkqz",
+      "_count": {
+        "files": 0,
+        "children": 1
+      }
+    },
+    {
+      "id": "cmuef1gh0006a7suw5w6imlwl",
+      "name": "Photos",
+      "parentId": "cmuef0x4400697suwc8nqj5pf",
+      "heritageSectionId": "cmufgkg510005wkuwf3k0m45p",
+      "heritagePartId": "cmufgkexx0001wkuwtnc6qkqz",
+      "_count": {
+        "files": 31,
+        "children": 0
+      }
+    },
+    {
+      "id": "cmuef1ua0006b7suwnhoxatn7",
+      "name": "Potiers",
+      "parentId": null,
+      "heritageSectionId": "cmufgkgc90006wkuw69we0dnw",
+      "heritagePartId": "cmufgkexx0001wkuwtnc6qkqz",
+      "_count": {
+        "files": 7,
+        "children": 0
+      }
+    }
+  ]
+}

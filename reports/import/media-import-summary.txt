@@ -1,0 +1,69 @@
+Media import dry run
+Files: 720
+Images: 473
+Videos: 247
+READY: 718
+DUPLICATE: 2
+UNRESOLVED: 0
+UNSUPPORTED: 0
+Cloudinary images: 472 (867191718 bytes)
+Cloudinary videos: 236 (7210304697 bytes)
+B2 videos: 10 (1528305118 bytes)
+Video threshold bytes: 104857600
+
+By area:
+- Château: 146
+- Façade maritime: 70
+- Muraille Partie 2: 153
+- Tranche IX / Secteur A: 52
+- Tranche IX / Secteur B: 90
+- Tranche IX / Secteur C: 207
+
+Duplicate groups:
+- CROSS 5532c2d3140f canonical=CHATEAU MER/Externe/Photos/DSC_0085.JPG (2)
+- CROSS 2895b486e0ce canonical=CHATEAU MER/Externe/Photos/DSC_0367.JPG (2)
+- CROSS 321cb2d2d2a5 canonical=CHATEAU MER/Externe/Photos/DSC_0487.JPG (2)
+- SAME 46ce00cc4c79 canonical=CHATEAU MER/Interne/Vidéos/00025.MTS (2)
+- SAME a1a951e14407 canonical=Façade maritime Muraille/Externe/Photos/DSC_0213.JPG (2)
+- CROSS 1c752459a938 canonical=Muraille partie 2/Externe/Photos/DSC_0714.JPG (2)
+- CROSS 679712fe6532 canonical=Muraille partie 2/Externe/Photos/DSC_0715.JPG (2)
+- CROSS f27b914da733 canonical=Muraille partie 2/Externe/Photos/DSC_0716.JPG (2)
+- CROSS fd34c87823b9 canonical=Muraille partie 2/Externe/Photos/DSC_0717.JPG (2)
+- CROSS e964565ca2d8 canonical=Muraille partie 2/Externe/Photos/DSC_0718.JPG (2)
+- CROSS 6efe17e2a092 canonical=Muraille partie 2/Externe/Photos/DSC_0721.JPG (2)
+- CROSS 526d4dbed341 canonical=Muraille partie 2/Externe/Photos/DSC_0723.JPG (2)
+- CROSS 383b474258ba canonical=Muraille partie 2/Externe/Photos/DSC_0724.JPG (2)
+- CROSS a6cf791289ea canonical=Muraille partie 2/Externe/Photos/DSC_0728.JPG (2)
+- CROSS baea2e3527cb canonical=Muraille partie 2/Externe/Photos/DSC_0729.JPG (2)
+- CROSS 4e5a84e8d3d4 canonical=Muraille partie 2/Externe/Photos/DSC_0730.JPG (2)
+- CROSS e0c81c625b4a canonical=Muraille partie 2/Externe/Photos/DSC_0731.JPG (2)
+- CROSS 8e1385712f00 canonical=Muraille partie 2/Externe/Photos/DSC_0732.JPG (2)
+- CROSS 091c2b1170a6 canonical=Muraille partie 2/Externe/Photos/DSC_0748.JPG (2)
+- CROSS 712a24bb90d3 canonical=Muraille partie 2/Externe/Photos/DSC_0749.JPG (2)
+- CROSS b69a89808b1a canonical=Tranche IX/Secteur A/00084.MTS (2)
+- CROSS 9f38efe4a1f4 canonical=Tranche IX/Secteur A/00085.MTS (2)
+- CROSS 3447ff690676 canonical=Tranche IX/Secteur A/00091.MTS (2)
+- CROSS 663b183c61a4 canonical=Tranche IX/Secteur A/00095.MTS (2)
+- CROSS cb567de4d902 canonical=Tranche IX/Secteur A/00097.MTS (2)
+- CROSS e2ebad2668ea canonical=Tranche IX/Secteur B/Externe/Photos/DSC_0862.JPG (2)
+- CROSS 0e8cd92c0b58 canonical=Tranche IX/Secteur B/Externe/Photos/DSC_0872.JPG (2)
+- CROSS 75b598d2ed6a canonical=Tranche IX/Secteur B/Externe/Photos/DSC_0876.JPG (2)
+- CROSS 1328ac09f091 canonical=Tranche IX/Secteur B/Externe/Photos/DSC_0884.JPG (2)
+- CROSS 3274aa82878c canonical=Tranche IX/Secteur B/Externe/Photos/DSC_0891.JPG (2)
+- CROSS cdfb9190ea24 canonical=Tranche IX/Secteur B/Externe/Photos/DSC_0932.JPG (2)
+- CROSS 4821a1e499b4 canonical=Tranche IX/Secteur B/Externe/Photos/DSC_0933.JPG (2)
+- CROSS 4ac186487801 canonical=Tranche IX/Secteur B/Externe/Photos/DSC_0944.JPG (2)
+
+Large B2 videos:
+- 101.98 MiB CHATEAU MER/Externe/Vidéos/00015.MTS
+- 173.02 MiB CHATEAU MER/Externe/Vidéos/DSC_0183.AVI
+- 107.02 MiB CHATEAU MER/Interne/Vidéos/00027.MTS
+- 170.1 MiB CHATEAU MER/Interne/Vidéos/00035.MTS
+- 145.24 MiB Façade maritime Muraille/Externe/Vidéos/DSC_0176.AVI
+- 134.17 MiB Muraille partie 2/Externe/Vidéos/00027.MTS
+- 165.28 MiB Muraille partie 2/Externe/Vidéos/00070.MTS
+- 131.45 MiB Muraille partie 2/Externe/Vidéos/00073.MTS
+- 122.71 MiB Muraille partie 2/Interne/Vidéos/DSC_0739.AVI
+- 206.54 MiB Tranche IX/Secteur C/Mosquée du Sultan/00069.MTS
+
+UNRESOLVED:

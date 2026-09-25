@@ -31,50 +31,31 @@ const ACCOUNTS = [
   },
 ] as const;
 
+/** The five project permission flags — no roles, no reclassification. */
+type ProjectFlags = {
+  canView: boolean;
+  canUpload: boolean;
+  canDownload: boolean;
+  canDeleteDocuments?: boolean;
+  canManageStructure: boolean;
+};
+
 async function upsertProjectAccess(
   userId: string,
-  projectSlug: string,
-  flags: {
-    canView: boolean;
-    canUpload: boolean;
-    canDownload: boolean;
-    canDeleteDocuments?: boolean;
-    canManageStructure: boolean;
-  },
+  projectId: string,
+  flags: ProjectFlags,
 ) {
-  const project = await db.project.findUnique({
-    where: { slug: projectSlug },
-    select: { id: true },
-  });
-  if (!project) {
-    console.warn(`Project ${projectSlug} not found — skip access seed`);
-    return;
-  }
+  const data = {
+    canView: flags.canView,
+    canUpload: flags.canUpload,
+    canDownload: flags.canDownload,
+    canDeleteDocuments: flags.canDeleteDocuments ?? false,
+    canManageStructure: flags.canManageStructure,
+  };
   await db.projectMember.upsert({
-    where: {
-      userId_projectId: { userId, projectId: project.id },
-    },
-    create: {
-      userId,
-      projectId: project.id,
-      role: "CONSULTANT",
-      canView: flags.canView,
-      canUpload: flags.canUpload,
-      canDownload: flags.canDownload,
-      canDeleteDocuments: flags.canDeleteDocuments ?? false,
-      canEditDossier: false,
-      canManageStructure: flags.canManageStructure,
-      canReclassifyDocuments: false,
-    },
-    update: {
-      canView: flags.canView,
-      canUpload: flags.canUpload,
-      canDownload: flags.canDownload,
-      canDeleteDocuments: flags.canDeleteDocuments ?? false,
-      canEditDossier: false,
-      canManageStructure: flags.canManageStructure,
-      canReclassifyDocuments: false,
-    },
+    where: { userId_projectId: { userId, projectId } },
+    create: { userId, projectId, ...data },
+    update: data,
   });
 }
 
@@ -110,19 +91,23 @@ async function main() {
   });
 
   if (testUser) {
-    // Local test matrix — Château: view+upload; Murailles: view only.
-    await upsertProjectAccess(testUser.id, "chateau-de-mer-safi", {
-      canView: true,
-      canUpload: true,
-      canDownload: true,
-      canManageStructure: false,
+    // Grant the test matrix on whichever projects already exist: the first gets
+    // view+upload, the second view+download only. The script never creates projects.
+    const projects = await db.project.findMany({
+      orderBy: { createdAt: "asc" },
+      take: 2,
+      select: { id: true, slug: true },
     });
-    await upsertProjectAccess(testUser.id, "murailles-portugaises-de-safi", {
-      canView: true,
-      canUpload: false,
-      canDownload: true,
-      canManageStructure: false,
-    });
+    if (!projects.length) {
+      console.warn("No project in database — skipping permission seed.");
+    }
+    const matrix: ProjectFlags[] = [
+      { canView: true, canUpload: true, canDownload: true, canManageStructure: false },
+      { canView: true, canUpload: false, canDownload: true, canManageStructure: false },
+    ];
+    for (const [index, project] of projects.entries()) {
+      await upsertProjectAccess(testUser.id, project.id, matrix[index]!);
+    }
   }
 
   const rows = await db.user.findMany({
@@ -137,11 +122,12 @@ async function main() {
       role: true,
       status: true,
       passwordHash: true,
-      projectMembers: {
+      memberships: {
         select: {
           canView: true,
           canUpload: true,
           canDownload: true,
+          canDeleteDocuments: true,
           canManageStructure: true,
           project: { select: { slug: true } },
         },
@@ -162,11 +148,12 @@ async function main() {
       role: row.role,
       status: row.status,
       passwordVerifies: passwordOk,
-      projectAccess: row.projectMembers.map((m) => ({
+      projectAccess: row.memberships.map((m) => ({
         project: m.project.slug,
         canView: m.canView,
         canUpload: m.canUpload,
         canDownload: m.canDownload,
+        canDeleteDocuments: m.canDeleteDocuments,
         canManageStructure: m.canManageStructure,
       })),
     });

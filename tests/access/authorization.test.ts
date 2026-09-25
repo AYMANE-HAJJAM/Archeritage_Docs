@@ -6,17 +6,12 @@ import {
   EMPTY_PROJECT_PERMISSIONS,
   FULL_PROJECT_PERMISSIONS,
   normalizeProjectPermissions,
-  resolveCanCreateDossier,
+  resolveCanCreateProject,
   resolveProjectPermissions,
 } from "../../lib/access/permissions";
-import { createUserSchema, updateUserSchema, createSectionSchema } from "../../lib/admin/schemas";
+import { createUserSchema, updateUserSchema } from "../../lib/admin/schemas";
 import { hashInvitationToken, buildInvitationUrl } from "../../lib/admin/invite-token";
-import { generateNextSectionCode } from "../../lib/admin/identifiers";
-import {
-  CHATEAU_STRUCTURE,
-  MURAILLES_STRUCTURE,
-  allHeritageSections,
-} from "../../lib/heritage/config/structure";
+import { generateNextSectionCode, generateSlug } from "../../lib/admin/identifiers";
 import { applyFlagChange } from "../../components/admin/permission-matrix";
 
 test("canManagePlatform is ADMIN-only", () => {
@@ -43,9 +38,7 @@ test("USER view-only: preview allowed, upload/download/structure denied", () => 
       canUpload: false,
       canDownload: false,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     },
   );
   assert.equal(perms.canView, true);
@@ -63,9 +56,7 @@ test("USER download allowed only with canDownload", () => {
       canUpload: false,
       canDownload: false,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     },
   );
   const allowed = resolveProjectPermissions(
@@ -75,9 +66,7 @@ test("USER download allowed only with canDownload", () => {
       canUpload: false,
       canDownload: true,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     },
   );
   assert.equal(denied.canDownload, false);
@@ -92,9 +81,7 @@ test("USER upload allowed only with canUpload", () => {
       canUpload: false,
       canDownload: true,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     },
   );
   const allowed = resolveProjectPermissions(
@@ -104,9 +91,7 @@ test("USER upload allowed only with canUpload", () => {
       canUpload: true,
       canDownload: true,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     },
   );
   assert.equal(denied.canUpload, false);
@@ -121,9 +106,7 @@ test("USER manage structure allowed only with canManageStructure", () => {
       canUpload: true,
       canDownload: true,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     },
   );
   const allowed = resolveProjectPermissions(
@@ -133,9 +116,7 @@ test("USER manage structure allowed only with canManageStructure", () => {
       canUpload: false,
       canDownload: false,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: true,
-      canReclassifyDocuments: false,
     },
   );
   assert.equal(denied.canManageStructure, false);
@@ -150,9 +131,7 @@ test("USER delete documents allowed only with canDeleteDocuments", () => {
       canUpload: true,
       canDownload: true,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: true,
-      canReclassifyDocuments: false,
     },
   );
   const allowed = resolveProjectPermissions(
@@ -162,9 +141,7 @@ test("USER delete documents allowed only with canDeleteDocuments", () => {
       canUpload: false,
       canDownload: false,
       canDeleteDocuments: true,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     },
   );
   assert.equal(denied.canDeleteDocuments, false);
@@ -184,9 +161,7 @@ test("normalize clears dependent flags when view is false", () => {
     canUpload: true,
     canDownload: true,
     canDeleteDocuments: true,
-    canEditDossier: true,
     canManageStructure: true,
-    canReclassifyDocuments: true,
   });
   assert.deepEqual(normalized, EMPTY_PROJECT_PERMISSIONS);
 });
@@ -242,29 +217,9 @@ test("UI flag rules: checking Supprimer des documents forces Voir", () => {
   assert.equal(next.canDeleteDocuments, true);
 });
 
-test("canCreateDossier is ADMIN-only (USER membership ignored)", () => {
-  assert.equal(
-    resolveCanCreateDossier({ id: "u", role: "USER" }, null),
-    false,
-  );
-  assert.equal(
-    resolveCanCreateDossier(
-      { id: "u", role: "USER" },
-      { canCreateDossier: true },
-    ),
-    false,
-  );
-  assert.equal(
-    resolveCanCreateDossier({ id: "a", role: "ADMIN" }, null),
-    true,
-  );
-  assert.equal(
-    resolveCanCreateDossier(
-      { id: "a", role: "ADMIN" },
-      { canCreateDossier: false },
-    ),
-    true,
-  );
+test("creating a project under a Territoire is ADMIN-only", () => {
+  assert.equal(resolveCanCreateProject({ id: "u", role: "USER" }), false);
+  assert.equal(resolveCanCreateProject({ id: "a", role: "ADMIN" }), true);
 });
 
 test("inaccessible dossier: canView false means no access", () => {
@@ -275,9 +230,7 @@ test("inaccessible dossier: canView false means no access", () => {
       canUpload: true,
       canDownload: true,
       canDeleteDocuments: true,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     },
   );
   assert.equal(perms.canView, false);
@@ -318,19 +271,12 @@ test("updateUserSchema rejects invalid role", () => {
   );
 });
 
-test("createSectionSchema allows omitted code (auto-allocate)", () => {
-  const ok = createSectionSchema.parse({
-    title: "Nouvelle rubrique",
-  });
-  assert.equal(ok.code, undefined);
-});
-
 test("section code generation keeps existing codes stable", () => {
   assert.equal(generateNextSectionCode(["01.1", "01.18"], "01"), "01.19");
   assert.equal(generateNextSectionCode(["02.1", "02.20"], "02"), "02.21");
 });
 
-test("default templates still cover official Safi sections", () => {
-  assert.equal(allHeritageSections(CHATEAU_STRUCTURE).length, 18);
-  assert.equal(allHeritageSections(MURAILLES_STRUCTURE).length, 20);
+test("generateSlug produces URL-safe identifiers", () => {
+  assert.equal(generateSlug("Relevés & Plans — Tranche IX"), "releves-plans-tranche-ix");
+  assert.match(generateSlug("Dossier Exemple"), /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 });

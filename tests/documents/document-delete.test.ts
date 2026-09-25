@@ -22,9 +22,7 @@ test("canManageStructure does not grant canDeleteDocuments", () => {
       canUpload: true,
       canDownload: true,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: true,
-      canReclassifyDocuments: false,
     },
   );
   assert.equal(perms.canManageStructure, true);

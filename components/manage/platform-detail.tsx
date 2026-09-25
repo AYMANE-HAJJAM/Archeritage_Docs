@@ -16,7 +16,6 @@ import { CreateDossierDialog } from "@/components/manage/create-dossier-dialog";
 import { EmptyState } from "@/components/layout/page-header";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
-import { SAFI_PROJECTS } from "@/lib/heritage/config/structure";
 
 const initial: ProjectActionState = {};
 
@@ -26,19 +25,12 @@ export type PlatformDetail = {
   id: string;
   name: string;
   code: string;
-  slug: string;
   description: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
   dossiers: DossierRow[];
 };
-
-function dossierCatalogCopy(slug: string): { title: string; description: string } | null {
-  const entry = SAFI_PROJECTS.find((p) => p.projectSlug === slug);
-  if (!entry) return null;
-  return { title: entry.title, description: entry.description };
-}
 
 export function PlatformDetailView({
   platform: initialPlatform,
@@ -83,7 +75,6 @@ export function PlatformDetailView({
           ...prev,
           name: p.name,
           code: p.code,
-          slug: p.slug,
           description: p.description,
           isActive: p.isActive,
           updatedAt: p.lastActivityAt,
@@ -109,7 +100,6 @@ export function PlatformDetailView({
           isActive: p.isActive,
           name: p.name,
           code: p.code,
-          slug: p.slug,
           description: p.description,
         }));
         pushToast(p.isActive ? "Projet réactivé." : "Projet archivé.", "success");
@@ -290,8 +280,6 @@ export function PlatformDetailView({
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <Field name="name" label="Nom" defaultValue={platform.name} required />
-            <Field name="code" label="Code" defaultValue={platform.code} required />
-            <Field name="slug" label="Slug" defaultValue={platform.slug} required />
             <label className="block text-xs">
               <span className="text-muted-foreground">Statut</span>
               <select
@@ -342,12 +330,8 @@ export function PlatformDetailView({
       ) : (
         <div className="grid gap-3 md:grid-cols-2">
           {dossiers.map((dossier) => {
-            const catalog = dossierCatalogCopy(dossier.slug);
-            const title = catalog?.title ?? dossier.name;
             const description =
-              dossier.description?.trim() ||
-              catalog?.description ||
-              "Dossier patrimonial.";
+              dossier.description?.trim() || "Dossier patrimonial.";
             const sectionLabel =
               dossier.sectionCount === 1
                 ? "1 rubrique"
@@ -362,7 +346,7 @@ export function PlatformDetailView({
                 key={dossier.id}
                 platformId={platform.id}
                 dossier={dossier}
-                title={title}
+                title={dossier.name}
                 description={description}
                 meta={`${sectionLabel} · ${docLabel}`}
                 editing={editDossierId === dossier.id}
@@ -535,20 +519,6 @@ function EditDossierForm({
         Modifier le dossier
       </p>
       <Field name="name" label="Nom" defaultValue={dossier.name} required />
-      <Field name="slug" label="Slug" defaultValue={dossier.slug} required />
-      <Field name="code" label="Code" defaultValue={dossier.code || ""} />
-      <label className="block text-xs">
-        <span className="text-muted-foreground">Type</span>
-        <select
-          name="type"
-          defaultValue={dossier.type}
-          className="mt-1 h-8 w-full rounded-md border border-border bg-background px-2 text-sm"
-        >
-          <option value="CHATEAU">CHATEAU</option>
-          <option value="MURAILLE">MURAILLE</option>
-          <option value="AUTRE">AUTRE</option>
-        </select>
-      </label>
       <label className="block text-xs">
         <span className="text-muted-foreground">Description</span>
         <input

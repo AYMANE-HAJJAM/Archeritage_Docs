@@ -2,18 +2,13 @@ import { notFound } from "next/navigation";
 
 import { HeritageCard } from "@/components/heritage/heritage-card";
 import {
-  canCreateDossierOnTerritoire,
+  canManagePlatform,
   listViewableProjectIds,
   requireActiveUser,
 } from "@/lib/access";
 import { CreateDossierDialogGate } from "@/components/manage/create-dossier-gate";
 import { EmptyState, PageHeader } from "@/components/layout/page-header";
 import { db } from "@/lib/db";
-import { SAFI_PROJECTS } from "@/lib/heritage/config/structure";
-
-export const metadata = {
-  title: "Safi Patrimoine",
-};
 
 export default async function TerritoryPage({
   params,
@@ -21,7 +16,6 @@ export default async function TerritoryPage({
   params: Promise<{ code: string }>;
 }) {
   const user = await requireActiveUser();
-
   const { code } = await params;
 
   const territoire = await db.territoire.findUnique({
@@ -33,12 +27,13 @@ export default async function TerritoryPage({
       description: true,
       projects: {
         where: { isActive: true },
+        orderBy: { name: "asc" },
         select: {
           id: true,
           name: true,
           slug: true,
           description: true,
-          _count: { select: { files: true, heritageSections: true } },
+          _count: { select: { groups: true, parts: true } },
         },
       },
     },
@@ -52,30 +47,31 @@ export default async function TerritoryPage({
       ? territoire.projects
       : territoire.projects.filter((p) => viewable.includes(p.id));
 
-  const projectsBySlug = new Map(
-    visibleProjects.map((project) => [project.slug, project]),
-  );
-
-  const tiles = SAFI_PROJECTS.map((entry) => {
-    const project = projectsBySlug.get(entry.projectSlug);
-    if (!project) return null;
-    return { entry, project };
-  }).filter((row): row is NonNullable<typeof row> => row !== null);
-
-  const catalogSlugs = new Set<string>(SAFI_PROJECTS.map((p) => p.projectSlug));
-  const extraTiles = visibleProjects
-    .filter((p) => !catalogSlugs.has(p.slug))
-    .map((project) => ({
-      entry: {
-        projectSlug: project.slug,
-        title: project.name,
-        description: project.description || "",
+  const fileCounts = await db.file.groupBy({
+    by: ["sectionId"],
+    where: {
+      section: {
+        group: { projectId: { in: visibleProjects.map((p) => p.id) } },
       },
-      project,
-    }));
+    },
+    _count: { _all: true },
+  });
+  const sectionOwners = await db.section.findMany({
+    where: { id: { in: fileCounts.map((row) => row.sectionId) } },
+    select: { id: true, group: { select: { projectId: true } } },
+  });
+  const projectFileCount = new Map<string, number>();
+  for (const row of fileCounts) {
+    const owner = sectionOwners.find((s) => s.id === row.sectionId);
+    if (!owner) continue;
+    const projectId = owner.group.projectId;
+    projectFileCount.set(
+      projectId,
+      (projectFileCount.get(projectId) ?? 0) + row._count._all,
+    );
+  }
 
-  const allTiles = [...tiles, ...extraTiles];
-  const canCreate = await canCreateDossierOnTerritoire(user, territoire.id);
+  const canCreate = canManagePlatform(user);
 
   return (
     <section className="pb-4">
@@ -84,7 +80,7 @@ export default async function TerritoryPage({
         title={territoire.name}
         description={
           territoire.description?.trim() ||
-          "Consultez les dossiers patrimoniaux — Château de Mer et Murailles portugaises."
+          "Consultez les dossiers patrimoniaux de cette plateforme."
         }
         actions={
           canCreate ? (
@@ -93,34 +89,31 @@ export default async function TerritoryPage({
         }
       />
 
-      {allTiles.length === 0 ? (
+      {visibleProjects.length === 0 ? (
         <EmptyState
           title="Aucun dossier patrimonial accessible"
           description="Votre compte n’a pas encore accès à un dossier de cette plateforme. Contactez un administrateur."
         />
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
-          {allTiles.map(({ entry, project }) => {
-            const docs = project._count.files;
-            const sections = project._count.heritageSections;
+          {visibleProjects.map((project) => {
+            const docs = projectFileCount.get(project.id) ?? 0;
+            const groups = project._count.groups;
             const meta = [
-              sections > 0
-                ? `${sections} rubrique${sections > 1 ? "s" : ""}`
+              project._count.parts > 0
+                ? `${project._count.parts} partie${project._count.parts > 1 ? "s" : ""}`
                 : null,
+              groups > 0 ? `${groups} groupe${groups > 1 ? "s" : ""}` : null,
               `${docs} document${docs > 1 ? "s" : ""}`,
             ]
               .filter(Boolean)
               .join(" · ");
             return (
               <HeritageCard
-                key={entry.projectSlug}
+                key={project.id}
                 href={`/projects/${project.slug}`}
-                title={entry.title}
-                description={
-                  entry.description ||
-                  project.description ||
-                  "Dossier patrimonial"
-                }
+                title={project.name}
+                description={project.description || "Dossier patrimonial"}
                 meta={meta}
               />
             );

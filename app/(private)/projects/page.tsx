@@ -28,7 +28,6 @@ export default async function ProjectsPage() {
           id: p.id,
           name: p.name,
           code: p.code,
-          slug: p.slug,
           description: p.description,
           isActive: p.isActive,
           dossierCount: p.dossierCount,
@@ -53,13 +52,27 @@ export default async function ProjectsPage() {
       description: true,
       projects: {
         where: { isActive: true },
-        select: {
-          id: true,
-          _count: { select: { files: true } },
-        },
+        select: { id: true },
       },
     },
   });
+
+  const fileRows = await db.file.groupBy({
+    by: ["sectionId"],
+    _count: { _all: true },
+  });
+  const sectionOwners = await db.section.findMany({
+    select: { id: true, group: { select: { projectId: true } } },
+  });
+  const filesByProject = new Map<string, number>();
+  for (const row of fileRows) {
+    const owner = sectionOwners.find((s) => s.id === row.sectionId);
+    if (!owner) continue;
+    filesByProject.set(
+      owner.group.projectId,
+      (filesByProject.get(owner.group.projectId) ?? 0) + row._count._all,
+    );
+  }
 
   const visibleTerritoires = territoires
     .map((territoire) => {
@@ -68,7 +81,10 @@ export default async function ProjectsPage() {
           ? territoire.projects
           : territoire.projects.filter((p) => viewable.includes(p.id));
       if (projects.length === 0) return null;
-      const fileCount = projects.reduce((n, p) => n + p._count.files, 0);
+      const fileCount = projects.reduce(
+        (n, p) => n + (filesByProject.get(p.id) ?? 0),
+        0,
+      );
       return {
         id: territoire.id,
         code: territoire.code,

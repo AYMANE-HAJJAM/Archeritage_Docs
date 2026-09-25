@@ -28,15 +28,17 @@ test("PDF signature is required; videos get extension MIME; other docs stay octe
   assert.equal(document.mimeType, "application/octet-stream");
 
   const mts = validateFile("clip.MTS", "application/octet-stream", Buffer.from("fake-mts-bytes"));
-  assert.equal(mts.storageProvider, "BACKBLAZE_B2");
+  assert.equal(mts.storageProvider, "CLOUDINARY");
   assert.equal(mts.mimeType, "video/MP2T");
   assert.equal(mts.extension, "mts");
 
   const avi = validateFile("clip.avi", "application/octet-stream", Buffer.from("fake-avi-bytes"));
   assert.equal(avi.mimeType, "video/x-msvideo");
+  assert.equal(avi.storageProvider, "CLOUDINARY");
 
   const mp4 = validateFile("clip.mp4", "application/octet-stream", Buffer.from("fake-mp4-bytes"));
   assert.equal(mp4.mimeType, "video/mp4");
+  assert.equal(mp4.storageProvider, "CLOUDINARY");
 });
 
 test("empty files, dangerous names and over-limit payloads are rejected", () => {
@@ -68,8 +70,10 @@ test("MAX_UPLOAD_MB accepts values above the old 100MB hard ceiling", () => {
 
 test("video validation can use a short head buffer with explicit size", () => {
   const previous = process.env.MAX_UPLOAD_MB;
+  const previousVideo = process.env.CLOUDINARY_VIDEO_MAX_MB;
   try {
     process.env.MAX_UPLOAD_MB = "500";
+    process.env.CLOUDINARY_VIDEO_MAX_MB = "100";
     const head = Buffer.from("fake-mts-head");
     const meta = validateFile(
       "00015.MTS",
@@ -82,6 +86,8 @@ test("video validation can use a short head buffer with explicit size", () => {
   } finally {
     if (previous === undefined) delete process.env.MAX_UPLOAD_MB;
     else process.env.MAX_UPLOAD_MB = previous;
+    if (previousVideo === undefined) delete process.env.CLOUDINARY_VIDEO_MAX_MB;
+    else process.env.CLOUDINARY_VIDEO_MAX_MB = previousVideo;
   }
 });
 

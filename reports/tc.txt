@@ -1,0 +1,91 @@
+﻿
+> archeritage-docs@1.0.0 typecheck
+> tsc --noEmit
+
+.next/types/validator.ts(134,39): error TS2307: Cannot find module '../../app/(private)/projects/[slug]/sections/[section]/page.js' or its corresponding type declarations.
+app/(private)/manage/actions.ts(5,3): error TS2305: Module '"@/lib/access"' has no exported member 'assertCanCreateDossier'.
+app/(private)/manage/actions.ts(7,3): error TS2305: Module '"@/lib/access"' has no exported member 'assertCanReclassify'.
+app/(private)/manage/actions.ts(40,8): error TS2307: Cannot find module '@/lib/admin/structure' or its corresponding type declarations.
+app/(private)/manage/actions.ts(41,44): error TS2307: Cannot find module '@/lib/admin/section-update-form' or its corresponding type declarations.
+app/(private)/manage/actions.ts(131,31): error TS2353: Object literal may only specify known properties, and 'files' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+app/(private)/manage/actions.ts(142,23): error TS2339: Property 'projects' does not exist on type '{ name: string; code: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; }'.
+app/(private)/manage/actions.ts(142,40): error TS7006: Parameter 'n' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(142,43): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(143,26): error TS2339: Property 'projects' does not exist on type '{ name: string; code: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; }'.
+app/(private)/manage/actions.ts(144,6): error TS7006: Parameter 'n' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(144,9): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(147,28): error TS2339: Property 'projects' does not exist on type '{ name: string; code: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; }'.
+app/(private)/manage/actions.ts(148,15): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(152,12): error TS7006: Parameter 'a' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(152,15): error TS7006: Parameter 'b' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(157,13): error TS2339: Property 'slug' does not exist on type '{ name: string; code: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; }'.
+app/(private)/manage/actions.ts(160,21): error TS2339: Property 'projects' does not exist on type '{ name: string; code: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; }'.
+app/(private)/manage/actions.ts(171,27): error TS2353: Object literal may only specify known properties, and 'files' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+app/(private)/manage/actions.ts(184,13): error TS2339: Property 'code' does not exist on type '{ name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(186,13): error TS2339: Property 'type' does not exist on type '{ name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(188,21): error TS2339: Property '_count' does not exist on type '{ name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(189,18): error TS2339: Property '_count' does not exist on type '{ name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(190,24): error TS2339: Property 'files' does not exist on type '{ name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(195,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(403,33): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(430,30): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(472,31): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(496,28): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(567,17): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileSelect<DefaultArgs>'.
+app/(private)/manage/actions.ts(570,42): error TS2339: Property 'projectId' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; sectionId: string; storageKey: string; sourceHash: string | null; originalName: string; displayName: string; extension: string; mimeType: string; ... 5 more ...; confidentialite: Confidentialite; }'.
+app/(private)/manage/actions.ts(599,37): error TS7006: Parameter 'g' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(604,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(private)/projects/manage/[territoireId]/page.tsx(22,24): error TS2339: Property 'slug' does not exist on type '{ id: string; name: string; code: string; description: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; dossierCount: number; dossiers: { groupCount: number; partCount: number; ... 8 more ...; territoireId: string | null; }[]; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(31,19): error TS2339: Property 'code' does not exist on type '{ groupCount: number; partCount: number; _count: { groups: number; parts: number; }; name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(33,19): error TS2339: Property 'type' does not exist on type '{ groupCount: number; partCount: number; _count: { groups: number; parts: number; }; name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(35,27): error TS2339: Property 'sectionCount' does not exist on type '{ groupCount: number; partCount: number; _count: { groups: number; parts: number; }; name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(36,24): error TS2339: Property 'fileCount' does not exist on type '{ groupCount: number; partCount: number; _count: { groups: number; parts: number; }; name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(37,29): error TS2339: Property 'lastActivityAt' does not exist on type '{ groupCount: number; partCount: number; _count: { groups: number; parts: number; }; name: string; description: string | null; isActive: boolean; id: string; createdAt: Date; updatedAt: Date; slug: string; territoireId: string | null; }'.
+app/(private)/projects/manage/page.tsx(15,17): error TS2339: Property 'slug' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/page.tsx(27,9): error TS2322: Type '{ id: string; name: string; code: string; description: string | null; isActive: boolean; dossierCount: number; sectionCount: number; fileCount: number; lastActivityAt: string; }[]' is not assignable to type 'LivePlatform[]'.
+  Property 'slug' is missing in type '{ id: string; name: string; code: string; description: string | null; isActive: boolean; dossierCount: number; sectionCount: number; fileCount: number; lastActivityAt: string; }' but required in type 'LivePlatform'.
+app/(private)/structure/page.tsx(2,36): error TS2307: Cannot find module '@/lib/admin/structure' or its corresponding type declarations.
+app/(private)/structure/page.tsx(81,19): error TS2339: Property 'code' does not exist on type '{ name: string; description: string | null; isActive: boolean; id: string; slug: string; _count: { groups: number; parts: number; }; }'.
+app/(private)/structure/page.tsx(83,34): error TS2339: Property 'heritageSections' does not exist on type '{ groups: number; parts: number; }'.
+app/(private)/structure/page.tsx(84,31): error TS2339: Property 'files' does not exist on type '{ groups: number; parts: number; }'.
+app/(private)/structure/page.tsx(89,37): error TS7006: Parameter 'g' implicitly has an 'any' type.
+app/(private)/structure/page.tsx(94,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(private)/users/page.tsx(30,43): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'ProjectSelect<DefaultArgs>'.
+app/(private)/users/page.tsx(39,17): error TS2339: Property 'projects' does not exist on type '{ id: string; name: string; description: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; code: string; }'.
+app/(private)/users/page.tsx(39,31): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/users/page.tsx(47,32): error TS2339: Property 'projects' does not exist on type '{ id: string; name: string; description: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; code: string; }'.
+app/(private)/users/page.tsx(47,46): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/users/page.tsx(84,29): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+components/manage/platform-detail.tsx(19,31): error TS2307: Cannot find module '@/lib/heritage/config/structure' or its corresponding type declarations.
+components/manage/platform-detail.tsx(38,37): error TS7006: Parameter 'p' implicitly has an 'any' type.
+components/manage/structure-workspace.tsx(29,45): error TS2307: Cannot find module '@/components/manage/structure-documentary-folders' or its corresponding type declarations.
+lib/documents/delete-document.ts(62,41): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Pick<{ id: string; createdAt: Date; updatedAt: Date; sectionId: string; storageKey: string; sourceHash: string | null; originalName: string; displayName: string; extension: string; ... 6 more ...; confidentialite: Confidentialite; }, "id" | ... 3 more ... | "storageVersion">'.
+prisma/seed.ts(45,7): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type '((Without<TerritoireUpdateInput, TerritoireUncheckedUpdateInput> & TerritoireUncheckedUpdateInput) | (Without<...> & TerritoireUpdateInput)) & object'.
+prisma/seed.ts(52,7): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type '((Without<TerritoireCreateInput, TerritoireUncheckedCreateInput> & TerritoireUncheckedCreateInput) | (Without<...> & TerritoireCreateInput)) & object'.
+prisma/seed.ts(90,34): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'Without<ProjectUpdateInput, ProjectUncheckedUpdateInput> & ProjectUncheckedUpdateInput & object'.
+prisma/seed.ts(91,64): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'Without<ProjectCreateInput, ProjectUncheckedCreateInput> & ProjectUncheckedCreateInput & object'.
+prisma/seed.ts(95,63): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'Without<FolderUpdateInput, FolderUncheckedUpdateInput> & FolderUncheckedUpdateInput & object'.
+prisma/seed.ts(95,124): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type '((Without<FolderCreateInput, FolderUncheckedCreateInput> & FolderUncheckedCreateInput) | (Without<...> & FolderCreateInput)) & object'.
+prisma/seed.ts(110,61): error TS2307: Cannot find module '../lib/heritage/seed-structure' or its corresponding type declarations.
+scripts/ensure-role-test-accounts.ts(60,7): error TS2353: Object literal may only specify known properties, and 'role' does not exist in type 'Without<ProjectMemberCreateInput, ProjectMemberUncheckedCreateInput> & ProjectMemberUncheckedCreateInput & object'.
+scripts/ensure-role-test-accounts.ts(74,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type '((Without<ProjectMemberUpdateInput, ProjectMemberUncheckedUpdateInput> & ProjectMemberUncheckedUpdateInput) | (Without<...> & ProjectMemberUpdateInput)) & object'.
+scripts/ensure-role-test-accounts.ts(140,7): error TS2353: Object literal may only specify known properties, and 'projectMembers' does not exist in type 'UserSelect<DefaultArgs>'.
+scripts/ensure-role-test-accounts.ts(165,26): error TS2339: Property 'projectMembers' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; firstName: string; lastName: string; email: string; passwordHash: string | null; role: Role; status: AccountStatus; }'.
+scripts/ensure-role-test-accounts.ts(165,46): error TS7006: Parameter 'm' implicitly has an 'any' type.
+tests/access/authorization.test.ts(9,3): error TS2305: Module '"../../lib/access/permissions"' has no exported member 'resolveCanCreateDossier'.
+tests/access/authorization.test.ts(19,8): error TS2307: Cannot find module '../../lib/heritage/config/structure' or its corresponding type declarations.
+tests/access/authorization.test.ts(46,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(66,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(78,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(95,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(107,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(124,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(136,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(153,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(165,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(187,5): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(278,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/documents/document-delete.test.ts(25,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/storage/path-builder.test.ts(10,5): error TS2353: Object literal may only specify known properties, and 'territoireSlug' does not exist in type 'StoragePathContext'.
+tests/storage/path-builder.test.ts(26,5): error TS2353: Object literal may only specify known properties, and 'territoireSlug' does not exist in type 'Omit<StoragePathContext, "fileId" | "originalFilename">'.
+tests/storage/path-builder.test.ts(40,5): error TS2353: Object literal may only specify known properties, and 'territoireSlug' does not exist in type 'StoragePathContext'.

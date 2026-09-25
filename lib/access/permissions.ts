@@ -1,19 +1,15 @@
 /**
  * Pure permission evaluation (no DB) — unit-testable.
  *
- * Business permissions exposed in USER access UI:
- * - canView (Voir)
- * - canUpload (Importer)
- * - canDownload (Télécharger)
- * - canDeleteDocuments (Supprimer des documents)
- * - canManageStructure (Gérer la structure)
+ * USER project flags:
+ * - canView
+ * - canUpload
+ * - canDownload
+ * - canDeleteDocuments
+ * - canManageStructure
  *
- * Dossier creation under a plateforme is ADMIN-only.
- * TerritoireMember.canCreateDossier remains in the schema unused for USERS
- * (future compatibility) and is ignored by authorization.
- *
- * Legacy flags kept for compatibility / future workflows:
- * - canEditDossier, canReclassifyDocuments
+ * canManageStructure does NOT imply canDeleteDocuments.
+ * Project creation under a Territoire is ADMIN-only.
  */
 import type { AccessUser } from "@/lib/access/roles";
 import { canManagePlatform } from "@/lib/access/roles";
@@ -23,12 +19,10 @@ export type ProjectPermissionFlags = {
   canUpload: boolean;
   canDownload: boolean;
   canDeleteDocuments: boolean;
-  canEditDossier: boolean;
   canManageStructure: boolean;
-  canReclassifyDocuments: boolean;
 };
 
-/** Normalize flags so view is required for upload/download/delete/structure. */
+/** Normalize flags so view is required for other permissions. */
 export function normalizeProjectPermissions(
   flags: ProjectPermissionFlags,
 ): ProjectPermissionFlags {
@@ -38,9 +32,7 @@ export function normalizeProjectPermissions(
       canUpload: false,
       canDownload: false,
       canDeleteDocuments: false,
-      canEditDossier: false,
       canManageStructure: false,
-      canReclassifyDocuments: false,
     };
   }
   return { ...flags, canView: true };
@@ -52,9 +44,7 @@ export const EMPTY_PROJECT_PERMISSIONS: ProjectPermissionFlags =
     canUpload: false,
     canDownload: false,
     canDeleteDocuments: false,
-    canEditDossier: false,
     canManageStructure: false,
-    canReclassifyDocuments: false,
   });
 
 export const FULL_PROJECT_PERMISSIONS: ProjectPermissionFlags = {
@@ -62,9 +52,7 @@ export const FULL_PROJECT_PERMISSIONS: ProjectPermissionFlags = {
   canUpload: true,
   canDownload: true,
   canDeleteDocuments: true,
-  canEditDossier: true,
   canManageStructure: true,
-  canReclassifyDocuments: true,
 };
 
 export function resolveProjectPermissions(
@@ -78,20 +66,11 @@ export function resolveProjectPermissions(
     canUpload: membership.canUpload,
     canDownload: membership.canDownload,
     canDeleteDocuments: membership.canDeleteDocuments,
-    canEditDossier: membership.canEditDossier,
     canManageStructure: membership.canManageStructure,
-    canReclassifyDocuments: membership.canReclassifyDocuments,
   });
 }
 
-/**
- * Creating heritage dossiers is ADMIN-only.
- * Membership `canCreateDossier` is ignored (schema field retained unused).
- */
-export function resolveCanCreateDossier(
-  user: AccessUser,
-  territoireMembership?: { canCreateDossier: boolean } | null,
-): boolean {
-  void territoireMembership;
+/** Creating projects under a Territoire is ADMIN-only. */
+export function resolveCanCreateProject(user: AccessUser): boolean {
   return canManagePlatform(user);
 }

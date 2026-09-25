@@ -27,7 +27,7 @@ export default async function UsersPage({
         projects: {
           where: { isActive: true },
           orderBy: { name: "asc" },
-          select: { id: true, name: true, code: true },
+          select: { id: true, name: true, slug: true },
         },
       },
     }),
@@ -39,7 +39,7 @@ export default async function UsersPage({
     dossiers: t.projects.map((p) => ({
       id: p.id,
       name: p.name,
-      code: p.code,
+      code: p.slug.toUpperCase(),
     })),
   }));
 
@@ -59,7 +59,7 @@ export default async function UsersPage({
           status: user.status,
           accessLabels: [],
           projectAccess: {},
-          territoireAccess: {},
+
         };
       }
 
@@ -93,7 +93,7 @@ export default async function UsersPage({
         status: user.status,
         accessLabels,
         projectAccess,
-        territoireAccess: {},
+
       };
     }),
   );

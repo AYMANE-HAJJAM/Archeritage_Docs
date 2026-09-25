@@ -27,7 +27,6 @@ export async function listUserProjectAccess(userId: string) {
         select: {
           id: true,
           name: true,
-          code: true,
           slug: true,
           isActive: true,
           territoireId: true,
@@ -39,15 +38,6 @@ export async function listUserProjectAccess(userId: string) {
   });
 }
 
-export async function listUserTerritoireAccess(userId: string) {
-  return db.territoireMember.findMany({
-    where: { userId },
-    include: {
-      territoire: { select: { id: true, name: true, code: true } },
-    },
-  });
-}
-
 function toStoredFlags(input: ProjectAccessInput): ProjectPermissionFlags {
   return normalizeProjectPermissions({
     canView: input.canView,
@@ -55,8 +45,6 @@ function toStoredFlags(input: ProjectAccessInput): ProjectPermissionFlags {
     canDownload: input.canDownload,
     canDeleteDocuments: input.canDeleteDocuments,
     canManageStructure: input.canManageStructure,
-    canEditDossier: false,
-    canReclassifyDocuments: false,
   });
 }
 
@@ -84,7 +72,6 @@ export async function upsertUserProjectAccess(
     create: {
       userId: targetUserId,
       projectId: input.projectId,
-      role: "CONSULTANT",
       ...flags,
     },
     update: { ...flags },
@@ -98,71 +85,46 @@ export async function upsertUserProjectAccess(
     metadata: {
       targetUserId,
       projectId: input.projectId,
-      canView: flags.canView,
-      canUpload: flags.canUpload,
-      canDownload: flags.canDownload,
-      canDeleteDocuments: flags.canDeleteDocuments,
-      canManageStructure: flags.canManageStructure,
+      ...flags,
     },
   });
 
   return row;
 }
 
-export async function upsertUserTerritoireAccess(
+/** Apply the invite dialog matrix in one pass (rows without canView skipped). */
+export async function applyInviteAccessMatrix(
   actor: AccessUser,
   targetUserId: string,
-  territoireId: string,
-  canCreateDossier: boolean,
+  rows: ProjectAccessInput[],
 ) {
   requireAdminApi(actor);
-  const target = await db.user.findUnique({ where: { id: targetUserId } });
-  if (!target) throw new HttpError(404, "Utilisateur introuvable.");
-  if (target.role === "ADMIN") {
-    throw new HttpError(400, "Les administrateurs ont déjà un accès complet.");
+  for (const row of rows) {
+    if (!row.canView) continue;
+    await upsertUserProjectAccess(actor, targetUserId, row);
   }
+}
 
-  const territoire = await db.territoire.findUnique({ where: { id: territoireId } });
-  if (!territoire) throw new HttpError(404, "Projet introuvable.");
+export async function removeUserProjectAccess(
+  actor: AccessUser,
+  targetUserId: string,
+  projectId: string,
+) {
+  requireAdminApi(actor);
+  const existing = await db.projectMember.findUnique({
+    where: { userId_projectId: { userId: targetUserId, projectId } },
+  });
+  if (!existing) return;
 
-  const row = await db.territoireMember.upsert({
-    where: {
-      userId_territoireId: { userId: targetUserId, territoireId },
-    },
-    create: {
-      userId: targetUserId,
-      territoireId,
-      canCreateDossier,
-    },
-    update: { canCreateDossier },
+  await db.projectMember.delete({
+    where: { userId_projectId: { userId: targetUserId, projectId } },
   });
 
   await writeAuditLog({
     actorUserId: actor.id,
     action: AuditActions.USER_ACCESS_UPDATED,
-    entityType: "TerritoireMember",
-    entityId: row.id,
-    metadata: { targetUserId, territoireId, canCreateDossier },
+    entityType: "ProjectMember",
+    entityId: existing.id,
+    metadata: { targetUserId, projectId, removed: true },
   });
-
-  return row;
-}
-
-/** Apply access matrix for a newly invited USER (no-op for ADMIN). */
-export async function applyInviteAccessMatrix(
-  actor: AccessUser,
-  targetUserId: string,
-  projectAccess: ProjectAccessInput[],
-) {
-  requireAdminApi(actor);
-  for (const row of projectAccess) {
-    if (
-      row.canView ||
-      row.canUpload ||
-      row.canDownload ||
-      row.canManageStructure
-    ) {
-      await upsertUserProjectAccess(actor, targetUserId, row);
-    }
-  }
 }

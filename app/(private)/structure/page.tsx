@@ -1,7 +1,8 @@
 import { requireAdmin } from "@/lib/access";
-import { listStructureAdmin } from "@/lib/admin/structure";
+import { loadStructureWorkspaceAction } from "@/app/(private)/manage/actions";
 import { listTerritoiresForStructure } from "@/lib/admin/territoires";
 import { StructureWorkspace } from "@/components/manage/structure-workspace";
+import { db } from "@/lib/db";
 
 export default async function StructurePage({
   searchParams,
@@ -65,8 +66,34 @@ export default async function StructurePage({
     );
   }
 
-  const structure = await listStructureAdmin(selected.id);
+  const structure = await loadStructureWorkspaceAction(selected.id);
   const territoire = territoires.find((t) => t.id === selectedTerritoireId)!;
+
+  // Per-dossier counters for the selector cards.
+  const sectionCounts = await db.section.groupBy({
+    by: ["groupId"],
+    _count: { _all: true },
+  });
+  const groupOwners = await db.sectionGroup.findMany({
+    select: { id: true, projectId: true },
+  });
+  const sectionsByProject = new Map<string, number>();
+  for (const row of sectionCounts) {
+    const owner = groupOwners.find((g) => g.id === row.groupId);
+    if (!owner) continue;
+    sectionsByProject.set(
+      owner.projectId,
+      (sectionsByProject.get(owner.projectId) ?? 0) + row._count._all,
+    );
+  }
+  const fileCounts = await db.file.findMany({
+    select: { section: { select: { group: { select: { projectId: true } } } } },
+  });
+  const filesByProject = new Map<string, number>();
+  for (const f of fileCounts) {
+    const projectId = f.section.group.projectId;
+    filesByProject.set(projectId, (filesByProject.get(projectId) ?? 0) + 1);
+  }
 
   return (
     <StructureWorkspace
@@ -78,33 +105,16 @@ export default async function StructurePage({
           id: p.id,
           name: p.name,
           slug: p.slug,
-          code: p.code,
           description: p.description,
-          sectionCount: p._count.heritageSections,
-          fileCount: p._count.files,
+          sectionCount: sectionsByProject.get(p.id) ?? 0,
+          fileCount: filesByProject.get(p.id) ?? 0,
         })),
       }))}
       initialTerritoireId={territoire.id}
       initialProjectId={selected.id}
-      groups={structure.groups.map((g) => ({
-        id: g.id,
-        label: g.label,
-        sortOrder: g.sortOrder,
-      }))}
-      sections={structure.sections.map((s) => ({
-        id: s.id,
-        code: s.code,
-        slug: s.slug,
-        title: s.title,
-        description: s.description,
-        kind: s.kind,
-        groupId: s.groupId,
-        sortOrder: s.sortOrder,
-        isActive: s.isActive,
-        documentCount: s.documentCount,
-        codeLocked: s.codeLocked,
-        hasLinkedContent: s.hasLinkedContent,
-      }))}
+      parts={structure.parts ?? []}
+      groups={structure.groups ?? []}
+      sections={structure.sections ?? []}
     />
   );
 }

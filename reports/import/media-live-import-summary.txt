@@ -1,0 +1,30 @@
+Live media import
+READY: 718
+This pass uploaded: 0
+This pass already imported: 718
+Cloudinary images this pass: 0
+Cloudinary videos this pass: 0
+B2 videos this pass: 0
+Skipped duplicates: 2
+Source changed: 0
+Failed: 0
+Bytes uploaded this pass: 0
+DB media files: 718
+DB total files: 750
+Documents preserved: 32/32
+Cloudinary saf/ image=472 video=236 raw=0
+B2 saf/ objects: 42 (keys missing from the database: 0). The 708 database keys not listed in B2 are Cloudinary public ids, not missing B2 objects.
+By area: {"Château":146,"Façade maritime":70,"Muraille — Partie 2":153,"Tranche IX / Secteur A":52,"Tranche IX / Secteur B":90,"Tranche IX / Secteur C":207}
+Retry: uploaded 0, alreadyImported 718
+Recovery between passes: the one failed file CHATEAU MER/Interne/Vidéos/00017.MTS was uploaded on the next run (Cloudinary video, 66004992 bytes) after "Connection terminated unexpectedly".
+Final Cloudinary: 472 images + 236 videos. Final B2: 42 objects.
+
+UI smoke:
+- Château de Mer: Documentation photographique 109 and Documentation vidéo 37 (146), plus the 15 documents
+- Photo folder Externe lists images; thumbnails return JPEG 200 and decoded on screen
+- Video folder Externe lists MTS/AVI including the large B2 files 00015.MTS and DSC_0183.AVI without breaking the page
+- Façade maritime: 70 documents, breadcrumb includes the part
+- Muraille — Partie 2: 153 documents
+- Tranche IX: 231 photos, 118 videos, 1 plan (350); photo section shows Secteur A, Secteur B, Secteur C
+
+Validation follows in the command log.

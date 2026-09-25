@@ -2,6 +2,7 @@ import "server-only";
 import { getUser } from "@/lib/auth";
 import { Prisma } from "@/generated/prisma/client";
 import { ZodError } from "zod";
+import { UploadError } from "@/lib/files/upload-error";
 
 export class HttpError extends Error {
   constructor(public status: number, message: string) { super(message); }
@@ -16,6 +17,12 @@ export async function authenticate(request: Request, mutation = false) {
   return user;
 }
 export function apiError(error: unknown) {
+  if (error instanceof UploadError) {
+    return Response.json(
+      { error: error.message, code: error.code },
+      { status: error.status },
+    );
+  }
   if (error instanceof HttpError) {
     return Response.json({ error: error.message }, { status: error.status });
   }

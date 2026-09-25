@@ -15,43 +15,50 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 import { SectionDocumentsList } from "@/components/heritage/section-documents-list";
-import {
-  folderMetaLine,
-} from "@/components/heritage/documentary-folder-tree";
-import type { DocumentaryFolderCard } from "@/lib/heritage/documentary-folder-types";
-import type { SectionDocument } from "@/lib/heritage/queries/section-documents";
-import { sectionFolderPath } from "@/lib/heritage/config/structure";
-import { cn } from "@/lib/utils";
+import type { SectionFile } from "@/lib/structure/queries";
 
-type MoveTarget = { id: string | null; label: string };
+export type FolderCard = {
+  id: string;
+  name: string;
+  parentId: string | null;
+  childFolderCount: number;
+  documentCount: number;
+};
 
-async function apiJson<T>(
-  url: string,
-  init: RequestInit,
-): Promise<T> {
+export type MoveTarget = { id: string | null; label: string };
+
+async function apiJson<T>(url: string, init: RequestInit): Promise<T> {
   const res = await fetch(url, {
     ...init,
-    headers: {
-      "content-type": "application/json",
-      ...(init.headers || {}),
-    },
+    headers: { "content-type": "application/json", ...(init.headers || {}) },
   });
-  const payload = (await res.json().catch(() => ({}))) as {
-    error?: string;
-  } & T;
-  if (!res.ok) {
-    throw new Error(payload.error || "L’opération a échoué.");
-  }
+  const payload = (await res.json().catch(() => ({}))) as { error?: string } & T;
+  if (!res.ok) throw new Error(payload.error || "L’opération a échoué.");
   return payload;
 }
 
-function FolderFormDialog({
+function folderMetaLine(folder: FolderCard): string {
+  const parts = [
+    folder.childFolderCount > 0
+      ? folder.childFolderCount === 1
+        ? "1 sous-dossier"
+        : `${folder.childFolderCount} sous-dossiers`
+      : null,
+    folder.documentCount > 0
+      ? folder.documentCount === 1
+        ? "1 document"
+        : `${folder.documentCount} documents`
+      : null,
+  ].filter(Boolean);
+  return parts.join(" · ");
+}
+
+function FolderNameDialog({
   open,
   onOpenChange,
   title,
   confirmLabel,
   initialName = "",
-  initialDescription = "",
   pending,
   onSubmit,
 }: {
@@ -60,20 +67,14 @@ function FolderFormDialog({
   title: string;
   confirmLabel: string;
   initialName?: string;
-  initialDescription?: string;
   pending: boolean;
-  onSubmit: (values: { name: string; description: string }) => void;
+  onSubmit: (name: string) => void;
 }) {
   const [name, setName] = useState(initialName);
-  const [description, setDescription] = useState(initialDescription);
-  const [source, setSource] = useState({ initialName, initialDescription });
-  if (
-    initialName !== source.initialName ||
-    initialDescription !== source.initialDescription
-  ) {
-    setSource({ initialName, initialDescription });
+  const [source, setSource] = useState(initialName);
+  if (initialName !== source) {
+    setSource(initialName);
     setName(initialName);
-    setDescription(initialDescription);
   }
 
   return (
@@ -83,13 +84,13 @@ function FolderFormDialog({
           {title}
         </DialogTitle>
         <DialogDescription className="mt-1 text-sm text-muted-foreground">
-          Le dossier sera créé à l’emplacement actuel.
+          Le dossier reste dans la rubrique courante.
         </DialogDescription>
         <form
           className="mt-4 space-y-3"
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit({ name: name.trim(), description: description.trim() });
+            onSubmit(name.trim());
           }}
         >
           <label className="block text-xs">
@@ -98,19 +99,9 @@ function FolderFormDialog({
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              maxLength={120}
+              maxLength={200}
               autoFocus
               className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
-            />
-          </label>
-          <label className="block text-xs">
-            <span className="text-muted-foreground">Description (optionnel)</span>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={2}
-              maxLength={2000}
-              className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
             />
           </label>
           <div className="flex justify-end gap-2 pt-1">
@@ -137,10 +128,8 @@ function FolderFormDialog({
 }
 
 export function DocumentaryFolderBrowser({
-  projectId,
   projectSlug,
-  sectionCode,
-  heritageSectionId,
+  sectionId,
   currentFolderId,
   folders,
   documents,
@@ -150,13 +139,11 @@ export function DocumentaryFolderBrowser({
   canDownload,
   canDelete,
 }: {
-  projectId: string;
   projectSlug: string;
-  sectionCode: string;
-  heritageSectionId: string;
+  sectionId: string;
   currentFolderId: string | null;
-  folders: DocumentaryFolderCard[];
-  documents: SectionDocument[];
+  folders: FolderCard[];
+  documents: SectionFile[];
   moveTargets: MoveTarget[];
   canManage: boolean;
   canUpload: boolean;
@@ -168,30 +155,17 @@ export function DocumentaryFolderBrowser({
   const [pending, setPending] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [createParentId, setCreateParentId] = useState<string | null>(null);
-  const [renameTarget, setRenameTarget] = useState<DocumentaryFolderCard | null>(
-    null,
-  );
-  const [moveTarget, setMoveTarget] = useState<DocumentaryFolderCard | null>(
-    null,
-  );
+  const [renameTarget, setRenameTarget] = useState<FolderCard | null>(null);
+  const [moveTarget, setMoveTarget] = useState<FolderCard | null>(null);
   const [moveParentId, setMoveParentId] = useState<string>("");
-  const [deleteTarget, setDeleteTarget] = useState<DocumentaryFolderCard | null>(
-    null,
-  );
-
-  const [localFolders, setLocalFolders] = useState(folders);
-  const [foldersSource, setFoldersSource] = useState(folders);
-  if (folders !== foldersSource) {
-    setFoldersSource(folders);
-    setLocalFolders(folders);
-  }
+  const [deleteTarget, setDeleteTarget] = useState<FolderCard | null>(null);
 
   const sortedFolders = useMemo(
     () =>
-      [...localFolders].sort((a, b) =>
+      [...folders].sort((a, b) =>
         a.name.localeCompare(b.name, "fr", { sensitivity: "base" }),
       ),
-    [localFolders],
+    [folders],
   );
 
   function openCreate(parentId: string | null = currentFolderId) {
@@ -199,107 +173,36 @@ export function DocumentaryFolderBrowser({
     setCreateOpen(true);
   }
 
-  async function createFolder(values: { name: string; description: string }) {
+  async function run(operation: () => Promise<unknown>, success: string) {
     setPending(true);
     try {
-      await apiJson("/api/folders", {
-        method: "POST",
-        body: JSON.stringify({
-          name: values.name,
-          description: values.description || null,
-          projectId,
-          parentId: createParentId,
-          heritageSectionId,
-        }),
-      });
-      setCreateOpen(false);
-      pushToast("Dossier créé.", "success");
+      await operation();
+      pushToast(success, "success");
       router.refresh();
+      return true;
     } catch (error) {
       pushToast(
-        error instanceof Error ? error.message : "Création impossible.",
+        error instanceof Error ? error.message : "L’opération a échoué.",
         "error",
       );
+      return false;
     } finally {
       setPending(false);
     }
   }
 
-  async function renameFolder(values: { name: string; description: string }) {
-    if (!renameTarget) return;
-    setPending(true);
-    try {
-      await apiJson(`/api/folders/${renameTarget.id}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          name: values.name,
-          description: values.description || null,
-        }),
-      });
-      setRenameTarget(null);
-      pushToast("Dossier renommé.", "success");
-      router.refresh();
-    } catch (error) {
-      pushToast(
-        error instanceof Error ? error.message : "Renommage impossible.",
-        "error",
-      );
-    } finally {
-      setPending(false);
-    }
-  }
+  const filteredMoveTargets = moveTargets.filter((t) => t.id !== moveTarget?.id);
+  const hasDocumentsInChildFolders = folders.some((f) => f.documentCount > 0);
+  const locationLabel = currentFolderId ? "ce dossier" : "cette rubrique";
 
-  async function moveFolder() {
-    if (!moveTarget) return;
-    setPending(true);
-    try {
-      await apiJson(`/api/folders/${moveTarget.id}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          parentId: moveParentId === "" ? null : moveParentId,
-        }),
-      });
-      setMoveTarget(null);
-      pushToast("Dossier déplacé.", "success");
-      router.refresh();
-    } catch (error) {
-      pushToast(
-        error instanceof Error ? error.message : "Déplacement impossible.",
-        "error",
-      );
-    } finally {
-      setPending(false);
-    }
+  function folderHref(folderId: string) {
+    return `/projects/${projectSlug}?sectionId=${sectionId}&folderId=${folderId}`;
   }
-
-  async function deleteFolder() {
-    if (!deleteTarget) return;
-    setPending(true);
-    try {
-      await apiJson(`/api/folders/${deleteTarget.id}`, {
-        method: "DELETE",
-      });
-      setDeleteTarget(null);
-      pushToast("Dossier supprimé.", "success");
-      router.refresh();
-    } catch (error) {
-      pushToast(
-        error instanceof Error ? error.message : "Suppression impossible.",
-        "error",
-      );
-    } finally {
-      setPending(false);
-    }
-  }
-
-  const filteredMoveTargets = moveTargets.filter(
-    (t) => t.id !== moveTarget?.id,
-  );
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-end gap-2">
-        {canManage ? (
+      {canManage ? (
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <Button
             type="button"
             size="sm"
@@ -309,26 +212,19 @@ export function DocumentaryFolderBrowser({
             <FolderPlus />
             Nouveau dossier
           </Button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       {sortedFolders.length > 0 ? (
         <div>
-          <h3 className="mb-3 text-sm font-semibold text-foreground">
-            Dossiers
-          </h3>
+          <h3 className="mb-3 text-sm font-semibold text-foreground">Dossiers</h3>
           <ul className="divide-y divide-border border border-border bg-surface">
             {sortedFolders.map((folder) => {
-              const href = sectionFolderPath(
-                projectSlug,
-                sectionCode,
-                folder.id,
-              );
               const meta = folderMetaLine(folder);
               return (
                 <li key={folder.id} className="group/folder relative">
                   <Link
-                    href={href}
+                    href={folderHref(folder.id)}
                     scroll={false}
                     className="flex items-start gap-3 px-4 py-3.5 transition-colors hover:bg-muted/40"
                   >
@@ -340,19 +236,13 @@ export function DocumentaryFolderBrowser({
                       <span className="block truncate text-[13px] font-medium text-foreground group-hover/folder:text-accent">
                         {folder.name}
                       </span>
-                      {meta ? (
-                        <span className="mt-0.5 block text-[11px] text-muted-foreground">
-                          {meta}
-                        </span>
-                      ) : (
-                        <span className="mt-0.5 block text-[11px] text-muted-foreground">
-                          Vide
-                        </span>
-                      )}
+                      <span className="mt-0.5 block text-[11px] text-muted-foreground">
+                        {meta || "Vide"}
+                      </span>
                     </span>
                   </Link>
                   {canManage ? (
-                    <div className="absolute right-2 top-2 flex gap-0.5 opacity-0 transition-opacity group-hover/folder:opacity-100 focus-within:opacity-100">
+                    <div className="absolute right-2 top-2 flex gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover/folder:opacity-100">
                       <button
                         type="button"
                         className="rounded-sm px-1.5 py-1 text-[10px] text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -398,28 +288,39 @@ export function DocumentaryFolderBrowser({
         title="Documents"
         canDownload={canDownload}
         canDelete={canDelete}
+        hasDocumentsInChildFolders={
+          documents.length === 0 && hasDocumentsInChildFolders
+        }
+        locationLabel={locationLabel}
         uploadContext={
-          canUpload
-            ? {
-                documentScope: "PROJECT_SECTION",
-                docCategorie: sectionCode,
-                projectId,
-                folderId: currentFolderId,
-              }
-            : undefined
+          canUpload ? { sectionId, folderId: currentFolderId } : undefined
         }
       />
 
-      <FolderFormDialog
+      <FolderNameDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
         title="Nouveau dossier"
         confirmLabel="Créer"
         pending={pending}
-        onSubmit={createFolder}
+        onSubmit={async (name) => {
+          const ok = await run(
+            () =>
+              apiJson("/api/folders", {
+                method: "POST",
+                body: JSON.stringify({
+                  name,
+                  sectionId,
+                  parentId: createParentId,
+                }),
+              }),
+            "Dossier créé.",
+          );
+          if (ok) setCreateOpen(false);
+        }}
       />
 
-      <FolderFormDialog
+      <FolderNameDialog
         open={Boolean(renameTarget)}
         onOpenChange={(open) => {
           if (!open) setRenameTarget(null);
@@ -427,9 +328,19 @@ export function DocumentaryFolderBrowser({
         title="Renommer le dossier"
         confirmLabel="Enregistrer"
         initialName={renameTarget?.name ?? ""}
-        initialDescription={renameTarget?.description ?? ""}
         pending={pending}
-        onSubmit={renameFolder}
+        onSubmit={async (name) => {
+          if (!renameTarget) return;
+          const ok = await run(
+            () =>
+              apiJson(`/api/folders/${renameTarget.id}`, {
+                method: "PATCH",
+                body: JSON.stringify({ name }),
+              }),
+            "Dossier renommé.",
+          );
+          if (ok) setRenameTarget(null);
+        }}
       />
 
       <Dialog
@@ -471,7 +382,20 @@ export function DocumentaryFolderBrowser({
             <button
               type="button"
               disabled={pending}
-              onClick={() => void moveFolder()}
+              onClick={async () => {
+                if (!moveTarget) return;
+                const ok = await run(
+                  () =>
+                    apiJson(`/api/folders/${moveTarget.id}`, {
+                      method: "PATCH",
+                      body: JSON.stringify({
+                        parentId: moveParentId === "" ? null : moveParentId,
+                      }),
+                    }),
+                  "Dossier déplacé.",
+                );
+                if (ok) setMoveTarget(null);
+              }}
               className="h-9 bg-primary px-3 text-sm font-medium text-primary-foreground disabled:opacity-60"
             >
               {pending ? "…" : "Déplacer"}
@@ -501,60 +425,27 @@ export function DocumentaryFolderBrowser({
         destructive={
           !(
             deleteTarget &&
-            (deleteTarget.childFolderCount > 0 ||
-              deleteTarget.documentCount > 0)
+            (deleteTarget.childFolderCount > 0 || deleteTarget.documentCount > 0)
           )
         }
         pending={pending}
-        onConfirm={() => {
+        onConfirm={async () => {
+          if (!deleteTarget) return;
           if (
-            deleteTarget &&
-            (deleteTarget.childFolderCount > 0 ||
-              deleteTarget.documentCount > 0)
+            deleteTarget.childFolderCount > 0 ||
+            deleteTarget.documentCount > 0
           ) {
             setDeleteTarget(null);
             return;
           }
-          void deleteFolder();
+          const ok = await run(
+            () =>
+              apiJson(`/api/folders/${deleteTarget.id}`, { method: "DELETE" }),
+            "Dossier supprimé.",
+          );
+          if (ok) setDeleteTarget(null);
         }}
       />
     </div>
-  );
-}
-
-export function DocumentaryBreadcrumb({
-  parts,
-}: {
-  parts: { name: string; href: string | null }[];
-}) {
-  return (
-    <nav aria-label="Fil d’Ariane" className="mb-4">
-      <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-        {parts.map((part, index) => {
-          const last = index === parts.length - 1;
-          return (
-            <li key={`${part.name}-${index}`} className="flex items-center gap-1">
-              {index > 0 ? <span aria-hidden>/</span> : null}
-              {part.href && !last ? (
-                <Link
-                  href={part.href}
-                  scroll={false}
-                  className="hover:text-foreground hover:underline"
-                >
-                  {part.name}
-                </Link>
-              ) : (
-                <span
-                  className={cn(last && "font-medium text-foreground")}
-                  aria-current={last ? "page" : undefined}
-                >
-                  {part.name}
-                </span>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-    </nav>
   );
 }

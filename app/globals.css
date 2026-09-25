@@ -49,6 +49,8 @@
   --sidebar-foreground: #f3f0e9;
   --sidebar-muted: #8f8a81;
   --header-height: 3.5rem;
+  --app-header-height: var(--header-height);
+  --context-nav-height: 2.75rem;
 }
 
 * {
@@ -56,7 +58,9 @@
 }
 
 html {
-  scroll-padding-top: calc(var(--header-height) + 0.75rem);
+  scroll-padding-top: calc(
+    var(--app-header-height) + var(--context-nav-height) + 0.5rem
+  );
 }
 
 body {

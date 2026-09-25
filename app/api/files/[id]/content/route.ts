@@ -18,7 +18,7 @@ export async function GET(
     if (!file) throw new HttpError(404, "Fichier introuvable.");
 
     const url = new URL(request.url);
-    const image = file.storageProvider === "CLOUDINARY";
+    const image = file.storageProvider === "CLOUDINARY" && !isVideoFile(file);
     const video = isVideoFile(file);
     const forceDownload =
       url.searchParams.has("download") ||

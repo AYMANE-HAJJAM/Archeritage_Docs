@@ -5,14 +5,12 @@ import { useRouter } from "next/navigation";
 import { Check, Upload, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import type { SectionDocument } from "@/lib/heritage/queries/section-documents";
+import type { SectionFile } from "@/lib/structure/queries";
 import { formatSize } from "@/lib/utils";
 
 export type UploadContextPayload = {
-  documentScope: "PROJECT_SECTION";
-  docCategorie: string;
-  projectId?: string;
-  /** Documentary folder destination; omit/null = section root. */
+  sectionId: string;
+  /** Folder destination; omit/null = section root. */
   folderId?: string | null;
 };
 
@@ -50,7 +48,7 @@ export function ContextualUpload({
   label?: string;
   className?: string;
   disabled?: boolean;
-  onDocumentUploaded?: (doc: SectionDocument) => void;
+  onDocumentUploaded?: (doc: SectionFile) => void;
   onBatchComplete?: (result: { done: number; failed: number }) => void;
   onBusyChange?: (busy: boolean) => void;
 }) {
@@ -89,7 +87,7 @@ export function ContextualUpload({
         const file = files[index];
         update(index, { status: "uploading", progress: 0 });
         try {
-          const doc = await new Promise<SectionDocument>((resolve, reject) => {
+          const doc = await new Promise<SectionFile>((resolve, reject) => {
             const request = new XMLHttpRequest();
             request.open("POST", "/api/files");
             request.upload.onprogress = (event) => {
@@ -105,7 +103,7 @@ export function ContextualUpload({
                 try {
                   const payload = JSON.parse(
                     request.responseText,
-                  ) as SectionDocument;
+                  ) as SectionFile;
                   resolve(payload);
                 } catch {
                   reject(new Error("Réponse serveur invalide."));
@@ -128,9 +126,7 @@ export function ContextualUpload({
 
             const form = new FormData();
             form.append("file", file);
-            form.append("documentScope", context.documentScope);
-            form.append("docCategorie", context.docCategorie);
-            if (context.projectId) form.append("projectId", context.projectId);
+            form.append("sectionId", context.sectionId);
             if (context.folderId) form.append("folderId", context.folderId);
             request.send(form);
           });

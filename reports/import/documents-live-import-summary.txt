@@ -1,0 +1,26 @@
+Live documents import
+Actor: naciri@archeritage.ma
+First pass uploaded: 32 (B2, 56308919 bytes). This file is the retry.
+Uploaded this run: 0
+Already imported: 32
+Skipped duplicates: 3
+Failed: 0
+Source changed: 0
+DB files: 32
+DB bytes: 56308919
+B2 objects under saf/: 32 (56308919 bytes)
+Cloudinary saf/ before=0 after=0 unchanged=true
+Territoires named Safi Patrimoine: 1
+Projects: 2
+Murailles parts: 3
+
+UI smoke:
+- /projects shows Safi Patrimoine, 2 dossiers, 32 documents
+- /territoires/SAF shows Château de Mer (15 documents) and Murailles (3 parts, 17 documents)
+- Murailles parts: Façade 0, Partie 2 0, Tranche IX 1
+- Section counts match the manifest (CPS 5, Synthèses 2, Tranche VI 1)
+- Tranche IX breadcrumb: Safi Patrimoine / Murailles / Tranche IX / RELEVÉS & PLANS / Plan topographique — Tranche IX
+- PDF preview opened (1/1) with a download action
+- Part page totals now count only that part (1 document, 1.6 Mo)
+
+Failures:

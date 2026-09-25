@@ -1,0 +1,319 @@
+{
+  "generatedAt": "2026-09-25T09:53:45.732Z",
+  "actorEmail": "naciri@archeritage.ma",
+  "structure": {
+    "territoire": "reused",
+    "project:Château de Mer": "reused",
+    "project:Murailles portugaises de Safi": "reused",
+    "part:Façade maritime de la Muraille": "reused",
+    "part:Muraille — Partie 2": "reused",
+    "part:Tranche IX": "reused",
+    "group:Château de Mer:GLOBAL:COMPRENDRE": "reused",
+    "section:Château de Mer|GLOBAL|COMPRENDRE|Présentation & histoire": "reused",
+    "section:Château de Mer|GLOBAL|COMPRENDRE|Documentation & articles": "reused",
+    "section:Château de Mer|GLOBAL|COMPRENDRE|Protection juridique": "reused",
+    "group:Château de Mer:GLOBAL:DIAGNOSTIC & ENVIRONNEMENT": "reused",
+    "section:Château de Mer|GLOBAL|DIAGNOSTIC & ENVIRONNEMENT|Expertise & diagnostic": "reused",
+    "section:Château de Mer|GLOBAL|DIAGNOSTIC & ENVIRONNEMENT|Environnement maritime & littoral": "reused",
+    "group:Château de Mer:GLOBAL:CONSULTATION & PROJET": "reused",
+    "section:Château de Mer|GLOBAL|CONSULTATION & PROJET|Dossier de consultation": "reused",
+    "section:Château de Mer|GLOBAL|CONSULTATION & PROJET|Mémoire technique": "reused",
+    "section:Château de Mer|GLOBAL|CONSULTATION & PROJET|Équipe & pièces de candidature": "reused",
+    "group:Murailles portugaises de Safi:GLOBAL:RELEVÉS & PLANS": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|RELEVÉS & PLANS|Synthèses": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|RELEVÉS & PLANS|Tranche III": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|RELEVÉS & PLANS|Tranche IV": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|RELEVÉS & PLANS|Tranche V": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|RELEVÉS & PLANS|Tranche VI": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|RELEVÉS & PLANS|Bab El Kasbah": "reused",
+    "group:Murailles portugaises de Safi:GLOBAL:DIAGNOSTIC": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|DIAGNOSTIC|Pathologies": "reused",
+    "group:Murailles portugaises de Safi:GLOBAL:CONSULTATION & PROJET": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|CONSULTATION & PROJET|CPS": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|CONSULTATION & PROJET|Règlement de consultation": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|CONSULTATION & PROJET|Pièces complémentaires": "reused",
+    "section:Murailles portugaises de Safi|GLOBAL|CONSULTATION & PROJET|Analyses & recommandations": "reused",
+    "group:Murailles portugaises de Safi:cmugs6moj000abcuw5w7uwr9z:RELEVÉS & PLANS": "reused",
+    "section:Murailles portugaises de Safi|Tranche IX|RELEVÉS & PLANS|Plan topographique — Tranche IX": "reused"
+  },
+  "firstPass": {
+    "uploaded": 32,
+    "failed": 0,
+    "skippedDuplicates": 3,
+    "sourceChanged": 0,
+    "dbFiles": 32,
+    "dbBytes": 56308919,
+    "b2Objects": 32,
+    "b2Bytes": 56308919,
+    "cloudinaryUnchanged": true
+  },
+  "uploaded": 0,
+  "skippedDuplicates": 3,
+  "alreadyImported": 32,
+  "failed": 0,
+  "sourceChanged": 0,
+  "bytesUploaded": 0,
+  "manifestReadyBytes": 56308919,
+  "database": {
+    "territoires": 1,
+    "projects": 2,
+    "parts": 3,
+    "groups": 7,
+    "sections": 20,
+    "files": 32,
+    "fileBytes": 56308919,
+    "b2Providers": 32,
+    "cloudinaryProviders": 0
+  },
+  "b2": {
+    "prefix": "saf/",
+    "objectCount": 32,
+    "bytes": 56308919,
+    "keysMissingFromDb": [],
+    "dbKeysMissingFromB2": []
+  },
+  "cloudinary": {
+    "prefix": "saf/",
+    "before": 0,
+    "after": 0,
+    "unchanged": true
+  },
+  "results": [
+    {
+      "relativePath": "chateau de mer 2/les étapes a prtéparer pour la consultation.docx",
+      "status": "already_imported",
+      "fileId": "cmugs74on001ubcuwkktb3mdb",
+      "storageKey": "saf/chateau-de-mer/cmugs6rw2000sbcuwwl45ri0r/4fac39c6-dd13-45d0-a3db-33ee07861d7f-les-etapes-a-prteparer-pour-la-consultation.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "chateau de mer 2/Mémoire technique.docx",
+      "status": "already_imported",
+      "fileId": "cmugs770d001vbcuw8j2tjvnl",
+      "storageKey": "saf/chateau-de-mer/cmugs6si3000ubcuwmxsonvbh/32c4dd56-325f-4200-98b4-f467e18cb152-memoire-technique.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "chateau de mer 2/mlettre d'intention equipe.docx",
+      "status": "already_imported",
+      "fileId": "cmugs78lz001wbcuwnpst9y1q",
+      "storageKey": "saf/chateau-de-mer/cmugs6t49000wbcuwynvk4t0g/7a339a7f-7142-4801-879d-e918aa74f4f5-mlettre-d-intention-equipe.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "chateau de mer 2/model CV mission chateau de mer.docx",
+      "status": "already_imported",
+      "fileId": "cmugs7ak2001xbcuwmkga2zkm",
+      "storageKey": "saf/chateau-de-mer/cmugs6t49000wbcuwynvk4t0g/66703a04-abb3-49ef-bb60-32e39bea7e27-model-cv-mission-chateau-de-mer.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "lecture chateau de mer/article.docx",
+      "status": "already_imported",
+      "fileId": "cmugs7cde001ybcuwl1ld479o",
+      "storageKey": "saf/chateau-de-mer/cmugs6oh3000gbcuwo1gglzda/22194fd4-2279-4064-86d7-e3ce8d49faeb-article.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "lecture chateau de mer/article2.docx",
+      "status": "already_imported",
+      "fileId": "cmugs7e40001zbcuwrzqu5chs",
+      "storageKey": "saf/chateau-de-mer/cmugs6oh3000gbcuwo1gglzda/a12191bc-4b0d-4010-96e8-f4458392c66a-article2.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "lecture chateau de mer/chateau de mer.docx",
+      "status": "already_imported",
+      "fileId": "cmugs7fuu0020bcuwdkyt9898",
+      "storageKey": "saf/chateau-de-mer/cmugs6nux000ebcuw6vm9mzwu/b407d437-65bf-4129-9277-6ee77dfdca77-chateau-de-mer.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "lecture chateau de mer/lecture 1.docx",
+      "status": "already_imported",
+      "fileId": "cmugs7hum0021bcuw3t29brka",
+      "storageKey": "saf/chateau-de-mer/cmugs6oh3000gbcuwo1gglzda/4ede4ecf-d2bb-400d-8c02-86fdbc1942d7-lecture-1.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "lecture chateau de mer/portuaire safi.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs7k850022bcuwcc64xtf5",
+      "storageKey": "saf/chateau-de-mer/cmugs6qs8000obcuwwsx1dhtf/9fe3d3fa-7b9d-4843-91ed-7540460861b3-portuaire-safi.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "LES textes de classement/Dossier juridique — Château de Mer (textes de classement 1922-1924).docx",
+      "status": "already_imported",
+      "fileId": "cmugs7m4j0023bcuwolb4y7py",
+      "storageKey": "saf/chateau-de-mer/cmugs6p2u000ibcuwb16ow622/e756b0d5-8782-40dc-b171-3138278f0ff0-dossier-juridique-chateau-de-mer-textes-de-classement-1922-1924.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "LES textes de classement/ma-bulletin-officiel-dated-1923-07-17-no-560.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs7p4g0024bcuwj4w7iv28",
+      "storageKey": "saf/chateau-de-mer/cmugs6p2u000ibcuwb16ow622/7c59dba6-c82a-4180-8f90-b2313d34036d-ma-bulletin-officiel-dated-1923-07-17-no-560.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "LES textes de classement/ma-bulletin-officiel-dated-1924-03-25-no-596.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs7slg0025bcuwgrxdid7p",
+      "storageKey": "saf/chateau-de-mer/cmugs6p2u000ibcuwb16ow622/3d8b23c9-a7f6-4b6b-aa0b-66d1bc7c2909-ma-bulletin-officiel-dated-1924-03-25-no-596.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "LES textes de classement/Répertoire des dahirs de classement du patrimoine marocain (1912-1956).pdf",
+      "status": "already_imported",
+      "fileId": "cmugs7ujw0026bcuw8h1oayj5",
+      "storageKey": "saf/chateau-de-mer/cmugs6p2u000ibcuwb16ow622/5f7702c0-037e-41af-9abd-e091e3d6bb59-repertoire-des-dahirs-de-classement-du-patrimoine-marocain-1912-1956.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "Pack_consultation_Chateau_de_Mer_Safi_V2_enrichi.docx",
+      "status": "already_imported",
+      "fileId": "cmugs7w9i0027bcuwhu25kx6o",
+      "storageKey": "saf/chateau-de-mer/cmugs6rw2000sbcuwwl45ri0r/9425746c-7b19-4430-bb7b-f8aa6e953090-pack-consultation-chateau-de-mer-safi-v2-enrichi.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "rapport provisoire expertise kssar lebhar safi envoyé.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs7yz00028bcuwnmfe1p2r",
+      "storageKey": "saf/chateau-de-mer/cmugs6q6m000mbcuwkn787fk2/77afbfb7-3d3c-44c1-bdc4-7aa0ae47164f-rapport-provisoire-expertise-kssar-lebhar-safi-envoye.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "Atlas des pathologies.docx",
+      "status": "already_imported",
+      "fileId": "cmugs80vs0029bcuwdpg9cdmy",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6ych001ebcuwaz2gpm03/afdccae1-006a-4530-9b2f-3841c49d63a9-atlas-des-pathologies.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "Docs récents/CPS 2.docx",
+      "status": "already_imported",
+      "fileId": "cmugs82j8002abcuwv5hizb6h",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6zg5001ibcuwsia72xb5/47c5045c-4ceb-4a87-8014-cb05ef7bbd8a-cps-2.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "Docs récents/CPS etude.docx",
+      "status": "already_imported",
+      "fileId": "cmugs847k002bbcuwx8ft9yqj",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6zg5001ibcuwsia72xb5/57912088-bf5b-46e5-96a4-2af676c10fca-cps-etude.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "Docs récents/les 3 pieces complémentaires.docx",
+      "status": "already_imported",
+      "fileId": "cmugs85zi002cbcuw17azg76q",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs70n1001mbcuwo1aahm9l/83778150-409a-482d-8099-7315d3a6d317-les-3-pieces-complementaires.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "Docs récents/RC.docx",
+      "status": "already_imported",
+      "fileId": "cmugs87r3002dbcuwm0dyzl9g",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs701h001kbcuwi19s8rtw/370fa458-0744-4212-abdc-d38a49cae5ab-rc.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/ANALYSE_COMPARATIVE_ET_RECOMMANDATIONS.docx",
+      "status": "already_imported",
+      "fileId": "cmugs89e2002ebcuwgnefz3xq",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs718f001obcuwcob50int/657d2fc8-86b3-4dcb-8fea-64452984c3ea-analyse-comparative-et-recommandations.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/CPS 6 PERP.docx",
+      "status": "already_imported",
+      "fileId": "cmugs8bf7002fbcuwcsi1y3tx",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6zg5001ibcuwsia72xb5/c7ca7e1a-7a88-435b-9302-1919d64cd178-cps-6-perp.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/CPS_4 SAFI_REVISÉ_COMPLET.docx",
+      "status": "already_imported",
+      "fileId": "cmugs8d15002gbcuwhzqol62u",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6zg5001ibcuwsia72xb5/1d84ff26-9cf1-4d94-be41-59f68b35ba0d-cps-4-safi-revise-complet.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/CPS_5 SAFI_FINAL_EXCELLENCE_INEGALEE MANUS.docx",
+      "status": "already_imported",
+      "fileId": "cmugs8eq4002hbcuwz8xrn77t",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6zg5001ibcuwsia72xb5/582b766e-e385-469c-82e1-63ed4e789800-cps-5-safi-final-excellence-inegalee-manus.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/Muraille portugaise tranche III-Objet.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs8gln002ibcuwphz23s27",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6uts0012bcuwm7b80nji/485d6e10-5438-4b60-bd13-ffce1828728a-muraille-portugaise-tranche-iii-objet.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/Muraille portugaise tranche IV-Objet.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs8j50002jbcuwvlmzmpe3",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6vfl0014bcuwcbmfkcvs/4662493e-adc0-43f7-bc83-39daeaa6e07c-muraille-portugaise-tranche-iv-objet.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/Muraille portugaise tranche IX-Objet.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs8l42002kbcuwk7rhjfmq",
+      "storageKey": "saf/murailles-portugaises-de-safi/tranche-ix/cmugs72g2001sbcuwdhzal6t5/02b5d58a-5cb1-42bd-a520-b01cd3b3ba7c-muraille-portugaise-tranche-ix-objet.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/Muraille portugaise tranche VI-Objet (1).pdf",
+      "status": "skipped_DUPLICATE"
+    },
+    {
+      "relativePath": "les plans et photos/Muraille portugaise tranche VI-Objet.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs8n7j002lbcuwjt9lgnwz",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6wmd0018bcuwio0a8n3m/ebc3f389-1c11-4508-8f7a-3d88dea05d70-muraille-portugaise-tranche-vi-objet.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/Muraille porturaise tranche V-Objet.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs8phw002mbcuwk8ecan2i",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6w100016bcuwee2z0yor/ac24e314-c80c-4e30-b24e-b200945958b6-muraille-porturaise-tranche-v-objet.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/Plan Bab EL Kasbah-Objet.pdf",
+      "status": "already_imported",
+      "fileId": "cmugs8rku002nbcuw1gleoyna",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6x7t001abcuwb3n477hd/060505fa-82c5-43f7-a47a-47b8917d4b94-plan-bab-el-kasbah-objet.pdf",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/synthese_donnees_plans (1).docx",
+      "status": "already_imported",
+      "fileId": "cmugs8ti5002obcuw0su68a7m",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6u840010bcuwck9q0s34/e70dbc5a-ee62-494d-91c9-c157723fb980-synthese-donnees-plans-1.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "les plans et photos/synthese_donnees_plans.docx",
+      "status": "already_imported",
+      "fileId": "cmugs8v5l002pbcuwprlawr1q",
+      "storageKey": "saf/murailles-portugaises-de-safi/cmugs6u840010bcuwck9q0s34/33fb308f-78f4-4b30-b397-25cdba9059ed-synthese-donnees-plans.docx",
+      "storageProvider": "BACKBLAZE_B2"
+    },
+    {
+      "relativePath": "muraille de safi Photos 1ere tranche/Muraille portugaise tranche IX-Objet.pdf",
+      "status": "skipped_DUPLICATE"
+    },
+    {
+      "relativePath": "muraille de safi Photos 1ere tranche/Plan Bab EL Kasbah-Objet.pdf",
+      "status": "skipped_DUPLICATE"
+    }
+  ]
+}

@@ -56,7 +56,7 @@ export function isImageFile(file: {
   mimeType?: string | null;
   storageProvider?: string | null;
 }): boolean {
-  if (file.storageProvider === "CLOUDINARY") return true;
+  if (file.storageProvider === "CLOUDINARY" && !isVideoFile(file)) return true;
   const ext = normalizeExtension(file.extension ?? "");
   if (IMAGE_EXTENSIONS.has(ext)) return true;
   return Boolean(file.mimeType?.startsWith("image/"));

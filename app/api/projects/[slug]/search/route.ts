@@ -1,7 +1,8 @@
-import { authenticate, apiError, HttpError } from "@/lib/http";
-import { getLibrary } from "@/lib/documents/library";
-import { isHeritageProject } from "@/lib/heritage/config/structure";
-import { searchHeritageProject } from "@/lib/heritage/queries/project-search";
+import { authenticate, apiError } from "@/lib/http";
+import { assertProjectAccess } from "@/lib/access";
+import { db } from "@/lib/db";
+import { HttpError } from "@/lib/http";
+import { searchProject } from "@/lib/structure/search";
 
 export async function GET(
   request: Request,
@@ -12,23 +13,16 @@ export async function GET(
     const { slug } = await params;
     const url = new URL(request.url);
     const q = url.searchParams.get("q") || "";
-    const mode = url.searchParams.get("mode") || "";
+    const page = Number(url.searchParams.get("page") || "1");
 
-    // Heritage in-project search (sections + documents + folders).
-    if (mode === "heritage") {
-      if (!isHeritageProject(slug)) {
-        throw new HttpError(
-          400,
-          "Recherche patrimoniale indisponible pour ce projet.",
-        );
-      }
-      return Response.json(await searchHeritageProject(user, slug, q));
-    }
+    const project = await db.project.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+    if (!project) throw new HttpError(404, "Projet introuvable.");
+    await assertProjectAccess(user, project.id);
 
-    // Legacy Explorer library search (default).
-    const type = url.searchParams.get("type") || undefined;
-    const folder = url.searchParams.get("folder") || null;
-    return Response.json(await getLibrary(slug, folder, { q, type }));
+    return Response.json(await searchProject(slug, q, user, { page }));
   } catch (error) {
     return apiError(error);
   }

@@ -42,14 +42,19 @@ test("old hardcoded ceiling of 100 no longer rejects 500/900", () => {
   }
 });
 
-test("upload route uses formData once and streams B2 uploads", () => {
-  const source = readFileSync(
+test("upload route uses formData once and the shared upload service streams B2", () => {
+  const route = readFileSync(
     path.join(process.cwd(), "app/api/files/route.ts"),
     "utf8",
   );
-  assert.match(source, /request\.formData\(\)/);
-  assert.match(source, /uploadWebFileToB2/);
-  assert.doesNotMatch(source, /readLimitedBody\(/);
-  assert.match(source, /maxDuration = 600/);
-  assert.match(source, /runtime MAX_UPLOAD_MB resolved/);
+  const service = readFileSync(
+    path.join(process.cwd(), "lib/files/create-uploaded-file.ts"),
+    "utf8",
+  );
+  assert.match(route, /request\.formData\(\)/);
+  assert.match(route, /createUploadedFile/);
+  assert.match(service, /uploadWebFileToB2/);
+  assert.doesNotMatch(route, /readLimitedBody\(/);
+  assert.match(route, /maxDuration = 600/);
+  assert.match(route, /MAX_UPLOAD_MB/);
 });

@@ -62,7 +62,7 @@ async function buildUserRow(userId: string): Promise<UsersTableRow | null> {
       ...user,
       accessLabels: [],
       projectAccess: {},
-      territoireAccess: {},
+
     };
   }
 
@@ -88,8 +88,6 @@ async function buildUserRow(userId: string): Promise<UsersTableRow | null> {
     ...user,
     accessLabels: accessLabelsFromMap(user.role, projectAccess, names),
     projectAccess,
-    // Schema field TerritoireMember.canCreateDossier kept unused (ADMIN-only create).
-    territoireAccess: {},
   };
 }
 
@@ -148,7 +146,7 @@ export async function createUserAction(
       status: result.user.status,
       accessLabels: labelsFromAccess(result.user.role, projectAccess, names),
       projectAccess,
-      territoireAccess: {},
+
     };
 
     revalidatePath("/users");

@@ -1,0 +1,192 @@
+{
+  "generatedAt": "2026-09-24T16:13:51.916Z",
+  "mode": "live",
+  "preserve": {
+    "description": "Auth/users/schema — NOT deleted by this script",
+    "users": [
+      {
+        "id": "cmuci7d2u00002cuwnta1acja",
+        "email": "user@archeritage.local",
+        "role": "USER",
+        "status": "ACTIVE",
+        "name": "Collaborateur Safi"
+      },
+      {
+        "id": "cmucisbj30000fguwsklh7r56",
+        "email": "admin.test@archeritage.local",
+        "role": "ADMIN",
+        "status": "ACTIVE",
+        "name": "Admin Test"
+      },
+      {
+        "id": "cmuciscaw0001fguwy9ztemcv",
+        "email": "user.test@archeritage.local",
+        "role": "USER",
+        "status": "ACTIVE",
+        "name": "User Test"
+      },
+      {
+        "id": "cmucrlm1w0000uwuwsjaly4tr",
+        "email": "invite-test-mucrll63@archeritage.local",
+        "role": "USER",
+        "status": "INVITED",
+        "name": "Invite Test"
+      },
+      {
+        "id": "cmucraqqi0000h4uwusxdtyrv",
+        "email": "aym.hajjam@gmail.com",
+        "role": "USER",
+        "status": "ACTIVE",
+        "name": "aymane hajjam"
+      },
+      {
+        "id": "cmu2m9s370000bouw9ddtaenl",
+        "email": "naciri@archeritage.ma",
+        "role": "ADMIN",
+        "status": "ACTIVE",
+        "name": "Administrateur"
+      }
+    ],
+    "sessionCount": 24,
+    "loginAttemptCount": 4,
+    "invitationTokenCount": 3,
+    "auditLogCount": 12,
+    "note": "Prisma migrations, app source, SMTP/B2/Cloudinary credentials untouched"
+  },
+  "database": {
+    "territoires": [
+      {
+        "id": "territoire-safi",
+        "code": "SAF",
+        "name": "Safi Patrimoine",
+        "slug": "safi-patrimoine",
+        "isActive": true,
+        "_count": {
+          "projects": 2,
+          "members": 1
+        }
+      },
+      {
+        "id": "cmue2j47x0000bcuwe0xvr27h",
+        "code": "SID",
+        "name": "Sidi Ifni",
+        "slug": "sidi-ifni",
+        "isActive": true,
+        "_count": {
+          "projects": 0,
+          "members": 0
+        }
+      }
+    ],
+    "projects": [
+      {
+        "id": "cmu2m9sq50001bouwdgpiukz1",
+        "name": "Château de Mer — Safi",
+        "slug": "chateau-de-mer-safi",
+        "code": "CDM",
+        "type": "CHATEAU",
+        "isActive": true,
+        "territoireId": "territoire-safi",
+        "_count": {
+          "files": 159,
+          "folders": 9,
+          "heritageSections": 18,
+          "heritageParts": 0,
+          "members": 3,
+          "sequences": 0
+        }
+      },
+      {
+        "id": "project-murailles-portugaises-safi",
+        "name": "Murailles portugaises de Safi",
+        "slug": "murailles-portugaises-de-safi",
+        "code": "MUR",
+        "type": "MURAILLE",
+        "isActive": true,
+        "territoireId": "territoire-safi",
+        "_count": {
+          "files": 566,
+          "folders": 35,
+          "heritageSections": 22,
+          "heritageParts": 4,
+          "members": 3,
+          "sequences": 0
+        }
+      }
+    ],
+    "counts": {
+      "files": 725,
+      "fileBytesHuman": "8.33 GB",
+      "folders": 44,
+      "heritageSections": 40,
+      "heritageParts": 4,
+      "heritageGroups": 13,
+      "projectMembers": 6,
+      "preuves": 0,
+      "sequences": 0
+    },
+    "byProvider": {
+      "CLOUDINARY": {
+        "count": 458,
+        "bytes": 842574970
+      },
+      "BACKBLAZE_B2": {
+        "count": 267,
+        "bytes": 8096907939
+      }
+    },
+    "storageKeyPrefixes": {
+      "safi-patrimoine/": 325,
+      "archeritage/": 400
+    }
+  },
+  "b2": {
+    "bucket": "ArcheritageDocs",
+    "prefixes": {
+      "archeritage/": {
+        "count": 163,
+        "bytes": 5178543409
+      },
+      "safi-patrimoine/": {
+        "count": 109,
+        "bytes": 2937014514
+      }
+    },
+    "currentObjectCount": 272,
+    "currentBytesHuman": "7.56 GB",
+    "versionRecordCount": 272,
+    "versionBytesHuman": "7.56 GB",
+    "orphanCount": 5
+  },
+  "cloudinary": {
+    "inventoryTotalOnAccount": 802,
+    "toDeleteCount": 458,
+    "preservedOtherAppsCount": 344,
+    "preservedOtherAppsPrefixes": {
+      "(root)": 77,
+      "rg3cp": 2,
+      "samples": 57,
+      "project": 1,
+      "uploads": 141,
+      "naala-foncier": 66
+    },
+    "deleteRule": "Only DB-referenced File.storageKey OR public_id under archeritage/ / safi-patrimoine/. Other account folders (samples, naala-foncier, rg3cp, uploads, …) are preserved.",
+    "byType": {
+      "image": {
+        "count": 458,
+        "bytes": 842574970
+      }
+    },
+    "totalBytesHuman": "803.54 MB",
+    "orphanWithinPlatformCount": 0
+  },
+  "cache": {
+    "fileCount": 5,
+    "bytesHuman": "17.79 MB"
+  },
+  "consistency": {
+    "dbB2FilesMissingFromBucket": [],
+    "dbCloudinaryFilesMissingFromCloud": []
+  },
+  "manifestPath": "C:\\Users\\Aymane_Hajjam\\Documents\\My Project\\ARCHERITAGE Docs\\reports\\reset\\full-content-reset-20260924-1713.json"
+}

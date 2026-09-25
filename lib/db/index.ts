@@ -7,7 +7,7 @@ import { normalizeDatabaseUrl } from "@/lib/db/connection-string";
  * Bump when Prisma schema fields change so a long-lived `npm run dev`
  * process does not keep a stale client after `prisma generate`.
  */
-const PRISMA_CLIENT_REV = "20260922-ssl-verify-full";
+const PRISMA_CLIENT_REV = "20260924-foundation";
 
 const globalDb = globalThis as unknown as {
   prisma?: PrismaClient;

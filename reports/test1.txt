@@ -1,0 +1,423 @@
+﻿
+> archeritage-docs@1.0.0 test
+> tsx --conditions=react-server --test "tests/**/*.test.ts"
+
+Γ£ö canManagePlatform is ADMIN-only (4.8798ms)
+Γ£ö ADMIN always resolves to full project permissions including download (2.0465ms)
+Γ£ö USER without membership has no project permissions (0.4261ms)
+Γ£ö USER view-only: preview allowed, upload/download/structure denied (0.341ms)
+Γ£ö USER download allowed only with canDownload (0.4845ms)
+Γ£ö USER upload allowed only with canUpload (0.3653ms)
+Γ£ö USER manage structure allowed only with canManageStructure (0.2491ms)
+Γ£ö USER delete documents allowed only with canDeleteDocuments (0.3254ms)
+Γ£ö ADMIN always has canDeleteDocuments (0.3546ms)
+Γ£ö normalize clears dependent flags when view is false (2.8032ms)
+Γ£ö UI flag rules: unchecking Voir clears dependents (0.5843ms)
+Γ£ö UI flag rules: checking Importer forces Voir (0.2682ms)
+Γ£ö UI flag rules: checking Supprimer des documents forces Voir (0.3823ms)
+Γ£ö creating a project under a Territoire is ADMIN-only (0.685ms)
+Γ£ö inaccessible dossier: canView false means no access (0.3086ms)
+Γ£ö invitation token is hashed (never store plaintext) (1.6031ms)
+Γ£ö createUserSchema normalizes email and defaults role USER (5.7487ms)
+Γ£ö updateUserSchema rejects invalid role (2.5922ms)
+Γ£ö section code generation keeps existing codes stable (0.4608ms)
+Γ£ö generateSlug produces URL-safe identifiers (2.4945ms)
+Γ£ö invitation email contains activation CTA and URL (6.1513ms)
+Γû╢ generateSlug
+  Γ£ö strips accents and hyphenates (3.0855ms)
+  Γ£ö falls back for empty input (0.8184ms)
+Γ£ö generateSlug (23.9256ms)
+Γû╢ proposeProjectCode
+  Γ£ö uses first significant word (0.8875ms)
+Γ£ö proposeProjectCode (1.2661ms)
+Γû╢ proposeDossierCode
+  Γ£ö builds initials or short codes (0.9281ms)
+Γ£ö proposeDossierCode (1.8102ms)
+Γû╢ generateNextSectionCode
+  Γ£ö increments after max without renumbering gaps (1.8457ms)
+  Γ£ö starts at .1 when empty (1.6069ms)
+  Γ£ö skips collisions if max+1 somehow taken (0.9838ms)
+  Γ£ö preserves existing codes (stability) (3.5844ms)
+Γ£ö generateNextSectionCode (9.2133ms)
+Γû╢ extractSectionPrefixes
+  Γ£ö reads dossier prefixes from codes (1.0731ms)
+Γ£ö extractSectionPrefixes (1.4342ms)
+Γû╢ allocateUnique
+  Γ£ö appends suffix on slug collision (0.8676ms)
+Γ£ö allocateUnique (1.3344ms)
+Γû╢ allocateUniqueCode
+  Γ£ö appends numeric suffix on code collision (0.7789ms)
+Γ£ö allocateUniqueCode (1.0458ms)
+Γû╢ notification UX guardrails
+  Γ£ö toast fallback does not call window.alert (2.5517ms)
+  Γ£ö management user actions do not use native confirm (9.5668ms)
+Γ£ö notification UX guardrails (35.3534ms)
+Γû╢ auth error copy
+  Γ£ö login action uses non-enumerating credential and disabled messages (6.9861ms)
+Γ£ö auth error copy (10.0339ms)
+Γû╢ password policy
+  Γ£ö rejects passwords shorter than 6 characters (4.5802ms)
+  Γ£ö accepts passwords with exactly 6 characters (0.6709ms)
+  Γ£ö does not require uppercase, number, or special characters (0.4018ms)
+  Γ£ö rejects confirmation mismatch (0.4157ms)
+  Γ£ö accepts matching confirmation at minimum length (0.3708ms)
+  Γ£ö stores passwords as bcrypt hashes only (1230.1816ms)
+Γ£ö password policy (1241.068ms)
+Γ£ö ADMIN full permissions include canDeleteDocuments (2.6823ms)
+Γ£ö canManageStructure does not grant canDeleteDocuments (3.3903ms)
+Γ£ö DOCUMENT_DELETED audit action is defined (1.4923ms)
+Γ£ö DELETE files API uses deleteDocumentForUser with authorization (1.382ms)
+Γ£ö deleteDocumentForUser enforces canDeleteDocuments and hard-deletes (1.9512ms)
+Γ£ö permission matrix exposes Supprimer des documents (0.8574ms)
+Γ£ö isImageFile detects Cloudinary and common image extensions (13.968ms)
+Γ£ö isVideoFile detects common video extensions including MTS and AVI (5.6399ms)
+Γ£ö browser-playable vs derivative video classification (1.1915ms)
+Γ£ö fileTypeBadge prefers extension (0.5863ms)
+Γ£ö supported images require matching signatures and extensions (7.7112ms)
+Γ£û PDF signature is required; videos get extension MIME; other docs stay octet-stream (3.6844ms)
+Γ£ö empty files, dangerous names and over-limit payloads are rejected (1.4566ms)
+Γ£ö MAX_UPLOAD_MB accepts values above the old 100MB hard ceiling (1.1374ms)
+Γ£û video validation can use a short head buffer with explicit size (1.0775ms)
+Γ£ö download names encode Unicode and cannot inject HTTP headers (1.1262ms)
+Γ£ö folder paths support deep nesting without recursion and terminate on corrupted cycles (12.8135ms)
+Γ£ö size ladder: configured 500MB allows 10ΓÇô300MB checks (4.9704ms)
+Γ£ö old hardcoded ceiling of 100 no longer rejects 500/900 (1.1023ms)
+Γ£û upload route uses formData once and streams B2 uploads (6.774ms)
+Γ£ö isConvertibleOfficeDocument recognizes supported office formats (2.6356ms)
+Γ£ö SUPPORTED_OFFICE_EXTENSIONS includes Word/Excel/PowerPoint (0.4186ms)
+Γ£ö computePreviewCacheKey is deterministic and sensitive to file changes (0.5719ms)
+Γ£ö findSofficeBinary returns an existing path or null (never a bare command) (1.3631ms)
+[preview] Converting .docx via LibreOffice (C:\Program Files\LibreOffice\program\soffice.com) timeout=180000ms
+Γ£ö convertOfficeToPdf converts real DOCX when LibreOffice is available (18117.6187ms)
+Γ£ö convertOfficeToPdf rejects unsupported formats (1.6755ms)
+Γ£ö convertOfficeToPdf rejects invalid DOCX ZIP containers (0.5593ms)
+∩╣ú convertOfficeToPdf fails clearly when LibreOffice is missing (0.8242ms) # LibreOffice is installed ΓÇö missing-binary path not exercised
+Γ£ö buildDocumentStoragePath mirrors hierarchy and sanitizes (5.9766ms)
+Γ£ö buildCloudinaryFolderPath has no filename (1.8296ms)
+Γ£ö rejects absolute-looking injection via segment sanitize (0.5728ms)
+Γ£ö isConvertibleVideoExtension covers MTS/AVI/MP4 family (1.6462ms)
+Γ£ö preview ffmpeg args target H.264 AAC MP4 with optional audio (0.4371ms)
+Γ£ö findFfmpegBinary resolves env, PATH, or bundled ffmpeg-static (385.4645ms)
+∩╣ú convertVideoToPreviewMp4 fails clearly when ffmpeg is missing (294.1306ms) # ffmpeg is available ΓÇö missing-binary path not exercised
+Γ£ö convertVideoToPreviewMp4 rejects unsupported formats (2.0088ms)
+[video-preview] Converting .mp4 via ffmpeg (C:\Users\Aymane_Hajjam\Documents\My Project\ARCHERITAGE Docs\node_modules\ffmpeg-static\ffmpeg.exe) timeout=300000ms
+Γ£ö convertVideoToPreviewMp4 converts synthetic MP4 (native path input) (2388.4955ms)
+[video-preview] Converting .avi via ffmpeg (C:\Users\Aymane_Hajjam\Documents\My Project\ARCHERITAGE Docs\node_modules\ffmpeg-static\ffmpeg.exe) timeout=300000ms
+Γ£ö convertVideoToPreviewMp4 converts AVI container when ffmpeg can read it (533.3837ms)
+[video-preview] Converting .mts via ffmpeg (C:\Users\Aymane_Hajjam\Documents\My Project\ARCHERITAGE Docs\node_modules\ffmpeg-static\ffmpeg.exe) timeout=300000ms
+Γ£ö convertVideoToPreviewMp4 converts MPEG-TS-like MTS when ffmpeg can read it (565.5823ms)
+Γ£ö video preview cache key stays deterministic per File.id/sourceHash (1.2897ms)
+Γä╣ tests 81
+Γä╣ suites 10
+Γä╣ pass 76
+Γä╣ fail 3
+Γä╣ cancelled 0
+Γä╣ skipped 2
+Γä╣ todo 0
+Γä╣ duration_ms 28345.5513
+
+Γ£û failing tests:
+
+test at tests\documents\file-validation.test.ts:23:1
+Γ£û PDF signature is required; videos get extension MIME; other docs stay octet-stream (3.6844ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'CLOUDINARY'
+  - 'BACKBLAZE_B2'
+  
+      at TestContext.<anonymous> (C:\Users\Aymane_Hajjam\Documents\My Project\ARCHERITAGE Docs\tests\documents\file-validation.test.ts:31:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'CLOUDINARY',
+    expected: 'BACKBLAZE_B2',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\documents\file-validation.test.ts:69:1
+Γ£û video validation can use a short head buffer with explicit size (1.0775ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'CLOUDINARY'
+  - 'BACKBLAZE_B2'
+  
+      at TestContext.<anonymous> (C:\Users\Aymane_Hajjam\Documents\My Project\ARCHERITAGE Docs\tests\documents\file-validation.test.ts:81:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'CLOUDINARY',
+    expected: 'BACKBLAZE_B2',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\documents\upload-limits.test.ts:45:1
+Γ£û upload route uses formData once and streams B2 uploads (6.774ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /runtime MAX_UPLOAD_MB resolved/. Input:
+  
+  'import { randomUUID } from "node:crypto";\n' +
+    'import { db } from "@/lib/db";\n' +
+    'import { authenticate, apiError, HttpError } from "@/lib/http";\n' +
+    'import { assertCanUpload } from "@/lib/access";\n' +
+    'import {\n' +
+    '  assertWithinUploadLimit,\n' +
+    '  maxUploadBytes,\n' +
+    '  resolveMaxUploadMb,\n' +
+    '  validateFile,\n' +
+    '} from "@/lib/validation/file";\n' +
+    'import {\n' +
+    '  deleteObject,\n' +
+    '  uploadObject,\n' +
+    '  uploadWebFileToB2,\n' +
+    '} from "@/lib/storage";\n' +
+    'import { buildDocumentStoragePath } from "@/lib/storage/path-builder";\n' +
+    'import { resolveStorageProvider } from "@/lib/storage/provider";\n' +
+    'import { resolveUploadContext } from "@/lib/structure/upload-context";\n' +
+    '\n' +
+    'export const runtime = "nodejs";\n' +
+    'export const maxDuration = 600;\n' +
+    '\n' +
+    'let loggedUploadLimit = false;\n' +
+    '\n' +
+    'function logUploadLimitOnce() {\n' +
+    '  if (loggedUploadLimit) return;\n' +
+    '  loggedUploadLimit = true;\n' +
+    '  try {\n' +
+    '    const mb = resolveMaxUploadMb();\n' +
+    '    console.info("[upload] MAX_UPLOAD_MB", { mb, bytes: mb * 1024 * 1024 });\n' +
+    '  } catch (error) {\n' +
+    '    console.error("[upload] MAX_UPLOAD_MB invalid", {\n' +
+    '      message: error instanceof Error ? error.message : String(error),\n' +
+    '    });\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    'export async function POST(request: Request) {\n' +
+    '  const startedAt = Date.now();\n' +
+    '  let fileName: string | undefined;\n' +
+    '  let fileSize: number | undefined;\n' +
+    '\n' +
+    '  try {\n' +
+    '    logUploadLimitOnce();\n' +
+    '    const user = await authenticate(request, true);\n' +
+    '\n' +
+    '    const type = request.headers.get("content-type") || "";\n' +
+    '    if (!type.startsWith("multipart/form-data")) {\n' +
+    '      throw new HttpError(400, "Format dΓÇÖenvoi invalide.");\n' +
+    '    }\n' +
+    '\n' +
+    '    let maxBytes: number;\n' +
+    '    try {\n' +
+    '      maxBytes = maxUploadBytes();\n' +
+    '    } catch {\n' +
+    '      throw new HttpError(\n' +
+    '        500,\n' +
+    '        "Configuration dΓÇÖupload invalide. Contactez un administrateur.",\n' +
+    '      );\n' +
+    '    }\n' +
+    '\n' +
+    '    const contentLength = Number(request.headers.get("content-length") || 0);\n' +
+    '    if (contentLength > maxBytes + 256 * 1024) {\n' +
+    '      throw new HttpError(413, "Le fichier d├⌐passe la taille autoris├⌐e.");\n' +
+    '    }\n' +
+    '\n' +
+    '    let form: FormData;\n' +
+    '    try {\n' +
+    '      form = await request.formData();\n' +
+    '    } catch {\n' +
+    '      throw new HttpError(400, "Envoi invalide.");\n' +
+    '    }\n' +
+    '\n' +
+    '    const file = form.get("file");\n' +
+    '    if (!(file instanceof File) || form.getAll("file").length !== 1) {\n' +
+    '      throw new HttpError(400, "S├⌐lectionnez un fichier.");\n' +
+    '    }\n' +
+    '\n' +
+    '    // Reject client-forced storage identity.\n' +
+    '    if (form.get("storageKey") || form.get("storageProvider") || form.get("uploadedById")) {\n' +
+    '      throw new HttpError(400, "Param├¿tres de stockage non autoris├⌐s.");\n' +
+    '    }\n' +
+    '\n' +
+    '    fileName = file.name;\n' +
+    '    fileSize = file.size;\n' +
+    '    try {\n' +
+    '      assertWithinUploadLimit(file.size);\n' +
+    '    } catch {\n' +
+    '      throw new HttpError(413, "Le fichier d├⌐passe la taille autoris├⌐e.");\n' +
+    '    }\n' +
+    '\n' +
+    '    const sectionId = String(form.get("sectionId") || "").trim();\n' +
+    '    const folderIdField = String(form.get("folderId") || "").trim();\n' +
+    '    if (!sectionId) {\n' +
+    '      throw new HttpError(400, "Section manquante.");\n' +
+    '    }\n' +
+    '\n' +
+    '    const ctx = await resolveUploadContext({\n' +
+    '      sectionId,\n' +
+    '      folderId: folderIdField || null,\n' +
+    '    });\n' +
+    '\n' +
+    '    await assertCanUpload(user, ctx.projectId);\n' +
+    '\n' +
+    '    const headBytes = Buffer.from(await file.slice(0, 64).arrayBuffer());\n' +
+    '    let metadata;\n' +
+    '    try {\n' +
+    '      metadata = validateFile(file.name, file.type, headBytes, file.size);\n' +
+    '    } catch (error) {\n' +
+    '      const message =\n' +
+    '        error instanceof Error ? error.message : "Fichier invalide.";\n' +
+    '      if (/trop volumineux/i.test(message)) {\n' +
+    '        throw new HttpError(413, "Le fichier d├⌐passe la taille autoris├⌐e.");\n' +
+    '      }\n' +
+    '      throw new HttpError(400, message);\n' +
+    '    }\n' +
+    '\n' +
+    '    // Authoritative provider from MIME + extension (ignore any client hint).\n' +
+    '    const storageProvider = resolveStorageProvider({\n' +
+    '      mimeType: metadata.mimeType,\n' +
+    '      filename: file.name,\n' +
+    '      extension: metadata.extension,\n' +
+    '    });\n' +
+    '\n' +
+    '    const storageKey = buildDocumentStoragePath({\n' +
+    '      territoireCode: ctx.territoireCode,\n' +
+    '      projectSlug: ctx.projectSlug,\n' +
+    '      partSlug: ctx.partSlug,\n' +
+    '      sectionSegment: ctx.sectionSegment,\n' +
+    '      folderNames: ctx.folderNames,\n' +
+    '      originalFilename: file.name,\n' +
+    '      fileId: randomUUID(),\n' +
+    '    });\n' +
+    '\n' +
+    '    let object: { storageKey: string; storageVersion: string | null };\n' +
+    '    try {\n' +
+    '      if (storageProvider === "CLOUDINARY") {\n' +
+    '        const bytes = Buffer.from(await file.arrayBuffer());\n' +
+    '        object = await uploadObject(\n' +
+    '          bytes,\n' +
+    '          storageProvider,\n' +
+    '          metadata.mimeType,\n' +
+    '          storageKey,\n' +
+    '        );\n' +
+    '      } else {\n' +
+    '        object = await uploadWebFileToB2(file, metadata.mimeType, storageKey);\n' +
+    '      }\n' +
+    '    } catch (error) {\n' +
+    '      console.error("[upload] storage failed", {\n' +
+    '        fileName,\n' +
+    '        fileSize,\n' +
+    '        storageProvider,\n' +
+    '        message: error instanceof Error ? error.message.slice(0, 400) : String(error),\n' +
+    '      });\n' +
+    '      throw new HttpError(\n' +
+    '        502,\n' +
+    '        "Impossible dΓÇÖenregistrer le fichier dans le stockage. R├⌐essayez plus tard.",\n' +
+    '      );\n' +
+    '    }\n' +
+    '\n' +
+    '    try {\n' +
+    '      const record = await db.file.create({\n' +
+    '        data: {\n' +
+    '          extension: metadata.extension,\n' +
+    '          mimeType: metadata.mimeType,\n' +
+    '          storageProvider,\n' +
+    '          storageKey: object.storageKey,\n' +
+    '          storageVersion: object.storageVersion,\n' +
+    '          originalName: file.name,\n' +
+    '          displayName: file.name,\n' +
+    '          size: file.size,\n' +
+    '          sectionId: ctx.sectionId,\n' +
+    '          folderId: ctx.folderId,\n' +
+    '          uploadedById: user.id,\n' +
+    '        },\n' +
+    '        select: {\n' +
+    '          id: true,\n' +
+    '          displayName: true,\n' +
+    '          originalName: true,\n' +
+    '          extension: true,\n' +
+    '          mimeType: true,\n' +
+    '          size: true,\n' +
+    '          storageProvider: true,\n' +
+    '          sectionId: true,\n' +
+    '          folderId: true,\n' +
+    '          createdAt: true,\n' +
+    '          uploadedById: true,\n' +
+    '          uploadedBy: { select: { name: true } },\n' +
+    '          folder: { select: { name: true } },\n' +
+    '          section: { select: { name: true, code: true } },\n' +
+    '        },\n' +
+    '      });\n' +
+    '\n' +
+    '      console.info("[upload] ok", {\n' +
+    '        fileId: record.id,\n' +
+    '        durationMs: Date.now() - startedAt,\n' +
+    '      });\n' +
+    '\n' +
+    '      return Response.json(\n' +
+    '        {\n' +
+    '          id: record.id,\n' +
+    '          displayName: record.displayName,\n' +
+    '          originalName: record.originalName,\n' +
+    '          extension: record.extension,\n' +
+    '          mimeType: record.mimeType,\n' +
+    '          size: record.size,\n' +
+    '          storageProvider: record.storageProvider,\n' +
+    '          sectionId: record.sectionId,\n' +
+    '          folderId: record.folderId,\n' +
+    '          createdAt: record.createdAt.toISOString(),\n' +
+    '          uploadedById: record.uploadedById,\n' +
+    '          uploadedByName: record.uploadedBy?.name ?? null,\n' +
+    '          location: [\n' +
+    '            record.section.code\n' +
+    '              ? `${record.section.code} ${record.section.name}`\n' +
+    '              : record.section.name,\n' +
+    '            record.folder?.name,\n' +
+    '          ]\n' +
+    '            .filter(Boolean)\n' +
+    '            .join(" ΓÇ║ "),\n' +
+    '        },\n' +
+    '        { status: 201 },\n' +
+    '      );\n' +
+    '    } catch (error) {\n' +
+    '      try {\n' +
+    '        await deleteObject({\n' +
+    '          ...object,\n' +
+    '          storageProvider,\n' +
+    '        });\n' +
+    '      } catch {\n' +
+    '        console.error("Orphaned upload requires cleanup", object.storageKey);\n' +
+    '      }\n' +
+    '      throw error;\n' +
+    '    }\n' +
+    '  } catch (error) {\n' +
+    '    return apiError(error);\n' +
+    '  }\n' +
+    '}\n'
+  
+      at TestContext.<anonymous> (C:\Users\Aymane_Hajjam\Documents\My Project\ARCHERITAGE Docs\tests\documents\upload-limits.test.ts:54:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import { randomUUID } from "node:crypto";\nimport { db } from "@/lib/db";\nimport { authenticate, apiError, HttpError } from "@/lib/http";\nimport { assertCanUpload } from "@/lib/access";\nimport {\n  assertWithinUploadLimit,\n  maxUploadBytes,\n  resolveMaxUploadMb,\n  validateFile,\n} from "@/lib/validation/file";\nimport {\n  deleteObject,\n  uploadObject,\n  uploadWebFileToB2,\n} from "@/lib/storage";\nimport { buildDocumentStoragePath } from "@/lib/storage/path-builder";\nimport { resolveStorageProvider } from "@/lib/storage/provider";\nimport { resolveUploadContext } from "@/lib/structure/upload-context";\n\nexport const runtime = "nodejs";\nexport const maxDuration = 600;\n\nlet loggedUploadLimit = false;\n\nfunction logUploadLimitOnce() {\n  if (loggedUploadLimit) return;\n  loggedUploadLimit = true;\n  try {\n    const mb = resolveMaxUploadMb();\n    console.info("[upload] MAX_UPLOAD_MB", { mb, bytes: mb * 1024 * 1024 });\n  } catch (error) {\n    console.error("[upload] MAX_UPLOAD_MB invalid", {\n      message: error instanceof Error ? error.message : String(error),\n    });\n  }\n}\n\nexport async function POST(request: Request) {\n  const startedAt = Date.now();\n  let fileName: string | undefined;\n  let fileSize: number | undefined;\n\n  try {\n    logUploadLimitOnce();\n    const user = await authenticate(request, true);\n\n    const type = request.headers.get("content-type") || "";\n    if (!type.startsWith("multipart/form-data")) {\n      throw new HttpError(400, "Format dΓÇÖenvoi invalide.");\n    }\n\n    let maxBytes: number;\n    try {\n      maxBytes = maxUploadBytes();\n    } catch {\n      throw new HttpError(\n        500,\n        "Configuration dΓÇÖupload invalide. Contactez un administrateur.",\n      );\n    }\n\n    const contentLength = Number(request.headers.get("content-length") || 0);\n    if (contentLength > maxBytes + 256 * 1024) {\n      throw new HttpError(413, "Le fichier d├⌐passe la taille autoris├⌐e.");\n    }\n\n    let form: FormData;\n    try {\n      form = await request.formData();\n    } catch {\n      throw new HttpError(400, "Envoi invalide.");\n    }\n\n    const file = form.get("file");\n    if (!(file instanceof File) || form.getAll("file").length !== 1) {\n      throw new HttpError(400, "S├⌐lectionnez un fichier.");\n    }\n\n    // Reject client-forced storage identity.\n    if (form.get("storageKey") || form.get("storageProvider") || form.get("uploadedById")) {\n      throw new HttpError(400, "Param├¿tres de stockage non autoris├⌐s.");\n    }\n\n    fileName = file.name;\n    fileSize = file.size;\n    try {\n      assertWithinUploadLimit(file.size);\n    } catch {\n      throw new HttpError(413, "Le fichier d├⌐passe la taille autoris├⌐e.");\n    }\n\n    const sectionId = String(form.get("sectionId") || "").trim();\n    const folderIdField = String(form.get("folderId") || "").trim();\n    if (!sectionId) {\n      throw new HttpError(400, "Section manquante.");\n    }\n\n    const ctx = await resolveUploadContext({\n      sectionId,\n      folderId: folderIdField || null,\n    });\n\n    await assertCanUpload(user, ctx.projectId);\n\n    const headBytes = Buffer.from(await file.slice(0, 64).arrayBuffer());\n    let metadata;\n    try {\n      metadata = validateFile(file.name, file.type, headBytes, file.size);\n    } catch (error) {\n      const message =\n        error instanceof Error ? error.message : "Fichier invalide.";\n      if (/trop volumineux/i.test(message)) {\n        throw new HttpError(413, "Le fichier d├⌐passe la taille autoris├⌐e.");\n      }\n      throw new HttpError(400, message);\n    }\n\n    // Authoritative provider from MIME + extension (ignore any client hint).\n    const storageProvider = resolveStorageProvider({\n      mimeType: metadata.mimeType,\n      filename: file.name,\n      extension: metadata.extension,\n    });\n\n    const storageKey = buildDocumentStoragePath({\n      territoireCode: ctx.territoireCode,\n      projectSlug: ctx.projectSlug,\n      partSlug: ctx.partSlug,\n      sectionSegment: ctx.sectionSegment,\n      folderNames: ctx.folderNames,\n      originalFilename: file.name,\n      fileId: randomUUID(),\n    });\n\n    let object: { storageKey: string; storageVersion: string | null };\n    try {\n      if (storageProvider === "CLOUDINARY") {\n        const bytes = Buffer.from(await file.arrayBuffer());\n        object = await uploadObject(\n          bytes,\n          storageProvider,\n          metadata.mimeType,\n          storageKey,\n        );\n      } else {\n        object = await uploadWebFileToB2(file, metadata.mimeType, storageKey);\n      }\n    } catch (error) {\n      console.error("[upload] storage failed", {\n        fileName,\n        fileSize,\n        storageProvider,\n        message: error instanceof Error ? error.message.slice(0, 400) : String(error),\n      });\n      throw new HttpError(\n        502,\n        "Impossible dΓÇÖenregistrer le fichier dans le stockage. R├⌐essayez plus tard.",\n      );\n    }\n\n    try {\n      const record = await db.file.create({\n        data: {\n          extension: metadata.extension,\n          mimeType: metadata.mimeType,\n          storageProvider,\n          storageKey: object.storageKey,\n          storageVersion: object.storageVersion,\n          originalName: file.name,\n          displayName: file.name,\n          size: file.size,\n          sectionId: ctx.sectionId,\n          folderId: ctx.folderId,\n          uploadedById: user.id,\n        },\n        select: {\n          id: true,\n          displayName: true,\n          originalName: true,\n          extension: true,\n          mimeType: true,\n          size: true,\n          storageProvider: true,\n          sectionId: true,\n          folderId: true,\n          createdAt: true,\n          uploadedById: true,\n          uploadedBy: { select: { name: true } },\n          folder: { select: { name: true } },\n          section: { select: { name: true, code: true } },\n        },\n      });\n\n      console.info("[upload] ok", {\n        fileId: record.id,\n        durationMs: Date.now() - startedAt,\n      });\n\n      return Response.json(\n        {\n          id: record.id,\n          displayName: record.displayName,\n          originalName: record.originalName,\n          extension: record.extension,\n          mimeType: record.mimeType,\n          size: record.size,\n          storageProvider: record.storageProvider,\n          sectionId: record.sectionId,\n          folderId: record.folderId,\n          createdAt: record.createdAt.toISOString(),\n          uploadedById: record.uploadedById,\n          uploadedByName: record.uploadedBy?.name ?? null,\n          location: [\n            record.section.code\n              ? `${record.section.code} ${record.section.name}`\n              : record.section.name,\n            record.folder?.name,\n          ]\n            .filter(Boolean)\n            .join(" ΓÇ║ "),\n        },\n        { status: 201 },\n      );\n    } catch (error) {\n      try {\n        await deleteObject({\n          ...object,\n          storageProvider,\n        });\n      } catch {\n        console.error("Orphaned upload requires cleanup", object.storageKey);\n      }\n      throw error;\n    }\n  } catch (error) {\n    return apiError(error);\n  }\n}\n',
+    expected: /runtime MAX_UPLOAD_MB resolved/,
+    operator: 'match',
+    diff: 'simple'
+  }

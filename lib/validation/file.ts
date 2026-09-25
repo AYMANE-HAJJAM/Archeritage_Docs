@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { VIDEO_MIME_BY_EXTENSION } from "@/lib/documents/file-kind";
+import { resolveStorageProvider } from "@/lib/storage/provider";
 
 export const nameSchema = z
   .string()
@@ -104,11 +105,7 @@ export function validateFile(
     ) {
       throw new Error("Image invalide. Utilisez JPG, PNG ou WebP.");
     }
-    return {
-      extension,
-      mimeType: detected!,
-      storageProvider: "CLOUDINARY",
-    };
+    return decided(extension, detected!, size);
   }
 
   if (
@@ -120,17 +117,30 @@ export function validateFile(
 
   const videoMime = VIDEO_MIME_BY_EXTENSION[extension];
   if (videoMime) {
-    return {
-      extension,
-      mimeType: videoMime,
-      storageProvider: "BACKBLAZE_B2",
-    };
+    return decided(extension, videoMime, size);
   }
 
+  return decided(
+    extension,
+    extension === "pdf" ? "application/pdf" : "application/octet-stream",
+    size,
+  );
+}
+
+function decided(
+  extension: string,
+  mimeType: string,
+  size: number,
+): ValidatedUpload {
   return {
     extension,
-    mimeType: extension === "pdf" ? "application/pdf" : "application/octet-stream",
-    storageProvider: "BACKBLAZE_B2",
+    mimeType,
+    storageProvider: resolveStorageProvider({
+      fileName: extension ? `file.${extension}` : "file",
+      mimeType,
+      extension,
+      sizeBytes: size,
+    }),
   };
 }
 

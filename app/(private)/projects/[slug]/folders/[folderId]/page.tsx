@@ -1,17 +1,8 @@
 import { redirect } from "next/navigation";
 
-import {
-  documentsPath,
-  isHeritageProject,
-  sectionFolderPath,
-} from "@/lib/heritage/config/structure";
-import { getDocumentaryFolder } from "@/lib/heritage/documentary-folders";
 import { db } from "@/lib/db";
 
-/**
- * Deep-link into a documentary folder under its heritage section.
- * Legacy (non-section) folders land on the document index.
- */
+/** Deep-link into a folder — resolves its section and opens the workspace. */
 export default async function FolderPage({
   params,
 }: {
@@ -19,19 +10,20 @@ export default async function FolderPage({
 }) {
   const { slug, folderId } = await params;
 
-  if (isHeritageProject(slug)) {
-    const folder = await getDocumentaryFolder(folderId);
-    if (folder?.heritageSectionId) {
-      const section = await db.heritageSection.findUnique({
-        where: { id: folder.heritageSectionId },
-        select: { code: true },
-      });
-      if (section) {
-        redirect(sectionFolderPath(slug, section.code, folder.id));
-      }
-    }
-    redirect(documentsPath(slug));
+  const folder = await db.folder.findUnique({
+    where: { id: folderId },
+    select: {
+      id: true,
+      sectionId: true,
+      section: { select: { group: { select: { project: { select: { slug: true } } } } } },
+    },
+  });
+
+  if (!folder || folder.section.group.project.slug !== slug) {
+    redirect(`/projects/${slug}`);
   }
 
-  redirect(`/projects/${slug}`);
+  redirect(
+    `/projects/${slug}?sectionId=${folder.sectionId}&folderId=${folder.id}`,
+  );
 }

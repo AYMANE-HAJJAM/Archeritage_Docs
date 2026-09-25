@@ -1,0 +1,52 @@
+Documents import dry run
+Territoire: Safi Patrimoine (proposed code SAF)
+Files: 35
+Documents: 35
+SKIP_MEDIA: 0
+READY: 32
+DUPLICATE: 3
+UNRESOLVED: 0
+READY bytes for B2: 56308919
+
+READY
+- chateau de mer synthese/chateau de mer 2/les étapes a prtéparer pour la consultation.docx → Château de Mer / GLOBAL / CONSULTATION & PROJET / Dossier de consultation [BACKBLAZE_B2]
+- chateau de mer synthese/chateau de mer 2/Mémoire technique.docx → Château de Mer / GLOBAL / CONSULTATION & PROJET / Mémoire technique [BACKBLAZE_B2]
+- chateau de mer synthese/chateau de mer 2/mlettre d'intention equipe.docx → Château de Mer / GLOBAL / CONSULTATION & PROJET / Équipe & pièces de candidature [BACKBLAZE_B2]
+- chateau de mer synthese/chateau de mer 2/model CV mission chateau de mer.docx → Château de Mer / GLOBAL / CONSULTATION & PROJET / Équipe & pièces de candidature [BACKBLAZE_B2]
+- chateau de mer synthese/lecture chateau de mer/article.docx → Château de Mer / GLOBAL / COMPRENDRE / Documentation & articles [BACKBLAZE_B2]
+- chateau de mer synthese/lecture chateau de mer/article2.docx → Château de Mer / GLOBAL / COMPRENDRE / Documentation & articles [BACKBLAZE_B2]
+- chateau de mer synthese/lecture chateau de mer/chateau de mer.docx → Château de Mer / GLOBAL / COMPRENDRE / Présentation & histoire [BACKBLAZE_B2]
+- chateau de mer synthese/lecture chateau de mer/lecture 1.docx → Château de Mer / GLOBAL / COMPRENDRE / Documentation & articles [BACKBLAZE_B2]
+- chateau de mer synthese/lecture chateau de mer/portuaire safi.pdf → Château de Mer / GLOBAL / DIAGNOSTIC & ENVIRONNEMENT / Environnement maritime & littoral [BACKBLAZE_B2]
+- chateau de mer synthese/LES textes de classement/Dossier juridique — Château de Mer (textes de classement 1922-1924).docx → Château de Mer / GLOBAL / COMPRENDRE / Protection juridique [BACKBLAZE_B2]
+- chateau de mer synthese/LES textes de classement/ma-bulletin-officiel-dated-1923-07-17-no-560.pdf → Château de Mer / GLOBAL / COMPRENDRE / Protection juridique [BACKBLAZE_B2]
+- chateau de mer synthese/LES textes de classement/ma-bulletin-officiel-dated-1924-03-25-no-596.pdf → Château de Mer / GLOBAL / COMPRENDRE / Protection juridique [BACKBLAZE_B2]
+- chateau de mer synthese/LES textes de classement/Répertoire des dahirs de classement du patrimoine marocain (1912-1956).pdf → Château de Mer / GLOBAL / COMPRENDRE / Protection juridique [BACKBLAZE_B2]
+- chateau de mer synthese/Pack_consultation_Chateau_de_Mer_Safi_V2_enrichi.docx → Château de Mer / GLOBAL / CONSULTATION & PROJET / Dossier de consultation [BACKBLAZE_B2]
+- chateau de mer synthese/rapport provisoire expertise kssar lebhar safi envoyé.pdf → Château de Mer / GLOBAL / DIAGNOSTIC & ENVIRONNEMENT / Expertise & diagnostic [BACKBLAZE_B2]
+- muraille portugaise/Atlas des pathologies.docx → Murailles portugaises de Safi / GLOBAL / DIAGNOSTIC / Pathologies [BACKBLAZE_B2]
+- muraille portugaise/Docs récents/CPS 2.docx → Murailles portugaises de Safi / GLOBAL / CONSULTATION & PROJET / CPS [BACKBLAZE_B2]
+- muraille portugaise/Docs récents/CPS etude.docx → Murailles portugaises de Safi / GLOBAL / CONSULTATION & PROJET / CPS [BACKBLAZE_B2]
+- muraille portugaise/Docs récents/les 3 pieces complémentaires.docx → Murailles portugaises de Safi / GLOBAL / CONSULTATION & PROJET / Pièces complémentaires [BACKBLAZE_B2]
+- muraille portugaise/Docs récents/RC.docx → Murailles portugaises de Safi / GLOBAL / CONSULTATION & PROJET / Règlement de consultation [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/ANALYSE_COMPARATIVE_ET_RECOMMANDATIONS.docx → Murailles portugaises de Safi / GLOBAL / CONSULTATION & PROJET / Analyses & recommandations [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/CPS 6 PERP.docx → Murailles portugaises de Safi / GLOBAL / CONSULTATION & PROJET / CPS [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/CPS_4 SAFI_REVISÉ_COMPLET.docx → Murailles portugaises de Safi / GLOBAL / CONSULTATION & PROJET / CPS [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/CPS_5 SAFI_FINAL_EXCELLENCE_INEGALEE MANUS.docx → Murailles portugaises de Safi / GLOBAL / CONSULTATION & PROJET / CPS [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/Muraille portugaise tranche III-Objet.pdf → Murailles portugaises de Safi / GLOBAL / RELEVÉS & PLANS / Tranche III [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/Muraille portugaise tranche IV-Objet.pdf → Murailles portugaises de Safi / GLOBAL / RELEVÉS & PLANS / Tranche IV [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/Muraille portugaise tranche IX-Objet.pdf → Murailles portugaises de Safi / Tranche IX / RELEVÉS & PLANS / Plan topographique — Tranche IX [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/Muraille portugaise tranche VI-Objet.pdf → Murailles portugaises de Safi / GLOBAL / RELEVÉS & PLANS / Tranche VI [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/Muraille porturaise tranche V-Objet.pdf → Murailles portugaises de Safi / GLOBAL / RELEVÉS & PLANS / Tranche V [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/Plan Bab EL Kasbah-Objet.pdf → Murailles portugaises de Safi / GLOBAL / RELEVÉS & PLANS / Bab El Kasbah [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/synthese_donnees_plans (1).docx → Murailles portugaises de Safi / GLOBAL / RELEVÉS & PLANS / Synthèses [BACKBLAZE_B2]
+- muraille portugaise/les plans et photos/synthese_donnees_plans.docx → Murailles portugaises de Safi / GLOBAL / RELEVÉS & PLANS / Synthèses [BACKBLAZE_B2]
+
+DUPLICATE
+- muraille portugaise/les plans et photos/Muraille portugaise tranche VI-Objet (1).pdf = muraille portugaise/les plans et photos/Muraille portugaise tranche VI-Objet.pdf
+- muraille portugaise/muraille de safi Photos 1ere tranche/Muraille portugaise tranche IX-Objet.pdf = muraille portugaise/les plans et photos/Muraille portugaise tranche IX-Objet.pdf
+- muraille portugaise/muraille de safi Photos 1ere tranche/Plan Bab EL Kasbah-Objet.pdf = muraille portugaise/les plans et photos/Plan Bab EL Kasbah-Objet.pdf
+
+UNRESOLVED
+
+SKIP_MEDIA

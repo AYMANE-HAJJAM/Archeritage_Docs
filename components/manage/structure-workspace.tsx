@@ -9,16 +9,22 @@ import {
   useTransition,
 } from "react";
 import { useRouter } from "next/navigation";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   createGroupAction,
+  createPartAction,
   createSectionAction,
+  deletePartAction,
   loadStructureWorkspaceAction,
+  moveSectionAction,
   renameGroupAction,
+  renamePartAction,
   reorderGroupsAction,
   reorderSectionsAction,
   updateSectionAction,
   type LiveGroup,
+  type LivePart,
   type LiveSection,
   type ProjectActionState,
 } from "@/app/(private)/manage/actions";
@@ -26,11 +32,10 @@ import { EmptyState } from "@/components/layout/page-header";
 import { useToast } from "@/components/ui/toast";
 import { SectionRemoveControl } from "@/components/manage/section-remove-control";
 import { GroupRemoveControl } from "@/components/manage/group-remove-control";
-import { StructureDocumentaryFolders } from "@/components/manage/structure-documentary-folders";
-import { Check } from "lucide-react";
 
 const initial: ProjectActionState = {};
 
+export type StructurePart = LivePart;
 export type StructureGroup = LiveGroup;
 export type StructureSection = LiveSection;
 
@@ -38,7 +43,6 @@ export type StructureProject = {
   id: string;
   name: string;
   slug: string;
-  code?: string | null;
   description?: string | null;
   sectionCount: number;
   fileCount: number;
@@ -55,12 +59,14 @@ export function StructureWorkspace({
   territoires,
   initialTerritoireId,
   initialProjectId,
+  parts: initialParts,
   groups: initialGroups,
   sections: initialSections,
 }: {
   territoires: StructureTerritoire[];
   initialTerritoireId: string;
   initialProjectId: string;
+  parts: StructurePart[];
   groups: StructureGroup[];
   sections: StructureSection[];
 }) {
@@ -68,9 +74,11 @@ export function StructureWorkspace({
   const { pushToast } = useToast();
   const [activeTerritoireId, setActiveTerritoireId] = useState(initialTerritoireId);
   const [activeProjectId, setActiveProjectId] = useState(initialProjectId);
+  const [parts, setParts] = useState(initialParts);
   const [groups, setGroups] = useState(initialGroups);
   const [sections, setSections] = useState(initialSections);
   const [structureSource, setStructureSource] = useState({
+    parts: initialParts,
     groups: initialGroups,
     sections: initialSections,
     projectId: initialProjectId,
@@ -79,22 +87,26 @@ export function StructureWorkspace({
   const [switching, setSwitching] = useState(false);
 
   if (
+    initialParts !== structureSource.parts ||
     initialGroups !== structureSource.groups ||
     initialSections !== structureSource.sections ||
     initialProjectId !== structureSource.projectId ||
     initialTerritoireId !== structureSource.territoireId
   ) {
     setStructureSource({
+      parts: initialParts,
       groups: initialGroups,
       sections: initialSections,
       projectId: initialProjectId,
       territoireId: initialTerritoireId,
     });
+    setParts(initialParts);
     setGroups(initialGroups);
     setSections(initialSections);
     setActiveProjectId(initialProjectId);
     setActiveTerritoireId(initialTerritoireId);
   }
+
   const [selectedId, setSelectedId] = useState<string | null>(
     initialSections[0]?.id ?? null,
   );
@@ -104,10 +116,7 @@ export function StructureWorkspace({
   const [, startTransition] = useTransition();
 
   // Keep selection valid when structure source changes.
-  const selectedStillExists = selectedId
-    ? sections.some((s) => s.id === selectedId)
-    : false;
-  if (selectedId && !selectedStillExists) {
+  if (selectedId && !sections.some((s) => s.id === selectedId)) {
     setSelectedId(sections[0]?.id ?? null);
   }
   const selected = sections.find((s) => s.id === selectedId) ?? null;
@@ -117,23 +126,26 @@ export function StructureWorkspace({
   const currentDossier =
     dossiers.find((d) => d.id === activeProjectId) ?? dossiers[0];
 
-  const grouped = useMemo(() => {
+  /** Groups laid out per Part, project-level groups first. */
+  const layout = useMemo(() => {
     const sortedGroups = [...groups].sort((a, b) => a.sortOrder - b.sortOrder);
-    return sortedGroups.map((group) => ({
-      group,
-      sections: sections
-        .filter((s) => s.groupId === group.id)
-        .sort((a, b) => a.sortOrder - b.sortOrder),
-    }));
-  }, [groups, sections]);
+    const withSections = (partId: string | null) =>
+      sortedGroups
+        .filter((g) => g.partId === partId)
+        .map((group) => ({
+          group,
+          sections: sections
+            .filter((s) => s.groupId === group.id)
+            .sort((a, b) => a.sortOrder - b.sortOrder),
+        }));
 
-  const ungrouped = useMemo(
-    () =>
-      sections
-        .filter((s) => !s.groupId)
-        .sort((a, b) => a.sortOrder - b.sortOrder),
-    [sections],
-  );
+    return [
+      { part: null as StructurePart | null, groups: withSections(null) },
+      ...[...parts]
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map((part) => ({ part, groups: withSections(part.id) })),
+    ];
+  }, [parts, groups, sections]);
 
   function upsertSection(row: StructureSection) {
     setSections((prev) => {
@@ -165,27 +177,22 @@ export function StructureWorkspace({
     setGroups((prev) => prev.filter((g) => g.id !== id));
   }
 
+  function upsertPart(row: StructurePart) {
+    setParts((prev) => {
+      const idx = prev.findIndex((p) => p.id === row.id);
+      if (idx === -1) return [...prev, row];
+      const next = [...prev];
+      next[idx] = row;
+      return next;
+    });
+  }
+
   function syncUrl(territoireId: string, projectId: string) {
     const qs = new URLSearchParams({
       territoire: territoireId,
       project: projectId,
     });
     router.replace(`/structure?${qs.toString()}`, { scroll: false });
-  }
-
-  function applyLoadedStructure(
-    territoireId: string,
-    projectId: string,
-    nextGroups: StructureGroup[],
-    nextSections: StructureSection[],
-  ) {
-    setActiveTerritoireId(territoireId);
-    setActiveProjectId(projectId);
-    setGroups(nextGroups);
-    setSections(nextSections);
-    setSelectedId(nextSections[0]?.id ?? null);
-    setCollapsed({});
-    syncUrl(territoireId, projectId);
   }
 
   function switchTerritoire(territoireId: string) {
@@ -195,6 +202,7 @@ export function StructureWorkspace({
     if (!first) {
       setActiveTerritoireId(territoireId);
       setActiveProjectId("");
+      setParts([]);
       setGroups([]);
       setSections([]);
       setSelectedId(null);
@@ -222,33 +230,14 @@ export function StructureWorkspace({
         pushToast(result.error || "Impossible de charger la structure.", "error");
         return;
       }
-      applyLoadedStructure(
-        territoireId,
-        projectId,
-        result.groups,
-        result.sections,
-      );
-    });
-  }
-
-  function persistGroupOrder(nextIds: string[], previous: StructureGroup[]) {
-    setGroups((prev) =>
-      nextIds
-        .map((id, index) => {
-          const g = prev.find((x) => x.id === id);
-          return g ? { ...g, sortOrder: index } : null;
-        })
-        .filter(Boolean) as StructureGroup[],
-    );
-    const fd = new FormData();
-    fd.set("projectId", activeProjectId);
-    fd.set("orderedIds", nextIds.join(","));
-    startTransition(async () => {
-      const result = await reorderGroupsAction(initial, fd);
-      if (!result.ok) {
-        setGroups(previous);
-        pushToast(result.error || "Réordonnancement impossible.", "error");
-      }
+      setActiveTerritoireId(territoireId);
+      setActiveProjectId(projectId);
+      setParts(result.parts ?? []);
+      setGroups(result.groups);
+      setSections(result.sections);
+      setSelectedId(result.sections[0]?.id ?? null);
+      setCollapsed({});
+      syncUrl(territoireId, projectId);
     });
   }
 
@@ -259,8 +248,9 @@ export function StructureWorkspace({
     if (!drag || !target) return;
 
     const previous = sections;
+    const targetGroupId = target.groupId;
     const order = sections
-      .slice()
+      .filter((s) => s.groupId === targetGroupId || s.id === dragSectionId)
       .sort((a, b) => a.sortOrder - b.sortOrder)
       .map((s) => s.id);
     const from = order.indexOf(dragSectionId);
@@ -270,33 +260,28 @@ export function StructureWorkspace({
     order.splice(to, 0, dragSectionId);
     setDragSectionId(null);
 
-    const nextGroupId = target.groupId;
     setSections((prev) =>
-      order.map((id, index) => {
-        const s = prev.find((x) => x.id === id)!;
-        if (id === dragSectionId) {
-          return { ...s, groupId: nextGroupId, sortOrder: index };
-        }
-        return { ...s, sortOrder: index };
+      prev.map((s) => {
+        const index = order.indexOf(s.id);
+        if (index === -1) return s;
+        return { ...s, groupId: targetGroupId, sortOrder: index };
       }),
     );
 
     startTransition(async () => {
-      if (drag.groupId !== target.groupId) {
+      if (drag.groupId !== targetGroupId) {
         const fd = new FormData();
         fd.set("sectionId", drag.id);
-        fd.set("projectId", activeProjectId);
-        fd.set("groupId", target.groupId || "");
-        const move = await updateSectionAction(initial, fd);
+        fd.set("groupId", targetGroupId);
+        const move = await moveSectionAction(initial, fd);
         if (!move.ok) {
           setSections(previous);
           pushToast(move.error || "Déplacement impossible.", "error");
           return;
         }
-        if (move.section) upsertSection(move.section);
       }
       const orderFd = new FormData();
-      orderFd.set("projectId", activeProjectId);
+      orderFd.set("groupId", targetGroupId);
       orderFd.set("orderedIds", order.join(","));
       const result = await reorderSectionsAction(initial, orderFd);
       if (!result.ok) {
@@ -319,7 +304,26 @@ export function StructureWorkspace({
     order.splice(from, 1);
     order.splice(to, 0, dragGroupId);
     setDragGroupId(null);
-    persistGroupOrder(order, previous);
+
+    setGroups((prev) =>
+      order
+        .map((id, index) => {
+          const g = prev.find((x) => x.id === id);
+          return g ? { ...g, sortOrder: index } : null;
+        })
+        .filter(Boolean) as StructureGroup[],
+    );
+
+    const fd = new FormData();
+    fd.set("projectId", activeProjectId);
+    fd.set("orderedIds", order.join(","));
+    startTransition(async () => {
+      const result = await reorderGroupsAction(initial, fd);
+      if (!result.ok) {
+        setGroups(previous);
+        pushToast(result.error || "Réordonnancement impossible.", "error");
+      }
+    });
   }
 
   return (
@@ -328,9 +332,9 @@ export function StructureWorkspace({
         <p className="page-eyebrow">Administration</p>
         <h1 className="page-title">Structure des dossiers</h1>
         <p className="page-lede">
-          Organisez la table des matières : groupes, rubriques et ordre
-          d’affichage. Glissez pour réordonner, cliquez une rubrique pour la
-          modifier à droite.
+          Organisez la table des matières : parties, groupes et rubriques.
+          Glissez pour réordonner, cliquez une rubrique pour la modifier à
+          droite.
         </p>
       </div>
 
@@ -349,170 +353,174 @@ export function StructureWorkspace({
           description="Créez d’abord un dossier patrimonial dans la fiche projet, puis revenez ici pour structurer ses rubriques."
         />
       ) : (
-      <div
-        className={cn(
-          "grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]",
-          switching && "pointer-events-none opacity-60",
-        )}
-      >
-        <div className="space-y-5">
-          <div className="space-y-1">
-            <p className="section-label">
-              Structure
-              {currentDossier ? ` · ${currentDossier.name}` : ""}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Ajoutez des groupes puis des rubriques. Glissez les lignes pour
-              changer l’ordre.
-            </p>
-          </div>
-          <AddGroupBar projectId={activeProjectId} onCreated={upsertGroup} />
-          <AddSectionBar
-            projectId={activeProjectId}
-            groups={groups}
-            onCreated={upsertSection}
-          />
-
+        <div
+          className={cn(
+            "grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]",
+            switching && "pointer-events-none opacity-60",
+          )}
+        >
           <div className="space-y-5">
-            {groups.length === 0 && sections.length === 0 ? (
-              <EmptyState
-                title="Structure vide"
-                description="Commencez par un groupe (ex. « Comprendre »), puis ajoutez votre première rubrique."
-              />
-            ) : null}
-            {grouped.map(({ group, sections: groupSections }) => {
-              const isCollapsed = collapsed[group.id];
-              return (
-                <section
-                  key={group.id}
-                  className={cn(
-                    "rounded-md border border-border/80 transition-colors",
-                    dragGroupId === group.id && "border-foreground/40",
-                  )}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => onDropGroup(group.id)}
-                >
-                  <div
-                    className="flex items-center gap-2 border-b border-border/60 bg-muted/20 px-3 py-2"
-                    draggable
-                    onDragStart={() => setDragGroupId(group.id)}
-                    onDragEnd={() => setDragGroupId(null)}
-                  >
-                    <button
-                      type="button"
-                      aria-expanded={!isCollapsed}
-                      onClick={() =>
-                        setCollapsed((c) => ({ ...c, [group.id]: !c[group.id] }))
-                      }
-                      className="text-[11px] text-muted-foreground"
-                    >
-                      {isCollapsed ? "▸" : "▾"}
-                    </button>
-                    <h2 className="flex-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground">
-                      {group.label}
-                    </h2>
-                    <span className="text-[10px] tabular-nums text-muted-foreground">
-                      {groupSections.length}
-                    </span>
-                    <RenameGroupInline
-                      projectId={activeProjectId}
-                      group={group}
-                      onRenamed={upsertGroup}
-                    />
-                    <GroupRemoveControl
-                      groupId={group.id}
-                      sectionCount={groupSections.length}
-                      onDeleted={removeGroup}
-                    />
-                  </div>
-
-                  {!isCollapsed ? (
-                    <ul className="divide-y divide-border/50">
-                      {groupSections.map((section, index) => (
-                        <SectionRow
-                          key={section.id}
-                          projectId={activeProjectId}
-                          section={section}
-                          index={index}
-                          selected={selectedId === section.id}
-                          onSelect={() => setSelectedId(section.id)}
-                          onDragStart={() => setDragSectionId(section.id)}
-                          onDragEnd={() => setDragSectionId(null)}
-                          onDrop={() => onDropSection(section.id)}
-                          dragging={dragSectionId === section.id}
-                          onDeleted={removeSection}
-                          onDeactivated={upsertSection}
-                        />
-                      ))}
-                      {groupSections.length === 0 ? (
-                        <li className="px-4 py-8 text-center">
-                          <p className="text-xs font-medium text-foreground">
-                            Groupe vide
-                          </p>
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            Ajoutez une rubrique avec le formulaire ci-dessus.
-                          </p>
-                        </li>
-                      ) : null}
-                    </ul>
-                  ) : null}
-                </section>
-              );
-            })}
-
-            {ungrouped.length ? (
-              <section className="rounded-md border border-dashed border-border">
-                <div className="border-b border-border/60 px-3 py-2">
-                  <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    Sans groupe
-                  </h2>
-                </div>
-                <ul className="divide-y divide-border/50">
-                  {ungrouped.map((section, index) => (
-                    <SectionRow
-                      key={section.id}
-                      projectId={activeProjectId}
-                      section={section}
-                      index={index}
-                      selected={selectedId === section.id}
-                      onSelect={() => setSelectedId(section.id)}
-                      onDragStart={() => setDragSectionId(section.id)}
-                      onDragEnd={() => setDragSectionId(null)}
-                      onDrop={() => onDropSection(section.id)}
-                      dragging={dragSectionId === section.id}
-                      onDeleted={removeSection}
-                      onDeactivated={upsertSection}
-                    />
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-          </div>
-        </div>
-
-        <aside className="lg:sticky lg:top-20 lg:self-start">
-          {selected ? (
-            <SectionInspector
-              key={selected.id}
-              projectId={activeProjectId}
-              section={selected}
-              groups={groups}
-              onUpdated={upsertSection}
-              onDeleted={removeSection}
-            />
-          ) : (
-            <div className="border border-dashed border-border bg-surface/50 p-5">
-              <p className="text-sm font-medium text-foreground">
-                Aucune rubrique sélectionnée
+            <div className="space-y-1">
+              <p className="section-label">
+                Structure
+                {currentDossier ? ` · ${currentDossier.name}` : ""}
               </p>
-              <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
-                Cliquez une rubrique dans la liste pour modifier son titre,
-                description ou statut.
+              <p className="text-xs text-muted-foreground">
+                Les parties sont optionnelles : un groupe sans partie s’affiche
+                directement à la racine du dossier.
               </p>
             </div>
-          )}
-        </aside>
-      </div>
+
+            <PartsBar
+              projectId={activeProjectId}
+              parts={parts}
+              onCreated={upsertPart}
+              onRenamed={upsertPart}
+              onDeleted={(id) =>
+                setParts((prev) => prev.filter((p) => p.id !== id))
+              }
+            />
+            <AddGroupBar
+              projectId={activeProjectId}
+              parts={parts}
+              onCreated={upsertGroup}
+            />
+            <AddSectionBar groups={groups} parts={parts} onCreated={upsertSection} />
+
+            <div className="space-y-6">
+              {groups.length === 0 && sections.length === 0 ? (
+                <EmptyState
+                  title="Structure vide"
+                  description="Commencez par un groupe (ex. « Comprendre »), puis ajoutez votre première rubrique."
+                />
+              ) : null}
+
+              {layout.map(({ part, groups: partGroups }) => {
+                if (!part && partGroups.length === 0) return null;
+                return (
+                  <div key={part?.id ?? "__root"} className="space-y-3">
+                    {part ? (
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        Partie · {part.name}
+                      </p>
+                    ) : null}
+                    {partGroups.length === 0 ? (
+                      <p className="rounded-md border border-dashed border-border px-3 py-4 text-xs text-muted-foreground">
+                        Aucun groupe dans cette partie.
+                      </p>
+                    ) : null}
+                    {partGroups.map(({ group, sections: groupSections }) => {
+                      const isCollapsed = collapsed[group.id];
+                      return (
+                        <section
+                          key={group.id}
+                          className={cn(
+                            "rounded-md border border-border/80 transition-colors",
+                            dragGroupId === group.id && "border-foreground/40",
+                          )}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDrop={() => onDropGroup(group.id)}
+                        >
+                          <div
+                            className="flex items-center gap-2 border-b border-border/60 bg-muted/20 px-3 py-2"
+                            draggable
+                            onDragStart={() => setDragGroupId(group.id)}
+                            onDragEnd={() => setDragGroupId(null)}
+                          >
+                            <button
+                              type="button"
+                              aria-expanded={!isCollapsed}
+                              onClick={() =>
+                                setCollapsed((c) => ({
+                                  ...c,
+                                  [group.id]: !c[group.id],
+                                }))
+                              }
+                              className="text-[11px] text-muted-foreground"
+                            >
+                              {isCollapsed ? "▸" : "▾"}
+                            </button>
+                            <h2 className="flex-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground">
+                              {group.name}
+                            </h2>
+                            <span className="text-[10px] tabular-nums text-muted-foreground">
+                              {groupSections.length}
+                            </span>
+                            <RenameGroupInline
+                              group={group}
+                              onRenamed={upsertGroup}
+                            />
+                            <GroupRemoveControl
+                              groupId={group.id}
+                              sectionCount={groupSections.length}
+                              onDeleted={removeGroup}
+                            />
+                          </div>
+
+                          {!isCollapsed ? (
+                            <ul className="divide-y divide-border/50">
+                              {groupSections.map((section, index) => (
+                                <SectionRow
+                                  key={section.id}
+                                  projectId={activeProjectId}
+                                  section={section}
+                                  index={index}
+                                  selected={selectedId === section.id}
+                                  onSelect={() => setSelectedId(section.id)}
+                                  onDragStart={() => setDragSectionId(section.id)}
+                                  onDragEnd={() => setDragSectionId(null)}
+                                  onDrop={() => onDropSection(section.id)}
+                                  dragging={dragSectionId === section.id}
+                                  onDeleted={removeSection}
+                                  onDeactivated={upsertSection}
+                                />
+                              ))}
+                              {groupSections.length === 0 ? (
+                                <li className="px-4 py-8 text-center">
+                                  <p className="text-xs font-medium text-foreground">
+                                    Groupe vide
+                                  </p>
+                                  <p className="mt-1 text-xs text-muted-foreground">
+                                    Ajoutez une rubrique avec le formulaire
+                                    ci-dessus.
+                                  </p>
+                                </li>
+                              ) : null}
+                            </ul>
+                          ) : null}
+                        </section>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <aside className="lg:sticky lg:top-20 lg:self-start">
+            {selected ? (
+              <SectionInspector
+                key={selected.id}
+                projectId={activeProjectId}
+                section={selected}
+                groups={groups}
+                parts={parts}
+                onUpdated={upsertSection}
+                onDeleted={removeSection}
+              />
+            ) : (
+              <div className="border border-dashed border-border bg-surface/50 p-5">
+                <p className="text-sm font-medium text-foreground">
+                  Aucune rubrique sélectionnée
+                </p>
+                <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
+                  Cliquez une rubrique dans la liste pour modifier son nom, son
+                  code ou son groupe.
+                </p>
+              </div>
+            )}
+          </aside>
+        </div>
       )}
     </div>
   );
@@ -539,11 +547,9 @@ function StructureContextSelector({
 
   return (
     <section className="space-y-5 rounded-md border border-border bg-surface p-4 sm:p-5">
-      <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Structure à gérer
-        </p>
-      </div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        Structure à gérer
+      </p>
 
       <div className="space-y-1.5">
         <label
@@ -628,22 +634,15 @@ function StructureContextSelector({
                       <Check className="size-3" strokeWidth={2.5} />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="flex items-start justify-between gap-2">
-                        <span
-                          className={cn(
-                            "truncate text-sm tracking-tight",
-                            active
-                              ? "font-semibold text-foreground"
-                              : "font-medium text-foreground/90",
-                          )}
-                        >
-                          {dossier.name}
-                        </span>
-                        {dossier.code ? (
-                          <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
-                            {dossier.code}
-                          </span>
-                        ) : null}
+                      <span
+                        className={cn(
+                          "block truncate text-sm tracking-tight",
+                          active
+                            ? "font-semibold text-foreground"
+                            : "font-medium text-foreground/90",
+                        )}
+                      >
+                        {dossier.name}
                       </span>
                       <span className="mt-1 block text-[11px] tabular-nums text-muted-foreground">
                         {meta}
@@ -713,10 +712,10 @@ function SectionRow({
           {index + 1}
         </span>
         <span className="w-12 shrink-0 font-mono text-[11px] text-muted-foreground">
-          {section.code}
+          {section.code ?? "—"}
         </span>
         <span className="min-w-0 flex-1 truncate text-sm font-medium">
-          {section.title}
+          {section.name}
         </span>
         {!section.isActive ? (
           <span className="rounded-sm bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
@@ -747,18 +746,22 @@ function SectionInspector({
   projectId,
   section,
   groups,
+  parts,
   onUpdated,
   onDeleted,
 }: {
   projectId: string;
   section: StructureSection;
   groups: StructureGroup[];
+  parts: StructurePart[];
   onUpdated: (row: StructureSection) => void;
   onDeleted: (id: string) => void;
 }) {
   const { pushToast } = useToast();
   const [state, action, pending] = useActionState(updateSectionAction, initial);
+  const [moveState, moveAction, moving] = useActionState(moveSectionAction, initial);
   const updateWasPending = useRef(false);
+  const moveWasPending = useRef(false);
 
   useEffect(() => {
     const finished = updateWasPending.current && !pending;
@@ -772,104 +775,83 @@ function SectionInspector({
     }
   }, [pending, state, onUpdated, pushToast]);
 
+  useEffect(() => {
+    const finished = moveWasPending.current && !moving;
+    moveWasPending.current = moving;
+    if (!finished) return;
+    if (moveState.ok && moveState.section) {
+      onUpdated(moveState.section);
+      pushToast("Rubrique déplacée.", "success");
+    } else if (moveState.error) {
+      pushToast(moveState.error, "error");
+    }
+  }, [moving, moveState, onUpdated, pushToast]);
+
   return (
     <div className="space-y-5 border border-border bg-surface p-5">
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           Détail de la rubrique
         </p>
-        <p className="mt-2 font-mono text-sm text-foreground">{section.code}</p>
-        {section.codeLocked ? (
-          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
-            Code verrouillé — {section.documentCount} document
-            {section.documentCount > 1 ? "s" : ""} rattaché
-            {section.documentCount > 1 ? "s" : ""}.
-          </p>
-        ) : (
-          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
-            Modifiez le contenu affiché dans la table des matières.
-          </p>
-        )}
+        <p className="mt-2 font-mono text-sm text-foreground">
+          {section.code ?? "Sans code"}
+        </p>
       </div>
 
       <form action={action} className="space-y-4">
         <input type="hidden" name="sectionId" value={section.id} />
-        <input type="hidden" name="projectId" value={projectId} />
         <label className="block text-xs">
-          <span className="text-muted-foreground">Titre</span>
+          <span className="text-muted-foreground">Nom</span>
           <input
-            name="title"
-            defaultValue={section.title}
+            name="name"
+            defaultValue={section.name}
             required
             className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
           />
         </label>
         <label className="block text-xs">
-          <span className="text-muted-foreground">Description</span>
-          <textarea
-            name="description"
-            defaultValue={section.description || ""}
-            rows={3}
-            placeholder="Texte d’introduction affiché sous le titre"
-            className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-          />
-        </label>
-        <label className="block text-xs">
-          <span className="text-muted-foreground">Adresse web (slug)</span>
+          <span className="text-muted-foreground">Code (optionnel)</span>
           <input
-            name="slug"
-            defaultValue={section.slug}
+            name="code"
+            defaultValue={section.code ?? ""}
+            placeholder="01.19"
             className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
           />
-          <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
-            Identifiant utilisé dans l’URL de la rubrique.
-          </span>
         </label>
-        <label className="block text-xs">
-          <span className="text-muted-foreground">Groupe parent</span>
-          <select
-            name="groupId"
-            defaultValue={section.groupId || ""}
-            className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
-          >
-            <option value="">Sans groupe</option>
-            {groups.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block text-xs">
-          <span className="text-muted-foreground">Type de contenu</span>
-          <select
-            name="kind"
-            defaultValue={section.kind}
-            className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
-          >
-            <option value="documentary">Documentaire</option>
-            <option value="structured">Structuré</option>
-            <option value="sequences">Séquences</option>
-          </select>
-        </label>
-        <label className="block text-xs">
-          <span className="text-muted-foreground">Visibilité</span>
-          <select
-            name="isActive"
-            defaultValue={section.isActive ? "1" : "0"}
-            className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
-          >
-            <option value="1">Active</option>
-            <option value="0">Inactive</option>
-          </select>
-        </label>
-        {state.error ? <p className="text-xs text-destructive">{state.error}</p> : null}
+        {state.error ? (
+          <p className="text-xs text-destructive">{state.error}</p>
+        ) : null}
         <button
           type="submit"
           disabled={pending}
           className="h-9 w-full rounded-md bg-primary text-sm font-medium text-primary-foreground disabled:opacity-60"
         >
           Enregistrer
+        </button>
+      </form>
+
+      <form action={moveAction} className="space-y-2 border-t border-border pt-4">
+        <input type="hidden" name="sectionId" value={section.id} />
+        <label className="block text-xs">
+          <span className="text-muted-foreground">Groupe parent</span>
+          <select
+            name="groupId"
+            defaultValue={section.groupId}
+            className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
+          >
+            {groups.map((g) => (
+              <option key={g.id} value={g.id}>
+                {groupOptionLabel(g, parts)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button
+          type="submit"
+          disabled={moving}
+          className="h-9 w-full rounded-md border border-border text-sm hover:bg-muted disabled:opacity-60"
+        >
+          Déplacer
         </button>
       </form>
 
@@ -885,20 +867,199 @@ function SectionInspector({
           className="size-9 border border-border"
         />
       </div>
-
-      <StructureDocumentaryFolders
-        projectId={projectId}
-        heritageSectionId={section.id}
-      />
     </div>
+  );
+}
+
+function groupOptionLabel(group: StructureGroup, parts: StructurePart[]) {
+  const part = group.partId ? parts.find((p) => p.id === group.partId) : null;
+  return part ? `${part.name} › ${group.name}` : group.name;
+}
+
+function PartsBar({
+  projectId,
+  parts,
+  onCreated,
+  onRenamed,
+  onDeleted,
+}: {
+  projectId: string;
+  parts: StructurePart[];
+  onCreated: (row: StructurePart) => void;
+  onRenamed: (row: StructurePart) => void;
+  onDeleted: (id: string) => void;
+}) {
+  const { pushToast } = useToast();
+  const [state, action, pending] = useActionState(createPartAction, initial);
+  const wasPending = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    if (state.ok && state.part) {
+      onCreated(state.part);
+      formRef.current?.reset();
+      pushToast("Partie ajoutée.", "success");
+    } else if (state.error) {
+      pushToast(state.error, "error");
+    }
+  }, [pending, state, onCreated, pushToast]);
+
+  return (
+    <div className="space-y-2 rounded-md border border-border bg-surface/50 p-3">
+      <form
+        ref={formRef}
+        action={action}
+        className="flex flex-wrap items-end gap-3"
+      >
+        <input type="hidden" name="projectId" value={projectId} />
+        <label className="block min-w-[200px] flex-1 text-xs">
+          <span className="text-muted-foreground">Nouvelle partie</span>
+          <input
+            name="name"
+            required
+            placeholder="ex. Murailles Nord"
+            className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
+          />
+          <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
+            Subdivision optionnelle du dossier, avec sa propre page.
+          </span>
+        </label>
+        <button
+          type="submit"
+          disabled={pending}
+          className="h-9 rounded-md border border-border px-3 text-sm hover:bg-muted"
+        >
+          Ajouter
+        </button>
+        {state.error ? (
+          <p className="w-full text-xs text-destructive">{state.error}</p>
+        ) : null}
+      </form>
+
+      {parts.length ? (
+        <ul className="divide-y divide-border/50 border-t border-border/50">
+          {parts.map((part) => (
+            <li key={part.id} className="flex items-center gap-2 py-1.5">
+              <span className="min-w-0 flex-1 truncate text-sm">{part.name}</span>
+              <span className="font-mono text-[10px] text-muted-foreground">
+                {part.slug}
+              </span>
+              <RenamePartInline part={part} onRenamed={onRenamed} />
+              <DeletePartControl part={part} onDeleted={onDeleted} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
+function RenamePartInline({
+  part,
+  onRenamed,
+}: {
+  part: StructurePart;
+  onRenamed: (row: StructurePart) => void;
+}) {
+  const { pushToast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [state, action, pending] = useActionState(renamePartAction, initial);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    const timer = window.setTimeout(() => {
+      if (state.ok && state.part) {
+        onRenamed(state.part);
+        setOpen(false);
+        pushToast("Partie renommée.", "success");
+      } else if (state.error) {
+        pushToast(state.error, "error");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [pending, state, onRenamed, pushToast]);
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-[10px] text-muted-foreground underline-offset-2 hover:underline"
+      >
+        Renommer
+      </button>
+    );
+  }
+  return (
+    <form action={action} className="flex items-center gap-1">
+      <input type="hidden" name="partId" value={part.id} />
+      <input
+        name="name"
+        defaultValue={part.name}
+        className="h-7 w-36 rounded border border-border bg-background px-1.5 text-xs"
+      />
+      <button type="submit" disabled={pending} className="text-[10px] underline">
+        OK
+      </button>
+    </form>
+  );
+}
+
+function DeletePartControl({
+  part,
+  onDeleted,
+}: {
+  part: StructurePart;
+  onDeleted: (id: string) => void;
+}) {
+  const { pushToast } = useToast();
+  const [state, action, pending] = useActionState(deletePartAction, initial);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    const finished = wasPending.current && !pending;
+    wasPending.current = pending;
+    if (!finished) return;
+    if (state.ok && state.deletedId) {
+      onDeleted(state.deletedId);
+      pushToast("Partie supprimée.", "success");
+    } else if (state.error) {
+      pushToast(state.error, "error");
+    }
+  }, [pending, state, onDeleted, pushToast]);
+
+  return (
+    <form action={action}>
+      <input type="hidden" name="partId" value={part.id} />
+      <button
+        type="submit"
+        disabled={pending || part.groupCount > 0}
+        title={
+          part.groupCount > 0
+            ? "Cette partie contient des groupes"
+            : "Supprimer la partie"
+        }
+        className="text-[10px] text-muted-foreground underline-offset-2 hover:underline disabled:opacity-40"
+      >
+        Supprimer
+      </button>
+    </form>
   );
 }
 
 function AddGroupBar({
   projectId,
+  parts,
   onCreated,
 }: {
   projectId: string;
+  parts: StructurePart[];
   onCreated: (row: StructureGroup) => void;
 }) {
   const { pushToast } = useToast();
@@ -920,20 +1081,37 @@ function AddGroupBar({
   }, [pending, state, onCreated, pushToast]);
 
   return (
-    <form ref={formRef} action={action} className="flex flex-wrap items-end gap-3 rounded-md border border-border bg-surface/50 p-3">
+    <form
+      ref={formRef}
+      action={action}
+      className="flex flex-wrap items-end gap-3 rounded-md border border-border bg-surface/50 p-3"
+    >
       <input type="hidden" name="projectId" value={projectId} />
       <label className="block min-w-[200px] flex-1 text-xs">
         <span className="text-muted-foreground">Nouveau groupe</span>
         <input
-          name="label"
+          name="name"
           required
           placeholder="ex. Comprendre, Agir, Suivre…"
           className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
         />
-        <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
-          Chapitre regroupant plusieurs rubriques.
-        </span>
       </label>
+      {parts.length ? (
+        <label className="block min-w-[160px] text-xs">
+          <span className="text-muted-foreground">Partie</span>
+          <select
+            name="partId"
+            className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
+          >
+            <option value="">Racine du dossier</option>
+            {parts.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
       <button
         type="submit"
         disabled={pending}
@@ -941,23 +1119,24 @@ function AddGroupBar({
       >
         Ajouter
       </button>
-      {state.error ? <p className="w-full text-xs text-destructive">{state.error}</p> : null}
+      {state.error ? (
+        <p className="w-full text-xs text-destructive">{state.error}</p>
+      ) : null}
     </form>
   );
 }
 
 function AddSectionBar({
-  projectId,
   groups,
+  parts,
   onCreated,
 }: {
-  projectId: string;
   groups: StructureGroup[];
+  parts: StructurePart[];
   onCreated: (row: StructureSection) => void;
 }) {
   const { pushToast } = useToast();
   const [state, action, pending] = useActionState(createSectionAction, initial);
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const wasPending = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -974,19 +1153,26 @@ function AddSectionBar({
     }
   }, [pending, state, onCreated, pushToast]);
 
+  if (groups.length === 0) {
+    return (
+      <p className="rounded-md border border-dashed border-border px-3 py-3 text-xs text-muted-foreground">
+        Créez un groupe avant d’ajouter une rubrique.
+      </p>
+    );
+  }
+
   return (
     <form
       ref={formRef}
       action={action}
       className="space-y-3 rounded-md border border-border bg-surface/50 p-4"
     >
-      <input type="hidden" name="projectId" value={projectId} />
       <p className="text-xs font-medium text-foreground">Nouvelle rubrique</p>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <label className="block text-xs sm:col-span-2 lg:col-span-1">
-          <span className="text-muted-foreground">Titre</span>
+          <span className="text-muted-foreground">Nom</span>
           <input
-            name="title"
+            name="name"
             required
             placeholder="ex. Présentation, Historique…"
             className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
@@ -996,15 +1182,23 @@ function AddSectionBar({
           <span className="text-muted-foreground">Groupe</span>
           <select
             name="groupId"
+            required
             className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
           >
-            <option value="">Sans groupe</option>
             {groups.map((g) => (
               <option key={g.id} value={g.id}>
-                {g.label}
+                {groupOptionLabel(g, parts)}
               </option>
             ))}
           </select>
+        </label>
+        <label className="block text-xs">
+          <span className="text-muted-foreground">Code (optionnel)</span>
+          <input
+            name="code"
+            placeholder="01.19"
+            className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
+          />
         </label>
         <div className="flex items-end">
           <button
@@ -1016,37 +1210,6 @@ function AddSectionBar({
           </button>
         </div>
       </div>
-      <p className="text-xs leading-5 text-muted-foreground">
-        Le code (ex. 01.19) et l’adresse web sont générés automatiquement à
-        partir du titre.
-      </p>
-      <button
-        type="button"
-        onClick={() => setShowAdvanced((v) => !v)}
-        className="text-[11px] font-medium text-muted-foreground underline-offset-2 hover:underline"
-      >
-        {showAdvanced ? "Masquer les paramètres avancés" : "Paramètres avancés"}
-      </button>
-      {showAdvanced ? (
-        <div className="grid gap-2 sm:grid-cols-2">
-          <label className="block text-xs">
-            <span className="text-muted-foreground">Code (optionnel)</span>
-            <input
-              name="code"
-              placeholder="01.19"
-              className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
-            />
-          </label>
-          <label className="block text-xs">
-            <span className="text-muted-foreground">Slug (optionnel)</span>
-            <input
-              name="slug"
-              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-              className="mt-1 h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
-            />
-          </label>
-        </div>
-      ) : null}
       {state.error ? (
         <p className="text-xs text-destructive">{state.error}</p>
       ) : null}
@@ -1055,11 +1218,9 @@ function AddSectionBar({
 }
 
 function RenameGroupInline({
-  projectId,
   group,
   onRenamed,
 }: {
-  projectId: string;
   group: StructureGroup;
   onRenamed: (row: StructureGroup) => void;
 }) {
@@ -1097,17 +1258,18 @@ function RenameGroupInline({
   }
   return (
     <form action={action} className="flex items-center gap-1">
-      <input type="hidden" name="projectId" value={projectId} />
       <input type="hidden" name="groupId" value={group.id} />
       <input
-        name="label"
-        defaultValue={group.label}
+        name="name"
+        defaultValue={group.name}
         className="h-7 w-36 rounded border border-border bg-background px-1.5 text-xs"
       />
       <button type="submit" disabled={pending} className="text-[10px] underline">
         OK
       </button>
-      {state.error ? <span className="text-[10px] text-destructive">{state.error}</span> : null}
+      {state.error ? (
+        <span className="text-[10px] text-destructive">{state.error}</span>
+      ) : null}
     </form>
   );
 }

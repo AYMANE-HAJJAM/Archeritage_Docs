@@ -1,0 +1,506 @@
+﻿app/(private)/manage/actions.ts(5,3): error TS2305: Module '"@/lib/access"' has no exported member 'assertCanCreateDossier'.
+app/(private)/manage/actions.ts(7,3): error TS2305: Module '"@/lib/access"' has no exported member 'assertCanReclassify'.
+app/(private)/manage/actions.ts(131,31): error TS2353: Object literal may only specify known properties, and 'files' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+app/(private)/manage/actions.ts(142,23): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/manage/actions.ts(142,40): error TS7006: Parameter 'n' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(142,43): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(143,26): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/manage/actions.ts(144,6): error TS7006: Parameter 'n' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(144,9): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(147,28): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/manage/actions.ts(148,15): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(152,12): error TS7006: Parameter 'a' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(152,15): error TS7006: Parameter 'b' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(157,13): error TS2339: Property 'slug' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/manage/actions.ts(160,21): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/manage/actions.ts(171,27): error TS2353: Object literal may only specify known properties, and 'files' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+app/(private)/manage/actions.ts(184,13): error TS2339: Property 'code' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(186,13): error TS2339: Property 'type' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(188,21): error TS2339: Property '_count' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(189,18): error TS2339: Property '_count' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(190,24): error TS2339: Property 'files' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/manage/actions.ts(195,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(403,33): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(430,30): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(472,31): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(496,28): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+app/(private)/manage/actions.ts(567,17): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileSelect<DefaultArgs>'.
+app/(private)/manage/actions.ts(570,42): error TS2339: Property 'projectId' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+app/(private)/manage/actions.ts(599,37): error TS7006: Parameter 'g' implicitly has an 'any' type.
+app/(private)/manage/actions.ts(604,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(private)/manage/user-actions.ts(7,3): error TS2305: Module '"@/lib/admin/user-access"' has no exported member 'applyInviteAccessMatrix'.
+app/(private)/projects/[slug]/folders/[folderId]/page.tsx(25,32): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+app/(private)/projects/[slug]/page.tsx(208,54): error TS7006: Parameter 'g' implicitly has an 'any' type.
+app/(private)/projects/[slug]/page.tsx(213,58): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(private)/projects/manage/[territoireId]/page.tsx(22,24): error TS2339: Property 'slug' does not exist on type '{ id: string; name: string; code: string; description: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; dossierCount: number; dossiers: { groupCount: number; partCount: number; ... 8 more ...; territoireId: string | null; }[]; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(31,19): error TS2339: Property 'code' does not exist on type '{ groupCount: number; partCount: number; _count: { parts: number; groups: number; }; name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(33,19): error TS2339: Property 'type' does not exist on type '{ groupCount: number; partCount: number; _count: { parts: number; groups: number; }; name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(35,27): error TS2339: Property 'sectionCount' does not exist on type '{ groupCount: number; partCount: number; _count: { parts: number; groups: number; }; name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(36,24): error TS2339: Property 'fileCount' does not exist on type '{ groupCount: number; partCount: number; _count: { parts: number; groups: number; }; name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/projects/manage/[territoireId]/page.tsx(37,29): error TS2339: Property 'lastActivityAt' does not exist on type '{ groupCount: number; partCount: number; _count: { parts: number; groups: number; }; name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+app/(private)/projects/manage/page.tsx(15,17): error TS2339: Property 'slug' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/manage/page.tsx(19,25): error TS2339: Property 'sectionCount' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/manage/page.tsx(20,22): error TS2339: Property 'fileCount' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/manage/page.tsx(21,27): error TS2339: Property 'lastActivityAt' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/page.tsx(31,19): error TS2339: Property 'slug' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/page.tsx(35,27): error TS2339: Property 'sectionCount' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/page.tsx(36,24): error TS2339: Property 'fileCount' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/page.tsx(37,29): error TS2339: Property 'lastActivityAt' does not exist on type 'AdminTerritoireRow'.
+app/(private)/projects/page.tsx(58,31): error TS2353: Object literal may only specify known properties, and 'files' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+app/(private)/projects/page.tsx(68,24): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/projects/page.tsx(69,24): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/projects/page.tsx(69,41): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/projects/page.tsx(71,42): error TS7006: Parameter 'n' implicitly has an 'any' type.
+app/(private)/projects/page.tsx(71,45): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/structure/page.tsx(81,19): error TS2339: Property 'code' does not exist on type '{ name: string; id: string; isActive: boolean; _count: { parts: number; groups: number; }; slug: string; description: string | null; }'.
+app/(private)/structure/page.tsx(83,34): error TS2339: Property 'heritageSections' does not exist on type '{ parts: number; groups: number; }'.
+app/(private)/structure/page.tsx(84,31): error TS2339: Property 'files' does not exist on type '{ parts: number; groups: number; }'.
+app/(private)/structure/page.tsx(89,37): error TS7006: Parameter 'g' implicitly has an 'any' type.
+app/(private)/structure/page.tsx(94,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(private)/territoires/[code]/page.tsx(5,3): error TS2305: Module '"@/lib/access"' has no exported member 'canCreateDossierOnTerritoire'.
+app/(private)/territoires/[code]/page.tsx(41,31): error TS2353: Object literal may only specify known properties, and 'files' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+app/(private)/territoires/[code]/page.tsx(52,20): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/territoires/[code]/page.tsx(53,20): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/territoires/[code]/page.tsx(53,37): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/territoires/[code]/page.tsx(56,26): error TS7006: Parameter 'project' implicitly has an 'any' type.
+app/(private)/territoires/[code]/page.tsx(67,14): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/territoires/[code]/page.tsx(68,11): error TS7006: Parameter 'project' implicitly has an 'any' type.
+app/(private)/users/page.tsx(30,43): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'ProjectSelect<DefaultArgs>'.
+app/(private)/users/page.tsx(39,17): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/users/page.tsx(39,31): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/users/page.tsx(47,32): error TS2339: Property 'projects' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+app/(private)/users/page.tsx(47,46): error TS7006: Parameter 'p' implicitly has an 'any' type.
+app/(private)/users/page.tsx(84,29): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+app/api/files/[id]/route.ts(5,10): error TS2724: '"@/lib/documents/delete-document"' has no exported member named 'deleteDocumentForUser'. Did you mean 'deleteDocument'?
+app/api/files/[id]/route.ts(25,37): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+app/api/files/[id]/route.ts(25,53): error TS2339: Property 'projectId' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+app/api/folders/[id]/route.ts(35,9): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderSelect<DefaultArgs>'.
+app/api/folders/[id]/route.ts(41,18): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+app/api/folders/[id]/route.ts(42,53): error TS2339: Property 'projectId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+app/api/folders/[id]/route.ts(66,42): error TS2339: Property 'projectId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+app/api/folders/[id]/route.ts(87,27): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderSelect<DefaultArgs>'.
+app/api/folders/[id]/route.ts(91,18): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+app/api/folders/[id]/route.ts(92,53): error TS2339: Property 'projectId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+app/api/folders/[id]/route.ts(97,42): error TS2339: Property 'projectId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+components/documents/explorer.tsx(232,430): error TS2322: Type 'number | true | { id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; size?: number | undefined; ... 10 more ...; _all?: number | undefined; }' is not assignable to type 'ReactNode'.
+  Type '{ id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; size?: number | undefined; ... 10 more ...; _all?: number | undefined; }' is not assignable to type 'ReactNode'.
+components/documents/explorer.tsx(232,471): error TS2365: Operator '>' cannot be applied to types 'number | boolean | { id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; ... 11 more ...; _all?: number | undefined; }' and 'number'.
+components/documents/explorer.tsx(232,519): error TS2322: Type 'number | true | { id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; size?: number | undefined; ... 10 more ...; _all?: number | undefined; }' is not assignable to type 'ReactNode'.
+  Type '{ id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; size?: number | undefined; ... 10 more ...; _all?: number | undefined; }' is not assignable to type 'ReactNode'.
+components/documents/explorer.tsx(232,554): error TS2365: Operator '>' cannot be applied to types 'number | boolean | { id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; ... 11 more ...; _all?: number | undefined; }' and 'number'.
+lib/admin/structure.ts(8,3): error TS2305: Module '"@/lib/admin/allocate-identifiers"' has no exported member 'allocateNextSectionCode'.
+lib/admin/structure.ts(9,3): error TS2305: Module '"@/lib/admin/allocate-identifiers"' has no exported member 'allocateSectionSlug'.
+lib/admin/structure.ts(62,8): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(66,8): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(77,19): error TS7006: Parameter 's' implicitly has an 'any' type.
+lib/admin/structure.ts(87,29): error TS7006: Parameter 's' implicitly has an 'any' type.
+lib/admin/structure.ts(113,29): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(119,30): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(157,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(160,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(193,29): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(197,39): error TS7006: Parameter 's' implicitly has an 'any' type.
+lib/admin/structure.ts(204,10): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(226,27): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(230,37): error TS7006: Parameter 'g' implicitly has an 'any' type.
+lib/admin/structure.ts(237,10): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(259,29): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(263,26): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(286,26): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(301,26): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(312,12): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(326,30): error TS2339: Property 'sequence' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(330,38): error TS7006: Parameter 's' implicitly has an 'any' type.
+lib/admin/structure.ts(354,30): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/admin/structure.ts(355,8): error TS2339: Property 'element' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(356,8): error TS2339: Property 'gate' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(361,8): error TS2339: Property 'observation' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(362,8): error TS2339: Property 'investigation' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(363,8): error TS2339: Property 'decision' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(364,8): error TS2339: Property 'intervention' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(385,5): error TS2322: Type '"docCategorie"[]' is not assignable to type 'FileScalarFieldEnum | FileScalarFieldEnum[]'.
+  Type '"docCategorie"[]' is not assignable to type 'FileScalarFieldEnum[]'.
+    Type '"docCategorie"' is not assignable to type 'FileScalarFieldEnum'.
+lib/admin/structure.ts(387,7): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/admin/structure.ts(394,33): error TS2339: Property 'docCategorie' does not exist on type 'PickEnumerable<FileGroupByOutputType, FileScalarFieldEnum | FileScalarFieldEnum[]> & { ...; }'.
+lib/admin/structure.ts(394,48): error TS18048: 'row._count' is possibly 'undefined'.
+lib/admin/structure.ts(394,59): error TS2339: Property '_all' does not exist on type 'true | { id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; size?: number | undefined; ... 10 more ...; _all?: number | undefined; }'.
+  Property '_all' does not exist on type 'true'.
+lib/admin/structure.ts(437,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(448,12): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(468,7): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileSelect<DefaultArgs>'.
+lib/admin/structure.ts(476,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/admin/structure.ts(478,23): error TS2339: Property 'projectId' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/admin/structure.ts(487,25): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/admin/structure.ts(491,7): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type '((Without<FileUpdateInput, FileUncheckedUpdateInput> & FileUncheckedUpdateInput) | (Without<...> & FileUpdateInput)) & object'.
+lib/admin/structure.ts(501,67): error TS2339: Property 'projectId' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/documents/delete-document.ts(6,10): error TS2305: Module '"@/lib/storage/preview-cache"' has no exported member 'clearPreviewCache'.
+lib/documents/delete-document.ts(7,10): error TS2305: Module '"@/lib/storage/video-preview-cache"' has no exported member 'clearVideoPreviewCache'.
+lib/documents/library.ts(15,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+lib/documents/library.ts(21,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/documents/library.ts(44,27): error TS2365: Operator '+' cannot be applied to types 'number | boolean | { id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; ... 11 more ...; _all?: number | undefined; }' and 'number'.
+lib/documents/library.ts(57,84): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/heritage/documentary-folders.ts(39,16): error TS2322: Type '{ heritagePartId: string; heritageSectionId: string; } | { heritagePartId?: undefined; heritageSectionId: string; }' is not assignable to type 'FolderWhereInput | undefined'.
+  Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderWhereInput'.
+lib/heritage/documentary-folders.ts(44,9): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'FolderSelect<DefaultArgs>'.
+lib/heritage/documentary-folders.ts(55,19): error TS2322: Type '{ heritagePartId: string; heritageSectionId: string; } | { heritagePartId?: undefined; heritageSectionId: string; }' is not assignable to type '(((Without<FolderNullableScalarRelationFilter, FolderWhereInput> & FolderWhereInput) | (Without<...> & FolderNullableScalarRelationFilter)) & object) | null | undefined'.
+  Object literal may only specify known properties, and 'heritageSectionId' does not exist in type '((Without<FolderNullableScalarRelationFilter, FolderWhereInput> & FolderWhereInput) | (Without<...> & FolderNullableScalarRelationFilter)) & object'.
+lib/heritage/documentary-folders.ts(68,19): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+lib/heritage/documentary-folders.ts(82,7): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'FolderSelect<DefaultArgs>'.
+lib/heritage/documentary-folders.ts(91,16): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+lib/heritage/documentary-folders.ts(92,3): error TS2322: Type '{ heritageSectionId: any; name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }' is not assignable to type 'DocumentaryFolderRow & { heritagePartId: string | null; }'.
+  Type '{ heritageSectionId: any; name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }' is missing the following properties from type 'DocumentaryFolderRow': description, projectId
+lib/heritage/documentary-folders.ts(94,31): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+lib/heritage/documentary-folders.ts(145,3): error TS2322: Type '{ childFolderCount: number; documentCount: number; totalBytes: number; lastActivityAt: string | null; name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; heritageSectionId: string; }[]' is not assignable to type 'DocumentaryFolderCard[]'.
+  Type '{ childFolderCount: number; documentCount: number; totalBytes: number; lastActivityAt: string | null; name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; heritageSectionId: string; }' is not assignable to type 'DocumentaryFolderCard'.
+    Type '{ childFolderCount: number; documentCount: number; totalBytes: number; lastActivityAt: string | null; name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; heritageSectionId: string; }' is missing the following properties from type 'DocumentaryFolderRow': description, projectId
+lib/heritage/documentary-folders.ts(167,5): error TS2322: Type '{ children: DocumentaryFolderTreeNode[]; childFolderCount: number; documentCount: number; totalBytes: number; lastActivityAt: string | null; name: string; ... 6 more ...; heritageSectionId: string; }[]' is not assignable to type 'DocumentaryFolderTreeNode[]'.
+  Type '{ children: DocumentaryFolderTreeNode[]; childFolderCount: number; documentCount: number; totalBytes: number; lastActivityAt: string | null; name: string; ... 6 more ...; heritageSectionId: string; }' is not assignable to type 'DocumentaryFolderTreeNode'.
+    Type '{ children: DocumentaryFolderTreeNode[]; childFolderCount: number; documentCount: number; totalBytes: number; lastActivityAt: string | null; name: string; ... 6 more ...; heritageSectionId: string; }' is missing the following properties from type 'DocumentaryFolderRow': description, projectId
+lib/heritage/documentary-folders.ts(180,37): error TS2353: Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderWhereInput'.
+lib/heritage/documentary-folders.ts(194,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/heritage/documentary-folders.ts(211,7): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'Without<FolderCreateInput, FolderUncheckedCreateInput> & FolderUncheckedCreateInput & object'.
+lib/heritage/documentary-folders.ts(220,7): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'FolderSelect<DefaultArgs>'.
+lib/heritage/documentary-folders.ts(229,3): error TS2739: Type '{ heritageSectionId: any; name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }' is missing the following properties from type 'DocumentaryFolderRow': description, projectId
+lib/heritage/documentary-folders.ts(231,32): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+lib/heritage/documentary-folders.ts(249,19): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type '((Without<FolderUpdateInput, FolderUncheckedUpdateInput> & FolderUncheckedUpdateInput) | (Without<...> & FolderUpdateInput)) & object'.
+lib/heritage/documentary-folders.ts(253,7): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'FolderSelect<DefaultArgs>'.
+lib/heritage/documentary-folders.ts(261,3): error TS2739: Type '{ heritageSectionId: any; name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }' is missing the following properties from type 'DocumentaryFolderRow': description, projectId
+lib/heritage/documentary-folders.ts(263,32): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+lib/heritage/documentary-folders.ts(286,14): error TS2353: Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderWhereInput'.
+lib/heritage/documentary-folders.ts(303,7): error TS2353: Object literal may only specify known properties, and 'description' does not exist in type 'FolderSelect<DefaultArgs>'.
+lib/heritage/documentary-folders.ts(311,3): error TS2739: Type '{ heritageSectionId: any; name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }' is missing the following properties from type 'DocumentaryFolderRow': description, projectId
+lib/heritage/documentary-folders.ts(313,32): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+lib/heritage/documentary-folders.ts(325,16): error TS2339: Property 'heritageSectionId' does not exist on type '{ _count: { files: number; children: number; }; } & { name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+lib/heritage/documentary-folders.ts(345,14): error TS2353: Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderWhereInput'.
+lib/heritage/documentary-folders.ts(402,24): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/heritage/queries/parts.ts(25,26): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient'.
+lib/heritage/queries/parts.ts(39,21): error TS7006: Parameter 'p' implicitly has an 'any' type.
+lib/heritage/queries/parts.ts(55,13): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient'.
+lib/heritage/queries/parts.ts(62,29): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient'.
+lib/heritage/queries/parts.ts(66,40): error TS7006: Parameter 'p' implicitly has an 'any' type.
+lib/heritage/queries/parts.ts(72,32): error TS2339: Property 'id' does not exist on type '{}'.
+lib/heritage/queries/parts.ts(75,30): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient'.
+lib/heritage/queries/parts.ts(96,45): error TS2353: Object literal may only specify known properties, and 'heritageParts' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+lib/heritage/queries/parts.ts(98,37): error TS2339: Property '_count' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+lib/heritage/queries/parts.ts(125,31): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type 'TerritoireSelect<DefaultArgs>'.
+lib/heritage/queries/parts.ts(132,27): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient'.
+lib/heritage/queries/parts.ts(141,30): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/heritage/queries/parts.ts(151,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+lib/heritage/queries/parts.ts(158,29): error TS2551: Property 'territoire' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'. Did you mean 'territoireId'?
+lib/heritage/queries/project-documents.ts(93,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/project-documents.ts(106,9): error TS2353: Object literal may only specify known properties, and 'docCategorie' does not exist in type 'FileSelect<DefaultArgs>'.
+lib/heritage/queries/project-documents.ts(114,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/project-documents.ts(129,12): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(129,48): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(130,31): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(133,12): error TS2339: Property 'documentScope' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(134,12): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(143,14): error TS2339: Property 'docStatut' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(143,44): error TS2339: Property 'docStatut' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(144,14): error TS2339: Property 'docVersion' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(144,46): error TS2339: Property 'docVersion' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(158,26): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(159,27): error TS2339: Property 'documentScope' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(160,23): error TS2339: Property 'docStatut' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(161,24): error TS2339: Property 'docVersion' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/project-documents.ts(178,7): error TS2322: Type 'true | { id?: number | undefined; originalName?: number | undefined; displayName?: number | undefined; extension?: number | undefined; mimeType?: number | undefined; size?: number | undefined; ... 10 more ...; _all?: number | undefined; } | undefined' is not assignable to type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+lib/heritage/queries/project-documents.ts(179,19): error TS18048: 'agg._sum' is possibly 'undefined'.
+lib/heritage/queries/project-documents.ts(183,23): error TS18048: 'agg._max' is possibly 'undefined'.
+lib/heritage/queries/project-search.ts(96,8): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/heritage/queries/project-search.ts(109,9): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/project-search.ts(123,9): error TS2353: Object literal may only specify known properties, and 'docTitle' does not exist in type 'FileSelect<DefaultArgs>'.
+lib/heritage/queries/project-search.ts(135,9): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+lib/heritage/queries/project-search.ts(143,9): error TS2353: Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderSelect<DefaultArgs>'.
+lib/heritage/queries/project-search.ts(151,22): error TS7006: Parameter 's' implicitly has an 'any' type.
+lib/heritage/queries/project-search.ts(154,38): error TS7006: Parameter 'f' implicitly has an 'any' type.
+lib/heritage/queries/project-search.ts(160,47): error TS7006: Parameter 'section' implicitly has an 'any' type.
+lib/heritage/queries/project-search.ts(172,45): error TS7006: Parameter 'file' implicitly has an 'any' type.
+lib/heritage/queries/project-search.ts(187,45): error TS7006: Parameter 'folder' implicitly has an 'any' type.
+lib/heritage/queries/project-search.ts(195,11): error TS7006: Parameter 'section' implicitly has an 'any' type.
+lib/heritage/queries/project-search.ts(206,11): error TS7006: Parameter 'file' implicitly has an 'any' type.
+lib/heritage/queries/project-search.ts(258,11): error TS7006: Parameter 'folder' implicitly has an 'any' type.
+lib/heritage/queries/section-documents.ts(44,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-documents.ts(56,20): error TS2322: Type '{ heritagePartId: string; heritageSectionId: any; } | { heritagePartId?: undefined; heritageSectionId: any; }' is not assignable to type 'FolderWhereInput | undefined'.
+  Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderWhereInput'.
+lib/heritage/queries/section-documents.ts(68,16): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/section-documents.ts(68,54): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/section-documents.ts(91,9): error TS2353: Object literal may only specify known properties, and 'docStatut' does not exist in type 'FileSelect<DefaultArgs>'.
+lib/heritage/queries/section-documents.ts(97,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+lib/heritage/queries/section-documents.ts(112,21): error TS2339: Property 'docStatut' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/section-documents.ts(113,22): error TS2339: Property 'docVersion' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/section-documents.ts(114,26): error TS2551: Property 'uploadedBy' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'. Did you mean 'uploadedById'?
+lib/heritage/queries/section-structured.ts(111,27): error TS2339: Property 'sequence' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-structured.ts(125,34): error TS7006: Parameter 'row' implicitly has an 'any' type.
+lib/heritage/queries/section-structured.ts(138,16): error TS2339: Property 'sequence' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-structured.ts(142,12): error TS7006: Parameter 'row' implicitly has an 'any' type.
+lib/heritage/queries/section-structured.ts(147,29): error TS2339: Property 'observation' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-structured.ts(158,39): error TS7006: Parameter 'row' implicitly has an 'any' type.
+lib/heritage/queries/section-structured.ts(168,29): error TS2339: Property 'investigation' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-structured.ts(178,41): error TS7006: Parameter 'row' implicitly has an 'any' type.
+lib/heritage/queries/section-structured.ts(187,29): error TS2339: Property 'decision' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-structured.ts(197,36): error TS7006: Parameter 'row' implicitly has an 'any' type.
+lib/heritage/queries/section-structured.ts(206,29): error TS2339: Property 'intervention' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-structured.ts(216,40): error TS7006: Parameter 'row' implicitly has an 'any' type.
+lib/heritage/queries/section-summaries.ts(126,8): error TS2339: Property 'sequence' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(127,8): error TS2339: Property 'sequence' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(275,14): error TS2339: Property 'sequence' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(279,10): error TS7006: Parameter 'row' implicitly has an 'any' type.
+lib/heritage/queries/section-summaries.ts(295,30): error TS2322: Type '{ heritagePartId: string; projectId: string; } | { heritagePartId?: undefined; projectId: string; }' is not assignable to type 'FileWhereInput | undefined'.
+  Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/section-summaries.ts(297,16): error TS2322: Type '{ heritagePartId: string; projectId: string; } | { heritagePartId?: undefined; projectId: string; }' is not assignable to type 'FileWhereInput | undefined'.
+  Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/section-summaries.ts(306,16): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/section-summaries.ts(306,54): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileWhereInput'.
+lib/heritage/queries/section-summaries.ts(309,9): error TS2353: Object literal may only specify known properties, and 'docCategorie' does not exist in type 'FileSelect<DefaultArgs>'.
+lib/heritage/queries/section-summaries.ts(319,9): error TS2322: Type '{ heritageSectionId: { not: null; }; heritagePartId: string; projectId: string; } | { heritageSectionId: { not: null; }; heritagePartId?: undefined; projectId: string; }' is not assignable to type 'FolderWhereInput | undefined'.
+  Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderWhereInput'.
+lib/heritage/queries/section-summaries.ts(322,9): error TS2353: Object literal may only specify known properties, and 'heritageSection' does not exist in type 'FolderSelect<DefaultArgs>'.
+lib/heritage/queries/section-summaries.ts(337,14): error TS2339: Property 'observation' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(338,14): error TS2339: Property 'observation' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(350,14): error TS2339: Property 'investigation' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(351,14): error TS2339: Property 'investigation' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(363,14): error TS2339: Property 'decision' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(364,14): error TS2339: Property 'decision' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(376,14): error TS2339: Property 'intervention' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(377,14): error TS2339: Property 'intervention' does not exist on type 'PrismaClient'.
+lib/heritage/queries/section-summaries.ts(391,22): error TS2339: Property 'heritageSection' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+lib/heritage/queries/section-summaries.ts(401,15): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/section-summaries.ts(402,44): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/section-summaries.ts(412,28): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+lib/heritage/queries/section-summaries.ts(428,37): error TS18048: 'projectFileAgg._max' is possibly 'undefined'.
+lib/heritage/queries/section-summaries.ts(449,17): error TS18048: 'projectFileAgg._sum' is possibly 'undefined'.
+lib/heritage/queries/structure.ts(122,7): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'ProjectSelect<DefaultArgs>'.
+lib/heritage/queries/structure.ts(129,25): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/heritage/queries/structure.ts(145,26): error TS2345: Argument of type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }' is not assignable to parameter of type '{ slug: string; name: string; description: string | null; code: string | null; }'.
+  Property 'code' is missing in type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }' but required in type '{ slug: string; name: string; description: string | null; code: string | null; }'.
+lib/heritage/queries/structure.ts(180,28): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/heritage/queries/structure.ts(202,14): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+lib/heritage/seed-structure.ts(36,18): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient'.
+lib/heritage/seed-structure.ts(49,20): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient'.
+lib/heritage/types/document-scope.ts(8,15): error TS2305: Module '"@/generated/prisma/client"' has no exported member 'DocumentScope'.
+lib/heritage/upload-context.ts(29,14): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+lib/heritage/upload-context.ts(37,7): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'Without<FolderCreateInput, FolderUncheckedCreateInput> & FolderUncheckedCreateInput & object'.
+lib/heritage/upload-context.ts(72,27): error TS2353: Object literal may only specify known properties, and 'heritageParts' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+lib/heritage/upload-context.ts(91,15): error TS2339: Property '_count' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; isActive: boolean; slug: string; description: string | null; territoireId: string | null; }'.
+lib/heritage/upload-context.ts(95,27): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient'.
+lib/structure/folders.ts(159,11): error TS7022: 'folder' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+prisma/seed.ts(45,7): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type '((Without<TerritoireUpdateInput, TerritoireUncheckedUpdateInput> & TerritoireUncheckedUpdateInput) | (Without<...> & TerritoireUpdateInput)) & object'.
+prisma/seed.ts(52,7): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type '((Without<TerritoireCreateInput, TerritoireUncheckedCreateInput> & TerritoireUncheckedCreateInput) | (Without<...> & TerritoireCreateInput)) & object'.
+prisma/seed.ts(90,34): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'Without<ProjectUpdateInput, ProjectUncheckedUpdateInput> & ProjectUncheckedUpdateInput & object'.
+prisma/seed.ts(91,64): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'Without<ProjectCreateInput, ProjectUncheckedCreateInput> & ProjectUncheckedCreateInput & object'.
+prisma/seed.ts(95,63): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'Without<FolderUpdateInput, FolderUncheckedUpdateInput> & FolderUncheckedUpdateInput & object'.
+prisma/seed.ts(95,124): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type '((Without<FolderCreateInput, FolderUncheckedCreateInput> & FolderUncheckedCreateInput) | (Without<...> & FolderCreateInput)) & object'.
+scripts/classify-heritage-documents.ts(38,9): error TS2353: Object literal may only specify known properties, and 'project' does not exist in type 'FileWhereInput'.
+scripts/classify-heritage-documents.ts(43,9): error TS2353: Object literal may only specify known properties, and 'docCategorie' does not exist in type 'FileSelect<DefaultArgs>'.
+scripts/classify-heritage-documents.ts(56,14): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/classify-heritage-documents.ts(59,52): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/classify-heritage-documents.ts(64,14): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/classify-heritage-documents.ts(64,35): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/classify-heritage-documents.ts(67,48): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/classify-heritage-documents.ts(73,70): error TS2551: Property 'folder' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'. Did you mean 'folderId'?
+scripts/classify-heritage-documents.ts(79,17): error TS2353: Object literal may only specify known properties, and 'docCategorie' does not exist in type '((Without<FileUpdateInput, FileUncheckedUpdateInput> & FileUncheckedUpdateInput) | (Without<...> & FileUpdateInput)) & object'.
+scripts/ensure-role-test-accounts.ts(60,7): error TS2353: Object literal may only specify known properties, and 'role' does not exist in type 'Without<ProjectMemberCreateInput, ProjectMemberUncheckedCreateInput> & ProjectMemberUncheckedCreateInput & object'.
+scripts/ensure-role-test-accounts.ts(74,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type '((Without<ProjectMemberUpdateInput, ProjectMemberUncheckedUpdateInput> & ProjectMemberUncheckedUpdateInput) | (Without<...> & ProjectMemberUpdateInput)) & object'.
+scripts/ensure-role-test-accounts.ts(140,7): error TS2353: Object literal may only specify known properties, and 'projectMembers' does not exist in type 'UserSelect<DefaultArgs>'.
+scripts/ensure-role-test-accounts.ts(165,26): error TS2339: Property 'projectMembers' does not exist on type '{ id: string; name: string; firstName: string; lastName: string; email: string; passwordHash: string | null; role: Role; status: AccountStatus; createdAt: Date; updatedAt: Date; }'.
+scripts/ensure-role-test-accounts.ts(165,46): error TS7006: Parameter 'm' implicitly has an 'any' type.
+scripts/flatten-media-wrappers.ts(29,34): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/flatten-media-wrappers.ts(33,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+scripts/flatten-media-wrappers.ts(36,14): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/flatten-media-wrappers.ts(55,74): error TS2339: Property 'heritageSectionId' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/flatten-media-wrappers.ts(69,18): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/flatten-media-wrappers.ts(96,18): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/flatten-media-wrappers.ts(106,46): error TS7006: Parameter 's' implicitly has an 'any' type.
+scripts/flatten-media-wrappers.ts(107,33): error TS2339: Property 'heritageSectionId' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/flatten-media-wrappers.ts(129,18): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/flatten-media-wrappers.ts(137,11): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/flatten-media-wrappers.ts(138,11): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/flatten-media-wrappers.ts(158,14): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/flatten-media-wrappers.ts(158,39): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/flatten-media-wrappers.ts(163,22): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/flatten-media-wrappers.ts(180,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/flatten-media-wrappers.ts(185,18): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/flatten-media-wrappers.ts(185,45): error TS2339: Property '_count' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/import-documents.ts(71,57): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/import-documents.ts(76,60): error TS2339: Property 'projectId' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/import-documents.ts(89,310): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'Without<FileCreateInput, FileUncheckedCreateInput> & FileUncheckedCreateInput & object'.
+scripts/inspect-murailles-phase1.ts(80,11): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'ProjectWhereInput'.
+scripts/inspect-murailles-phase1.ts(81,11): error TS2353: Object literal may only specify known properties, and 'type' does not exist in type 'ProjectWhereInput'.
+scripts/inspect-murailles-phase1.ts(85,65): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type 'TerritoireSelect<DefaultArgs>'.
+scripts/inspect-murailles-phase1.ts(93,8): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/inspect-murailles-phase1.ts(97,8): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/inspect-murailles-phase1.ts(103,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/inspect-murailles-phase1.ts(108,9): error TS2353: Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderSelect<DefaultArgs>'.
+scripts/inspect-murailles-phase1.ts(114,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/inspect-murailles-phase1.ts(126,9): error TS2353: Object literal may only specify known properties, and 'docCategorie' does not exist in type 'FileSelect<DefaultArgs>'.
+scripts/inspect-murailles-phase1.ts(132,8): error TS2339: Property 'secteur' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/inspect-murailles-phase1.ts(139,18): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(146,6): error TS7006: Parameter 's' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(152,23): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(154,62): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(156,6): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(185,33): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(187,31): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(192,16): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(194,13): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(196,16): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(198,13): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(218,48): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(225,40): error TS2345: Argument of type 'Map<unknown, unknown>' is not assignable to parameter of type 'Map<string, { id: string; name: string; parentId: string | null; }>'.
+  Type 'unknown' is not assignable to type 'string'.
+scripts/inspect-murailles-phase1.ts(247,47): error TS7006: Parameter 'm' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(254,14): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(262,11): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(275,44): error TS2345: Argument of type 'Map<unknown, unknown>' is not assignable to parameter of type 'Map<string, { id: string; name: string; parentId: string | null; }>'.
+  Type 'unknown' is not assignable to type 'string'.
+scripts/inspect-murailles-phase1.ts(288,21): error TS2339: Property 'code' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; description: string | null; isActive: boolean; slug: string; territoireId: string | null; }'.
+scripts/inspect-murailles-phase1.ts(289,21): error TS2339: Property 'type' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; description: string | null; isActive: boolean; slug: string; territoireId: string | null; }'.
+scripts/inspect-murailles-phase1.ts(290,27): error TS2551: Property 'territoire' does not exist on type '{ id: string; name: string; createdAt: Date; updatedAt: Date; description: string | null; isActive: boolean; slug: string; territoireId: string | null; }'. Did you mean 'territoireId'?
+scripts/inspect-murailles-phase1.ts(303,25): error TS7006: Parameter 'g' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(308,29): error TS7006: Parameter 's' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(328,16): error TS7006: Parameter 'm' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(333,16): error TS7006: Parameter 'm' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(338,16): error TS7006: Parameter 'm' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(343,16): error TS7006: Parameter 'm' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(351,34): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/inspect-murailles-phase1.ts(357,30): error TS2345: Argument of type 'Map<unknown, unknown>' is not assignable to parameter of type 'Map<string, { id: string; name: string; parentId: string | null; }>'.
+  Type 'unknown' is not assignable to type 'string'.
+scripts/inspect-murailles-phase1.ts(388,40): error TS7006: Parameter 's' implicitly has an 'any' type.
+scripts/migrate-murailles-parts.ts(100,15): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(105,18): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(129,31): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(134,14): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(159,43): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/migrate-murailles-parts.ts(161,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/migrate-murailles-parts.ts(164,16): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/migrate-murailles-parts.ts(166,47): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/migrate-murailles-parts.ts(172,31): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(182,32): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(197,31): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(202,29): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(206,47): error TS7006: Parameter 's' implicitly has an 'any' type.
+scripts/migrate-murailles-parts.ts(212,14): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/migrate-murailles-parts.ts(217,7): error TS2353: Object literal may only specify known properties, and 'heritageSectionId' does not exist in type 'FolderSelect<DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(233,14): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/migrate-murailles-parts.ts(239,7): error TS2353: Object literal may only specify known properties, and 'docCategorie' does not exist in type 'FileSelect<DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(255,30): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-murailles-parts.ts(261,13): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-murailles-parts.ts(263,42): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/migrate-murailles-parts.ts(263,75): error TS2339: Property 'id' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(284,50): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-murailles-parts.ts(297,50): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-murailles-parts.ts(307,20): error TS2339: Property 'heritagePartId' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-murailles-parts.ts(308,26): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 6 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-murailles-parts.ts(329,59): error TS2339: Property 'slug' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(352,7): error TS2353: Object literal may only specify known properties, and 'territoireSlug' does not exist in type 'StoragePathContext'.
+scripts/migrate-murailles-parts.ts(352,43): error TS2339: Property 'slug' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; code: string; isActive: boolean; description: string | null; }'.
+scripts/migrate-murailles-parts.ts(373,11): error TS2353: Object literal may only specify known properties, and 'heritagePartId' does not exist in type '((Without<FileUpdateInput, FileUncheckedUpdateInput> & FileUncheckedUpdateInput) | (Without<...> & FileUpdateInput)) & object'.
+scripts/migrate-murailles-parts.ts(383,31): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/migrate-murailles-parts.ts(383,64): error TS2339: Property 'id' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(385,19): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/migrate-murailles-parts.ts(385,48): error TS2339: Property 'heritagePartId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/migrate-murailles-parts.ts(395,21): error TS2353: Object literal may only specify known properties, and 'heritagePartId' does not exist in type '((Without<FolderUpdateInput, FolderUncheckedUpdateInput> & FolderUncheckedUpdateInput) | (Without<...> & FolderUpdateInput)) & object'.
+scripts/migrate-murailles-parts.ts(406,19): error TS2339: Property 'id' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(408,21): error TS2339: Property 'id' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(409,21): error TS2339: Property 'id' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(419,47): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/migrate-murailles-parts.ts(431,11): error TS2353: Object literal may only specify known properties, and 'heritagePartId' does not exist in type '((Without<FolderUpdateInput, FolderUncheckedUpdateInput> & FolderUncheckedUpdateInput) | (Without<...> & FolderUpdateInput)) & object'.
+scripts/migrate-murailles-parts.ts(432,56): error TS2339: Property 'heritageSectionId' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; sortOrder: number; sectionId: string; parentId: string | null; }'.
+scripts/migrate-murailles-parts.ts(440,32): error TS2339: Property 'title' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(443,24): error TS2339: Property 'title' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(447,16): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/migrate-murailles-parts.ts(448,33): error TS2339: Property 'id' does not exist on type '{}'.
+scripts/migrate-murailles-parts.ts(457,47): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/migrate-murailles-parts.ts(459,20): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/migrate-murailles-parts.ts(462,20): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/migrate-murailles-parts.ts(464,51): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FolderWhereInput'.
+scripts/migrate-murailles-parts.ts(466,20): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileWhereInput'.
+scripts/migrate-remove-territory-shared-scopes.ts(139,9): error TS2353: Object literal may only specify known properties, and 'project' does not exist in type 'FileWhereInput'.
+scripts/migrate-remove-territory-shared-scopes.ts(144,9): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileSelect<DefaultArgs>'.
+scripts/migrate-remove-territory-shared-scopes.ts(157,28): error TS2339: Property 'documentScope' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; sectionId: string; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 5 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-remove-territory-shared-scopes.ts(157,60): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; sectionId: string; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 5 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-remove-territory-shared-scopes.ts(161,9): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type '((Without<FileUpdateInput, FileUncheckedUpdateInput> & FileUncheckedUpdateInput) | (Without<...> & FileUpdateInput)) & object'.
+scripts/migrate-remove-territory-shared-scopes.ts(170,9): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileSelect<DefaultArgs>'.
+scripts/migrate-remove-territory-shared-scopes.ts(187,30): error TS2339: Property 'documentScope' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; sectionId: string; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 5 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-remove-territory-shared-scopes.ts(187,65): error TS2339: Property 'docCategorie' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; sectionId: string; originalName: string; displayName: string; extension: string; mimeType: string; size: number; storageProvider: StorageProvider; ... 5 more ...; confidentialite: Confidentialite; }'.
+scripts/migrate-remove-territory-shared-scopes.ts(194,11): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileWhereInput'.
+scripts/migrate-remove-territory-shared-scopes.ts(195,11): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileWhereInput'.
+scripts/migrate-remove-territory-shared-scopes.ts(198,34): error TS2353: Object literal may only specify known properties, and 'documentScope' does not exist in type 'FileSelect<DefaultArgs>'.
+scripts/reorder-murailles-groups.ts(32,27): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reorder-murailles-groups.ts(40,17): error TS7006: Parameter 'g' implicitly has an 'any' type.
+scripts/reorder-murailles-groups.ts(52,32): error TS7006: Parameter 'g' implicitly has an 'any' type.
+scripts/reorder-murailles-groups.ts(63,16): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reorder-murailles-groups.ts(70,26): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(364,45): error TS2353: Object literal may only specify known properties, and 'members' does not exist in type 'TerritoireCountOutputTypeSelect<DefaultArgs>'.
+scripts/reset-business-content.ts(367,8): error TS2339: Property 'territoireMember' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(379,13): error TS2353: Object literal may only specify known properties, and 'files' does not exist in type 'ProjectCountOutputTypeSelect<DefaultArgs>'.
+scripts/reset-business-content.ts(401,8): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(402,8): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(403,8): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(413,9): error TS2353: Object literal may only specify known properties, and 'projectId' does not exist in type 'FileSelect<DefaultArgs>'.
+scripts/reset-business-content.ts(420,8): error TS2339: Property 'secteur' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(421,8): error TS2339: Property 'sequence' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(422,8): error TS2339: Property 'element' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(423,8): error TS2339: Property 'observation' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(424,8): error TS2339: Property 'investigation' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(425,8): error TS2339: Property 'decision' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(426,8): error TS2339: Property 'intervention' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(427,8): error TS2339: Property 'gate' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(428,8): error TS2339: Property 'preuve' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/reset-business-content.ts(449,25): error TS7006: Parameter 'u' implicitly has an 'any' type.
+scripts/reset-business-content.ts(472,32): error TS7006: Parameter 's' implicitly has an 'any' type.
+scripts/reset-business-content.ts(472,35): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(556,16): error TS2339: Property 'preuve' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(557,16): error TS2339: Property 'observation' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(558,16): error TS2339: Property 'investigation' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(559,16): error TS2339: Property 'decision' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(560,16): error TS2339: Property 'intervention' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(561,16): error TS2339: Property 'gate' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(562,16): error TS2339: Property 'element' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(572,16): error TS2339: Property 'sequence' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(573,16): error TS2339: Property 'secteur' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(574,16): error TS2339: Property 'heritagePart' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(575,16): error TS2339: Property 'heritageSection' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(576,16): error TS2339: Property 'heritageSectionGroup' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(579,16): error TS2339: Property 'territoireMember' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">'.
+scripts/reset-business-content.ts(620,29): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(623,5): error TS2322: Type '{} | null' is not assignable to type 'string | null'.
+  Type '{}' is not assignable to type 'string'.
+scripts/reset-business-content.ts(626,5): error TS2322: Type '{} | null' is not assignable to type 'string | null'.
+  Type '{}' is not assignable to type 'string'.
+scripts/reset-business-content.ts(645,5): error TS2322: Type '{} | null' is not assignable to type 'string | null'.
+  Type '{}' is not assignable to type 'string'.
+scripts/reset-business-content.ts(673,14): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(674,14): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(676,14): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(677,14): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(725,38): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(797,58): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(802,10): error TS7006: Parameter 'f' implicitly has an 'any' type.
+scripts/reset-business-content.ts(892,35): error TS7006: Parameter 't' implicitly has an 'any' type.
+scripts/verify-business-reset.ts(32,33): error TS2339: Property 'territoireMember' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/verify-business-reset.ts(33,30): error TS2339: Property 'heritageSectionGroup' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/verify-business-reset.ts(34,32): error TS2339: Property 'heritageSection' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/verify-business-reset.ts(35,29): error TS2339: Property 'heritagePart' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/verify-business-reset.ts(38,23): error TS2339: Property 'preuve' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+scripts/verify-business-reset.ts(39,25): error TS2339: Property 'sequence' does not exist on type 'PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>'.
+tests/access/authorization.test.ts(9,3): error TS2305: Module '"../../lib/access/permissions"' has no exported member 'resolveCanCreateDossier'.
+tests/access/authorization.test.ts(46,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(66,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(78,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(95,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(107,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(124,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(136,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(153,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(165,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(187,5): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/access/authorization.test.ts(278,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/admin/structure-delete.test.ts(119,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/admin/structure-delete.test.ts(131,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/documents/document-delete.test.ts(25,7): error TS2353: Object literal may only specify known properties, and 'canEditDossier' does not exist in type 'ProjectPermissionFlags'.
+tests/storage/path-builder.test.ts(10,5): error TS2353: Object literal may only specify known properties, and 'territoireSlug' does not exist in type 'StoragePathContext'.
+tests/storage/path-builder.test.ts(26,5): error TS2353: Object literal may only specify known properties, and 'territoireSlug' does not exist in type 'Omit<StoragePathContext, "originalFilename" | "fileId">'.
+tests/storage/path-builder.test.ts(40,5): error TS2353: Object literal may only specify known properties, and 'territoireSlug' does not exist in type 'StoragePathContext'.

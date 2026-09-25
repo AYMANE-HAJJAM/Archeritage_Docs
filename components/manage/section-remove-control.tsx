@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
 import {
   deleteSectionAction,
-  updateSectionAction,
+  setSectionActiveAction,
   type LiveSection,
   type ProjectActionState,
 } from "@/app/(private)/manage/actions";
@@ -16,7 +16,7 @@ const initial: ProjectActionState = {};
 
 export type RemovableSection = Pick<
   LiveSection,
-  "id" | "title" | "code" | "isActive" | "hasLinkedContent" | "documentCount"
+  "id" | "name" | "code" | "isActive" | "hasLinkedContent" | "documentCount"
 >;
 
 /**
@@ -43,7 +43,7 @@ export function SectionRemoveControl({
     initial,
   );
   const [updState, updAction, updating] = useActionState(
-    updateSectionAction,
+    setSectionActiveAction,
     initial,
   );
   const deleteFormRef = useRef<HTMLFormElement>(null);

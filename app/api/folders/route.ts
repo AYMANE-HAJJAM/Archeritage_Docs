@@ -1,84 +1,45 @@
-import { z } from "zod";
-import { db } from "@/lib/db";
+import { authenticate, apiError, HttpError, readJson } from "@/lib/http";
 import {
   assertCanManageStructure,
-  assertCanUpload,
+  assertProjectAccess,
+  getProjectIdForSection,
 } from "@/lib/access";
-import { authenticate, apiError, HttpError, readJson } from "@/lib/http";
-import { nameSchema } from "@/lib/validation/file";
-import {
-  createDocumentaryFolder,
-  assertDocumentaryFolder,
-} from "@/lib/heritage/documentary-folders";
+import { createFolder, listFolderChildren } from "@/lib/structure/folders";
 
-const schema = z.object({
-  name: nameSchema,
-  projectId: z.string().min(1),
-  parentId: z.string().min(1).nullable(),
-  /** When set, creates a documentary folder under a heritage section. */
-  heritageSectionId: z.string().min(1).optional(),
-  description: z.string().max(2000).optional().nullable(),
-});
+export async function GET(request: Request) {
+  try {
+    const user = await authenticate(request);
+    const url = new URL(request.url);
+    const sectionId = url.searchParams.get("sectionId")?.trim();
+    const parentId = url.searchParams.get("parentId")?.trim() || null;
+    if (!sectionId) throw new HttpError(400, "sectionId requis.");
+
+    const projectId = await getProjectIdForSection(sectionId);
+    await assertProjectAccess(user, projectId);
+
+    const folders = await listFolderChildren(sectionId, parentId);
+    return Response.json({ folders });
+  } catch (error) {
+    return apiError(error);
+  }
+}
 
 export async function POST(request: Request) {
   try {
     const user = await authenticate(request, true);
-    const data = schema.parse(await readJson(request));
-
-    if (!(await db.project.findUnique({ where: { id: data.projectId } }))) {
-      throw new HttpError(404, "Projet introuvable.");
+    const body = await readJson(request);
+    const sectionId = String(body.sectionId || "").trim();
+    const parentId = body.parentId ? String(body.parentId).trim() : null;
+    const name = String(body.name || "").trim();
+    if (!sectionId || !name) {
+      throw new HttpError(400, "sectionId et name requis.");
     }
 
-    if (data.heritageSectionId) {
-      await assertCanManageStructure(user, data.projectId);
-      if (data.parentId) {
-        await assertDocumentaryFolder(data.parentId, {
-          projectId: data.projectId,
-          heritageSectionId: data.heritageSectionId,
-        });
-      }
-      const folder = await createDocumentaryFolder({
-        projectId: data.projectId,
-        heritageSectionId: data.heritageSectionId,
-        parentId: data.parentId,
-        name: data.name,
-        description: data.description,
-      });
-      return Response.json(
-        {
-          id: folder.id,
-          name: folder.name,
-          description: folder.description,
-          parentId: folder.parentId,
-          heritageSectionId: folder.heritageSectionId,
-        },
-        { status: 201 },
-      );
-    }
+    const projectId = await getProjectIdForSection(sectionId);
+    await assertCanManageStructure(user, projectId);
 
-    // Legacy Explorer folders — uploaders may organize the physical tree.
-    await assertCanUpload(user, data.projectId);
-    if (
-      data.parentId &&
-      !(await db.folder.findFirst({
-        where: {
-          id: data.parentId,
-          projectId: data.projectId,
-          heritageSectionId: null,
-        },
-      }))
-    ) {
-      throw new HttpError(404, "Dossier introuvable.");
-    }
-    const folder = await db.folder.create({
-      data: {
-        name: data.name,
-        projectId: data.projectId,
-        parentId: data.parentId,
-        heritageSectionId: null,
-      },
-    });
-    return Response.json({ id: folder.id }, { status: 201 });
+    const folder = await createFolder({ sectionId, parentId, name });
+    return Response.json(folder, { status: 201 });
   } catch (error) {
     return apiError(error);
   }

@@ -7,8 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─── Existing enums (unchanged) ───────────────────────────────────────────────
-
 enum Role {
   ADMIN
   USER
@@ -19,129 +17,17 @@ enum StorageProvider {
   BACKBLAZE_B2
 }
 
-// ─── New enums — Phase 1 ──────────────────────────────────────────────────────
-
-enum ProjectType {
-  CHATEAU
-  MURAILLE
-  AUTRE
-}
-
-/// 9 rôles fonctionnels définis par le cahier des charges §15.
-/// Distinct du Role système (ADMIN/USER) porté par User.role.
-enum ProjectRole {
-  ADMIN
-  MO          // Maître d'ouvrage / Al Omrane
-  MOE         // Architecte maître d'œuvre
-  CULTURE     // Direction de la Culture
-  BET         // Bureau d'études techniques
-  LABORATOIRE
-  ENTREPRISE
-  CONSULTANT  // Consultation institutionnelle — lecture seule
-  PUBLIC      // Contenu expressément publié uniquement
-}
-
-enum SequenceType {
-  SEQUENCE
-  TOUR
-  PORTE
-  ZONE
-  OUVRAGE
-  AUTRE
-}
-
-enum EtatGeneral {
-  BON
-  MOYEN
-  DEGRADE
-  CRITIQUE
-}
-
-enum NiveauRisque {
-  FAIBLE
-  MOYEN
-  ELEVE
-  CRITIQUE
-}
-
-/// Système de preuve §7 du cahier des charges.
-enum EvidenceStatus {
-  OBS // Observation terrain
-  DOC // Information documentaire
-  TEM // Témoignage / information orale
-  HYP // Hypothèse
-  INV // Investigation nécessaire
-  VAL // Information / décision validée
-}
-
-/// Cycle de vie documentaire §11 du cahier des charges.
-enum DocumentStatus {
-  BROUILLON
-  EN_REVISION
-  SOUMIS
-  VALIDE
-  OBSOLETE
-}
-
-/// Niveau de confidentialité §14 du cahier des charges.
-enum Confidentialite {
-  PUBLIE         // Espace institutionnel public
-  INSTITUTIONNEL // Partenaires institutionnels connectés
-  PROJET         // Équipe projet (valeur par défaut)
-  CONFIDENTIEL   // Accès restreint
-}
-
-/// Logical document placement in the SAFI PATRIMOINE IA (metadata only).
-/// Orthogonal to physical Folder / storageKey.
-/// Active product runtime uses PROJECT_SECTION (or null for project-level admin docs).
-/// TERRITORY / SHARED_RESOURCE are retained for schema stability after 00/03 removal.
-enum DocumentScope {
-  PROJECT_SECTION  // 01.x / 02.x heritage section via docCategorie
-  TERRITORY        // legacy — unused by product runtime
-  SHARED_RESOURCE  // legacy — unused by product runtime
-}
-
-enum InvestigationStatus {
-  REQUISE
-  EN_COURS
-  TERMINEE
-}
-
-/// Types de décision patrimoniale §6 du cahier des charges.
-enum DecisionType {
-  CONSERVER
-  ENTRETENIR
-  REPARER
-  CONSOLIDER
-  REMPLACER_PONCTUEL
-  RESTITUER_EXCEPTIONNEL
-}
-
-/// Gates de validation §12 du cahier des charges.
-enum GateNumber {
-  G0 // Documentation suffisante
-  G1 // Diagnostic validé
-  G2 // Projet/traitement validé
-  G3 // Zone témoin validée
-  G4 // Intervention autorisée
-  G5 // Intervention réceptionnée/documentée
-}
-
-enum GateStatus {
-  EN_ATTENTE
-  EN_COURS
-  VALIDE
-  REJETE
-}
-
-/// Platform account lifecycle (application Role remains ADMIN/USER).
 enum AccountStatus {
   INVITED
   ACTIVE
   DISABLED
 }
 
-// ─── Existing models — only additive changes, nothing removed ─────────────────
+/// Optional access filter for sensitive documents.
+enum Confidentialite {
+  PROJET
+  CONFIDENTIEL
+}
 
 model User {
   id           String        @id @default(cuid())
@@ -154,17 +40,11 @@ model User {
   status       AccountStatus @default(ACTIVE)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  // Existing back-relations
   files        File[]
   sessions     Session[]
-  // New back-relations — Phase 1
-  projectMembers    ProjectMember[]
-  territoireMembers TerritoireMember[]
-  observations      Observation[]
-  decisionsValidees Decision[]    @relation("DecisionValidateur")
-  gatesResponsable  Gate[]
-  invitations       InvitationToken[]
-  auditLogs         AuditLog[]        @relation("AuditActor")
+  memberships  ProjectMember[]
+  invitations  InvitationToken[]
+  auditLogs    AuditLog[]    @relation("AuditActor")
 }
 
 model Session {
@@ -185,7 +65,6 @@ model LoginAttempt {
   @@index([expiresAt])
 }
 
-/// One-time account activation / invitation token (hash only stored).
 model InvitationToken {
   id        String    @id @default(cuid())
   userId    String
@@ -199,7 +78,6 @@ model InvitationToken {
   @@index([expiresAt])
 }
 
-/// Lightweight platform audit trail (no secrets / file contents).
 model AuditLog {
   id          String   @id @default(cuid())
   actorUserId String?
@@ -215,96 +93,124 @@ model AuditLog {
   @@index([actorUserId])
 }
 
-model Project {
-  id          String      @id @default(cuid())
+/// Platform / container (e.g. Safi Patrimoine). Identity: `code` only.
+model Territoire {
+  id          String    @id @default(cuid())
+  code        String    @unique
   name        String
-  slug        String      @unique
   description String?
-  // New fields — Phase 1, all nullable or with safe defaults
-  code        String?     @unique // "CDM", "MUR"
-  type        ProjectType @default(AUTRE)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  projects    Project[]
+}
+
+model Project {
+  id           String         @id @default(cuid())
+  name         String
+  slug         String         @unique
+  description  String?
   territoireId String?
-  isActive    Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  // Existing relations
-  folders     Folder[]
-  files       File[]
-  // New relations — Phase 1
-  territoire  Territoire?     @relation(fields: [territoireId], references: [id])
-  members     ProjectMember[]
-  secteurs    Secteur[]
-  sequences   Sequence[]
-  gates       Gate[]
-  heritageGroups   HeritageSectionGroup[]
-  heritageSections HeritageSection[]
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  territoire   Territoire?    @relation(fields: [territoireId], references: [id], onDelete: Restrict)
+  members      ProjectMember[]
+  parts        Part[]
+  groups       SectionGroup[]
+
+  @@index([territoireId])
+  @@index([isActive])
 }
 
-/// Visual grouping for heritage sections (e.g. Comprendre, Diagnostiquer).
-model HeritageSectionGroup {
-  id        String            @id @default(cuid())
+model ProjectMember {
+  id                 String   @id @default(cuid())
+  userId             String
+  projectId          String
+  canView            Boolean  @default(false)
+  canUpload          Boolean  @default(false)
+  canDownload        Boolean  @default(false)
+  canDeleteDocuments Boolean  @default(false)
+  canManageStructure Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project            Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@index([projectId])
+  @@index([userId])
+}
+
+/// Optional subdivision of a project.
+model Part {
+  id        String         @id @default(cuid())
   projectId String
-  label     String
-  sortOrder Int               @default(0)
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  project   Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  sections  HeritageSection[]
+  name      String
+  slug      String
+  sortOrder Int            @default(0)
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  project   Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  groups    SectionGroup[]
 
+  @@unique([projectId, slug])
   @@index([projectId, sortOrder])
-}
-
-/// Official heritage rubrique (logical IA). Orthogonal to Folder storage.
-model HeritageSection {
-  id          String               @id @default(cuid())
-  projectId   String
-  groupId     String?
-  code        String
-  slug        String
-  title       String
-  description String?
-  kind        String               @default("documentary")
-  /// JSON string array of SectionContentTrack values
-  tracks      Json                 @default("[]")
-  sortOrder   Int                  @default(0)
-  isActive    Boolean              @default(true)
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
-  project     Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  group       HeritageSectionGroup? @relation(fields: [groupId], references: [id], onDelete: SetNull)
-  /// Documentary organization folders (not heritage IA).
-  folders     Folder[]
-
-  @@unique([projectId, code])
-  @@index([projectId, sortOrder])
-  @@index([groupId])
   @@index([projectId, isActive])
 }
 
-/// Physical documentary folder. When heritageSectionId is set, the folder is
-/// part of the section-scoped documentary tree (unlimited nesting via parentId).
-/// Legacy Explorer / __imports__ rows keep heritageSectionId null.
-model Folder {
-  id                String           @id @default(cuid())
-  name              String
-  description       String?
-  projectId         String
-  parentId          String?
-  /// Links folder to a heritage rubrique. Null = legacy / technical folder.
-  heritageSectionId String?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  project           Project          @relation(fields: [projectId], references: [id], onDelete: Restrict)
-  parent            Folder?          @relation("FolderTree", fields: [parentId, projectId], references: [id, projectId], onDelete: Restrict, onUpdate: Restrict)
-  children          Folder[]         @relation("FolderTree")
-  heritageSection   HeritageSection? @relation(fields: [heritageSectionId], references: [id], onDelete: Cascade)
-  files             File[]
+model SectionGroup {
+  id        String    @id @default(cuid())
+  projectId String
+  /// When set, must belong to the same project (enforced in app + migration check).
+  partId    String?
+  name      String
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  part      Part?     @relation(fields: [partId], references: [id], onDelete: Cascade)
+  sections  Section[]
 
-  @@unique([id, projectId])
-  @@index([projectId, parentId])
+  @@index([projectId, sortOrder])
+  @@index([partId])
+}
+
+model Section {
+  id        String       @id @default(cuid())
+  groupId   String
+  name      String
+  /// Optional display code (e.g. 01.1). Not a relational identity.
+  code      String?
+  sortOrder Int          @default(0)
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  group     SectionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  folders   Folder[]
+  files     File[]
+
+  @@index([groupId, sortOrder])
+  @@index([groupId, isActive])
+}
+
+model Folder {
+  id        String   @id @default(cuid())
+  name      String
+  sectionId String
+  parentId  String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  parent    Folder?  @relation("FolderTree", fields: [parentId, sectionId], references: [id, sectionId], onDelete: Restrict, onUpdate: Restrict)
+  children  Folder[] @relation("FolderTree")
+  files     File[]
+
+  @@unique([id, sectionId])
+  @@index([sectionId, parentId])
   @@index([parentId])
-  @@index([heritageSectionId, parentId])
-  @@index([projectId, heritageSectionId])
 }
 
 model File {
@@ -318,308 +224,18 @@ model File {
   storageKey      String          @unique
   storageVersion  String?
   sourceHash      String?         @unique
-  projectId       String
-  /// Null = classified at heritage section root (no documentary folder).
+  sectionId       String
   folderId        String?
   uploadedById    String
+  confidentialite Confidentialite @default(PROJET)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  // Existing relations
-  project         Project         @relation(fields: [projectId], references: [id], onDelete: Restrict)
-  folder          Folder?         @relation(fields: [folderId, projectId], references: [id, projectId], onDelete: Restrict, onUpdate: Restrict)
+  section         Section         @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  folder          Folder?         @relation(fields: [folderId, sectionId], references: [id, sectionId], onDelete: Restrict, onUpdate: Restrict)
   uploadedBy      User            @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
-  // New metadata fields §10 §11 du CDC — all nullable
-  docTitle        String?
-  docAuteur       String?
-  docSource       String?
-  /// Category code within documentScope:
-  /// PROJECT_SECTION → "01.3" / "02.5"
-  /// (legacy TERRITORY / SHARED_RESOURCE unused by product runtime)
-  docCategorie    String?
-  docVersion      String?          // ex. "V01", "V02"
-  docStatut       DocumentStatus?
-  docNomenclature String?          // ex. SAF-MUR-DCE-CPS-V01-20260916
-  confidentialite Confidentialite  @default(PROJET)
-  documentScope   DocumentScope?
-  // New relation — file can be linked to a heritage sequence
-  sequenceId      String?
-  sequence        Sequence?        @relation(fields: [sequenceId], references: [id])
-  // New back-relation
-  preuves         Preuve[]
 
-  @@index([projectId, folderId])
+  @@index([sectionId, folderId])
   @@index([folderId])
   @@index([uploadedById])
-  @@index([projectId, createdAt])
-  @@index([sequenceId])
-  @@index([documentScope, docCategorie])
-  @@index([projectId, documentScope])
-}
-
-// ─── New models — Phase 1 ─────────────────────────────────────────────────────
-
-/// Territoire — top-level managed platform (admin « Projet »).
-/// e.g. Safi Patrimoine → child Projects (dossiers patrimoniaux).
-model Territoire {
-  id          String    @id @default(cuid())
-  code        String    @unique // "SAF"
-  name        String            // "Safi Patrimoine"
-  slug        String    @unique // "safi-patrimoine"
-  description String?
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  projects    Project[]
-  members     TerritoireMember[]
-}
-
-/// Appartenance d'un utilisateur à un projet avec rôle fonctionnel granulaire.
-/// 9 rôles §15 du cahier des charges. Distinct du Role système sur User.role.
-model ProjectMember {
-  id                     String      @id @default(cuid())
-  userId                 String
-  projectId              String
-  /// Legacy CDC functional role — kept for future actor workflows.
-  role                   ProjectRole @default(CONSULTANT)
-  canView                Boolean     @default(false)
-  canUpload              Boolean     @default(false)
-  canDownload            Boolean     @default(false)
-  /// Delete documents in this project (independent from structure management).
-  canDeleteDocuments     Boolean     @default(false)
-  /// Kept for future dossier metadata edit workflows — not exposed in USER UI.
-  canEditDossier         Boolean     @default(false)
-  canManageStructure     Boolean     @default(false)
-  /// Kept for future reclassification workflows — not exposed in USER UI.
-  canReclassifyDocuments Boolean     @default(false)
-  createdAt              DateTime    @default(now())
-  updatedAt              DateTime    @updatedAt
-  user                   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project                Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, projectId])
-  @@index([projectId])
-  @@index([userId])
-}
-
-/// Platform-level membership (e.g. may create dossiers under Safi Patrimoine).
-model TerritoireMember {
-  id               String     @id @default(cuid())
-  userId           String
-  territoireId     String
-  canCreateDossier Boolean    @default(false)
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  territoire       Territoire @relation(fields: [territoireId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, territoireId])
-  @@index([territoireId])
-  @@index([userId])
-}
-
-/// Secteur — subdivision géographique ou fonctionnelle d'un projet.
-model Secteur {
-  id          String     @id @default(cuid())
-  code        String               // ex. "MUR-TR1", "CDM-NORD"
-  name        String
-  projectId   String
-  description String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  project     Project    @relation(fields: [projectId], references: [id], onDelete: Restrict)
-  sequences   Sequence[]
-
-  @@unique([code, projectId])
-  @@index([projectId])
-}
-
-/// Séquence / Ouvrage — unité élémentaire numérique du patrimoine §6 CDC.
-/// Exemples : MUR-S07, MUR-T09, MUR-BEK, CDM-ZONE-SUD.
-/// Tous les champs de la fiche §6 sont présents et nullable jusqu'à saisie réelle.
-model Sequence {
-  id        String       @id @default(cuid())
-  code      String       @unique  // ex. "MUR-S07"
-  name      String                // ex. "Séquence 7 — Flanc nord"
-  type      SequenceType @default(SEQUENCE)
-  projectId String
-  secteurId String?
-  // Identification §6
-  tranche              String?
-  coordonnees          String?
-  longueurM            Float?
-  surfaceM2            Float?
-  facesAccessibles     String?
-  dateReleve           DateTime?
-  // Patrimoine §6
-  datation             String?
-  systemeConstructif   String?
-  materiaux            String?
-  valeurPatrimoniale   String?
-  transformations      String?
-  // État §6
-  etatGeneral          EtatGeneral?
-  pathologiesObservees String?
-  niveauRisque         NiveauRisque?
-  // Diagnostic §6
-  causeProbable        String?
-  niveauCertitude      String?
-  betLaboratoire       String?
-  // Projet §6
-  traitementRetenu     String?
-  materiauxTraitement  String?
-  zoneTemoin           String?
-  detailTechnique      String?
-  // Mémoire §6
-  dateProchaine        DateTime?
-  maintenanceRequise   String?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  // Relations
-  project       Project        @relation(fields: [projectId], references: [id], onDelete: Restrict)
-  secteur       Secteur?       @relation(fields: [secteurId], references: [id])
-  elements      Element[]
-  observations  Observation[]
-  investigations Investigation[]
-  decisions     Decision[]
-  interventions Intervention[]
-  gates         Gate[]
-  files         File[]
-
-  @@index([projectId])
-  @@index([secteurId])
-}
-
-/// Élément — composante d'une séquence ou d'un ouvrage.
-/// Principalement utilisé pour le Château (zone → ouvrage → élément).
-model Element {
-  id          String        @id @default(cuid())
-  code        String?
-  name        String
-  sequenceId  String?
-  description String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  sequence    Sequence?     @relation(fields: [sequenceId], references: [id])
-  observations Observation[]
-
-  @@index([sequenceId])
-}
-
-/// Observation — constat daté avec statut de preuve §7 CDC.
-model Observation {
-  id          String         @id @default(cuid())
-  code        String?                      // ex. "MUR-S07-OBS-001"
-  description String
-  statut      EvidenceStatus
-  date        DateTime
-  auteurId    String
-  sequenceId  String?
-  elementId   String?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  auteur      User           @relation(fields: [auteurId], references: [id], onDelete: Restrict)
-  sequence    Sequence?      @relation(fields: [sequenceId], references: [id])
-  element     Element?       @relation(fields: [elementId], references: [id])
-  preuves     Preuve[]
-
-  @@index([sequenceId])
-  @@index([auteurId])
-  @@index([elementId])
-}
-
-/// Investigation — enquête ou analyse demandée (BET, laboratoire).
-model Investigation {
-  id          String              @id @default(cuid())
-  titre       String
-  description String?
-  bet         String?
-  statut      InvestigationStatus @default(REQUISE)
-  sequenceId  String?
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
-  sequence    Sequence?           @relation(fields: [sequenceId], references: [id])
-  preuves     Preuve[]
-
-  @@index([sequenceId])
-}
-
-/// Décision patrimoniale — choix validé sur une séquence §6 CDC.
-model Decision {
-  id            String       @id @default(cuid())
-  type          DecisionType
-  description   String?
-  dateDecision  DateTime?
-  valideeParId  String?
-  sequenceId    String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  valideePar    User?        @relation("DecisionValidateur", fields: [valideeParId], references: [id])
-  sequence      Sequence?    @relation(fields: [sequenceId], references: [id])
-  preuves       Preuve[]
-
-  @@index([sequenceId])
-  @@index([valideeParId])
-}
-
-/// Intervention — travaux exécutés sur une séquence §6 CDC.
-model Intervention {
-  id               String     @id @default(cuid())
-  entreprise       String?
-  dateDebut        DateTime?
-  dateFin          DateTime?
-  description      String?
-  quantiteExecutee String?
-  observationMOE   String?
-  sequenceId       String?
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  sequence         Sequence?  @relation(fields: [sequenceId], references: [id])
-  preuves          Preuve[]
-
-  @@index([sequenceId])
-}
-
-/// Gate de validation §12 CDC — G0 à G5 par séquence ou par projet.
-model Gate {
-  id             String     @id @default(cuid())
-  numero         GateNumber
-  statut         GateStatus @default(EN_ATTENTE)
-  commentaire    String?
-  dateValidation DateTime?
-  responsableId  String?
-  sequenceId     String?
-  projectId      String?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  responsable    User?      @relation(fields: [responsableId], references: [id])
-  sequence       Sequence?  @relation(fields: [sequenceId], references: [id])
-  project        Project?   @relation(fields: [projectId], references: [id])
-  preuves        Preuve[]
-
-  @@index([sequenceId])
-  @@index([projectId])
-}
-
-/// Preuve — lien entre une entité patrimoniale et un fichier §7 CDC.
-model Preuve {
-  id              String         @id @default(cuid())
-  type            EvidenceStatus
-  description     String?
-  fileId          String
-  observationId   String?
-  investigationId String?
-  decisionId      String?
-  interventionId  String?
-  gateId          String?
-  createdAt       DateTime       @default(now())
-  file            File           @relation(fields: [fileId], references: [id], onDelete: Restrict)
-  observation     Observation?   @relation(fields: [observationId], references: [id])
-  investigation   Investigation? @relation(fields: [investigationId], references: [id])
-  decision        Decision?      @relation(fields: [decisionId], references: [id])
-  intervention    Intervention?  @relation(fields: [interventionId], references: [id])
-  gate            Gate?          @relation(fields: [gateId], references: [id])
-
-  @@index([fileId])
-  @@index([observationId])
-  @@index([investigationId])
+  @@index([sectionId, createdAt])
 }

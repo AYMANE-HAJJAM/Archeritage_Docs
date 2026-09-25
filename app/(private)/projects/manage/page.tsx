@@ -12,7 +12,6 @@ export default async function ProjectsManagePage() {
         id: p.id,
         name: p.name,
         code: p.code,
-        slug: p.slug,
         description: p.description,
         isActive: p.isActive,
         dossierCount: p.dossierCount,

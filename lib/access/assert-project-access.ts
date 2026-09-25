@@ -1,16 +1,22 @@
 /**
  * Application-level authorization.
- * ADMIN = full platform. USER = scoped ProjectMember / TerritoireMember flags.
+ * ADMIN = full platform. USER = scoped ProjectMember flags.
  */
 import "server-only";
 
-import { redirect } from "next/navigation";
 import { getUser, type SessionUser } from "@/lib/auth";
 import { HttpError } from "@/lib/http";
+
+async function redirectTo(pathname: string): Promise<never> {
+  const { redirect } = await import("next/navigation");
+  redirect(pathname);
+  throw new Error("redirect");
+}
 import { db } from "@/lib/db";
 import { canManagePlatform, type AccessUser } from "@/lib/access/roles";
 import {
   FULL_PROJECT_PERMISSIONS,
+  resolveCanCreateProject,
   resolveProjectPermissions,
   type ProjectPermissionFlags,
 } from "@/lib/access/permissions";
@@ -21,19 +27,19 @@ export {
   EMPTY_PROJECT_PERMISSIONS,
   FULL_PROJECT_PERMISSIONS,
   normalizeProjectPermissions,
-  resolveCanCreateDossier,
+  resolveCanCreateProject,
   resolveProjectPermissions,
 } from "@/lib/access/permissions";
 
 export async function requireActiveUser(): Promise<SessionUser> {
   const user = await getUser();
-  if (!user) redirect("/login");
+  if (!user) return redirectTo("/login");
   return user;
 }
 
 export async function requireAdmin(): Promise<SessionUser> {
   const user = await requireActiveUser();
-  if (!canManagePlatform(user)) redirect("/projects");
+  if (!canManagePlatform(user)) return redirectTo("/projects");
   return user;
 }
 
@@ -47,40 +53,35 @@ export async function getProjectMembership(
   userId: string,
   projectId: string,
 ): Promise<ProjectPermissionFlags | null> {
-  const row = await db.projectMember.findUnique({
+  return db.projectMember.findUnique({
     where: { userId_projectId: { userId, projectId } },
     select: {
       canView: true,
       canUpload: true,
       canDownload: true,
       canDeleteDocuments: true,
-      canEditDossier: true,
       canManageStructure: true,
-      canReclassifyDocuments: true,
     },
   });
-  return row;
 }
 
 export async function getProjectPermissionsForUser(
   user: AccessUser,
   projectId: string,
 ): Promise<ProjectPermissionFlags> {
-  if (canManagePlatform(user)) {
-    return FULL_PROJECT_PERMISSIONS;
-  }
+  if (canManagePlatform(user)) return FULL_PROJECT_PERMISSIONS;
   const membership = await getProjectMembership(user.id, projectId);
   return resolveProjectPermissions(user, membership);
 }
 
-export async function canCreateDossierOnTerritoire(
-  user: AccessUser,
-  /* territoireId retained for call-site compatibility */
-  territoireId: string,
-): Promise<boolean> {
-  void territoireId;
-  // ADMIN-only. TerritoireMember.canCreateDossier is not consulted.
-  return canManagePlatform(user);
+/** Resolve projectId from a section (Section → SectionGroup → Project). */
+export async function getProjectIdForSection(sectionId: string): Promise<string> {
+  const section = await db.section.findUnique({
+    where: { id: sectionId },
+    select: { group: { select: { projectId: true } } },
+  });
+  if (!section) throw new HttpError(404, "Section introuvable.");
+  return section.group.projectId;
 }
 
 export async function assertProjectPermission(
@@ -104,7 +105,6 @@ export async function assertProjectPermission(
   return perms;
 }
 
-/** View / browse / preview access (or ADMIN). */
 export async function assertProjectAccess(
   user: AccessUser,
   projectId: string,
@@ -140,19 +140,8 @@ export async function assertCanManageStructure(
   await assertProjectPermission(user, projectId, "canManageStructure");
 }
 
-export async function assertCanReclassify(
-  user: AccessUser,
-  projectId: string,
-): Promise<void> {
-  await assertProjectPermission(user, projectId, "canReclassifyDocuments");
-}
-
-export async function assertCanCreateDossier(
-  user: AccessUser,
-  territoireId: string,
-): Promise<void> {
-  const ok = await canCreateDossierOnTerritoire(user, territoireId);
-  if (!ok) {
+export async function assertCanCreateProject(user: AccessUser): Promise<void> {
+  if (!resolveCanCreateProject(user)) {
     throw new HttpError(403, "Permission insuffisante pour créer un dossier.");
   }
 }
@@ -160,28 +149,30 @@ export async function assertCanCreateDossier(
 /** Preview / consultation — requires canView. */
 export async function assertFileReadable(
   user: AccessUser,
-  file: { projectId: string; confidentialite: string | null },
+  file: { sectionId: string; confidentialite: string | null },
 ): Promise<void> {
-  await assertProjectAccess(user, file.projectId);
+  const projectId = await getProjectIdForSection(file.sectionId);
+  await assertProjectAccess(user, projectId);
   if (canManagePlatform(user)) return;
   if (file.confidentialite === "CONFIDENTIEL") {
     throw new HttpError(403, "Document confidentiel — accès refusé.");
   }
 }
 
-/** Original file download — requires canDownload (and view). */
+/** Original file download — requires canDownload. */
 export async function assertFileDownloadable(
   user: AccessUser,
-  file: { projectId: string; confidentialite: string | null },
+  file: { sectionId: string; confidentialite: string | null },
 ): Promise<void> {
-  await assertCanDownload(user, file.projectId);
+  const projectId = await getProjectIdForSection(file.sectionId);
+  await assertCanDownload(user, projectId);
   if (canManagePlatform(user)) return;
   if (file.confidentialite === "CONFIDENTIEL") {
     throw new HttpError(403, "Document confidentiel — téléchargement refusé.");
   }
 }
 
-/** List project IDs the user may view (ADMIN → all active, or all if includeInactive). */
+/** List project IDs the user may view (ADMIN → ALL). */
 export async function listViewableProjectIds(
   user: AccessUser,
   options?: { includeInactive?: boolean },

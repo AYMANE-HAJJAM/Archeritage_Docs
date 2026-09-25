@@ -1,0 +1,150 @@
+{
+  "dryRun": false,
+  "steps": [
+    {
+      "action": "reparent_vues",
+      "id": "cmuedtw1w000s7suwvqd6jr8i",
+      "name": "Vues intérieures",
+      "detail": {
+        "fromParent": "Photos Tech",
+        "toParent": null,
+        "section": "cmufgkg510005wkuwf3k0m45p"
+      }
+    },
+    {
+      "action": "reparent_vues",
+      "id": "cmuedu1wg000t7suw4p4bjmet",
+      "name": "Vues extérieures",
+      "detail": {
+        "fromParent": "Photos Tech",
+        "toParent": null,
+        "section": "cmufgkg510005wkuwf3k0m45p"
+      }
+    },
+    {
+      "action": "reparent_vues",
+      "id": "cmuee046d001f7suwqv73rtq9",
+      "name": "Vues extérieures",
+      "detail": {
+        "fromParent": "Vidéos Tech",
+        "toParent": null,
+        "section": "cmufgkgc90006wkuw69we0dnw"
+      }
+    },
+    {
+      "action": "reparent_vues",
+      "id": "cmuee0b0r001g7suw16xhleuq",
+      "name": "Vues intérieures",
+      "detail": {
+        "fromParent": "Vidéos Tech",
+        "toParent": null,
+        "section": "cmufgkgc90006wkuw69we0dnw"
+      }
+    },
+    {
+      "action": "reparent_vues",
+      "id": "cmueej926002y7suwx00fih4n",
+      "name": "Vues intérieures",
+      "detail": {
+        "fromParent": "Photos Tech",
+        "toParent": null,
+        "section": "cmufgkg510005wkuwf3k0m45p"
+      }
+    },
+    {
+      "action": "reparent_vues",
+      "id": "cmueeje7o002z7suw8ftn8tg5",
+      "name": "Vues extérieures",
+      "detail": {
+        "fromParent": "Photos Tech",
+        "toParent": null,
+        "section": "cmufgkg510005wkuwf3k0m45p"
+      }
+    },
+    {
+      "action": "reparent_vues",
+      "id": "cmueeslh400597suwgymr222h",
+      "name": "Vues extérieures",
+      "detail": {
+        "fromParent": "Vidéos Tech",
+        "toParent": null,
+        "section": "cmufgkgc90006wkuw69we0dnw"
+      }
+    },
+    {
+      "action": "reparent_vues",
+      "id": "cmueesr4p005a7suwml5dlox5",
+      "name": "Vues intérieures",
+      "detail": {
+        "fromParent": "Vidéos Tech",
+        "toParent": null,
+        "section": "cmufgkgc90006wkuw69we0dnw"
+      }
+    },
+    {
+      "action": "reparent_potiers",
+      "id": "cmuef0x4400697suwc8nqj5pf",
+      "name": "Potiers",
+      "detail": {
+        "fromParent": "la Muraille — Partie 2"
+      }
+    },
+    {
+      "action": "promote_potiers_videos",
+      "id": "cmuef1ua0006b7suwnhoxatn7",
+      "name": "Vidéos",
+      "detail": {
+        "renameTo": "Potiers",
+        "parentId": null
+      }
+    },
+    {
+      "action": "skip_nonempty_wrapper",
+      "id": "cmuedqbwp000p7suw2ccn2a9f",
+      "name": "Façade maritime Muraille",
+      "detail": {
+        "files": 0,
+        "children": 2
+      }
+    },
+    {
+      "action": "delete_empty_wrapper",
+      "id": "cmuedtgbf000q7suwrdyz9pzv",
+      "name": "Photos Tech"
+    },
+    {
+      "action": "delete_empty_wrapper",
+      "id": "cmuedtn1a000r7suwut6z4kxa",
+      "name": "Vidéos Tech"
+    },
+    {
+      "action": "skip_nonempty_wrapper",
+      "id": "cmueehl2d002v7suw26c8etw2",
+      "name": "la Muraille — Partie 2",
+      "detail": {
+        "files": 0,
+        "children": 2
+      }
+    },
+    {
+      "action": "delete_empty_wrapper",
+      "id": "cmueeitco002w7suwcljccxxi",
+      "name": "Photos Tech"
+    },
+    {
+      "action": "delete_empty_wrapper",
+      "id": "cmueeiykd002x7suw5vmqgkne",
+      "name": "Vidéos Tech"
+    },
+    {
+      "action": "delete_empty_wrapper",
+      "id": "cmuedqbwp000p7suw2ccn2a9f",
+      "name": "Façade maritime Muraille"
+    },
+    {
+      "action": "delete_empty_wrapper",
+      "id": "cmueehl2d002v7suw26c8etw2",
+      "name": "la Muraille — Partie 2"
+    }
+  ]
+}

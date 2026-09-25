@@ -5,27 +5,24 @@ import {
   updateUserProjectAccessAction,
   type ManageUserActionState,
 } from "@/app/(private)/manage/user-actions";
+import {
+  emptyFlags,
+  type DossierFlags,
+} from "@/components/admin/permission-matrix";
+
+export type ProjectAccessFlags = DossierFlags;
 
 const initial: ManageUserActionState = {};
 
 export type AccessDossier = {
   id: string;
   name: string;
-  code: string | null;
 };
 
 export type AccessPlatform = {
   id: string;
   name: string;
   dossiers: AccessDossier[];
-};
-
-export type ProjectAccessFlags = {
-  canView: boolean;
-  canUpload: boolean;
-  canEditDossier: boolean;
-  canManageStructure: boolean;
-  canReclassifyDocuments: boolean;
 };
 
 export function UserAccessPanel({
@@ -37,7 +34,7 @@ export function UserAccessPanel({
   userId: string;
   userRole: "ADMIN" | "USER";
   platforms: AccessPlatform[];
-  projectAccess: Record<string, ProjectAccessFlags>;
+  projectAccess: Record<string, DossierFlags>;
 }) {
   if (userRole === "ADMIN") {
     return (
@@ -66,22 +63,13 @@ export function UserAccessPanel({
       {platforms.map((platform) => (
         <div key={platform.id} className="space-y-3">
           <p className="text-sm font-medium">{platform.name}</p>
-
           <div className="space-y-2">
             {platform.dossiers.map((dossier) => (
               <ProjectAccessForm
                 key={dossier.id}
                 userId={userId}
                 dossier={dossier}
-                flags={
-                  projectAccess[dossier.id] ?? {
-                    canView: false,
-                    canUpload: false,
-                    canEditDossier: false,
-                    canManageStructure: false,
-                    canReclassifyDocuments: false,
-                  }
-                }
+                flags={projectAccess[dossier.id] ?? emptyFlags()}
               />
             ))}
           </div>
@@ -98,7 +86,7 @@ function ProjectAccessForm({
 }: {
   userId: string;
   dossier: AccessDossier;
-  flags: ProjectAccessFlags;
+  flags: DossierFlags;
 }) {
   const [state, action, pending] = useActionState(
     updateUserProjectAccessAction,
@@ -113,12 +101,7 @@ function ProjectAccessForm({
       <input type="hidden" name="userId" value={userId} />
       <input type="hidden" name="projectId" value={dossier.id} />
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs font-medium">
-          {dossier.name}
-          {dossier.code ? (
-            <span className="ml-1.5 text-muted-foreground">({dossier.code})</span>
-          ) : null}
-        </p>
+        <p className="text-xs font-medium">{dossier.name}</p>
         <button
           type="submit"
           disabled={pending}
@@ -135,14 +118,19 @@ function ProjectAccessForm({
           defaultChecked={flags.canUpload}
         />
         <PermCheck
+          name="canDownload"
+          label="Télécharger"
+          defaultChecked={flags.canDownload}
+        />
+        <PermCheck
+          name="canDeleteDocuments"
+          label="Supprimer documents"
+          defaultChecked={flags.canDeleteDocuments}
+        />
+        <PermCheck
           name="canManageStructure"
           label="Gérer structure"
           defaultChecked={flags.canManageStructure}
-        />
-        <PermCheck
-          name="canReclassifyDocuments"
-          label="Reclasser documents"
-          defaultChecked={flags.canReclassifyDocuments}
         />
       </div>
       {state.error ? (

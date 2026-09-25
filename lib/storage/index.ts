@@ -4,6 +4,7 @@ import { Readable } from "node:stream";
 import { v2 as cloudinary, type UploadApiResponse } from "cloudinary";
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import type { File as StoredFile } from "@/generated/prisma/client";
+import { isVideoFile } from "@/lib/documents/file-kind";
 
 function required(key: string) { const value = process.env[key]; if (!value) throw new Error(`Missing ${key}`); return value; }
 function cloud() {
@@ -27,8 +28,9 @@ export async function uploadObject(
   bytes: Buffer,
   provider: StoredFile["storageProvider"],
   mimeType: string,
+  storageKey?: string,
 ) {
-  return uploadObjectBody(bytes, bytes.length, provider, mimeType);
+  return uploadObjectBody(bytes, bytes.length, provider, mimeType, storageKey);
 }
 
 /**
@@ -40,21 +42,28 @@ export async function uploadObjectBody(
   contentLength: number,
   provider: StoredFile["storageProvider"],
   mimeType: string,
+  storageKey?: string,
 ) {
-  const key = `archeritage/${randomUUID()}`;
+  const key = storageKey || `archeritage/${randomUUID()}`;
+  if (key.includes("..") || key.startsWith("/") || key.includes("\\")) {
+    throw new Error("Unsafe storage key rejected.");
+  }
   if (provider === "CLOUDINARY") {
     if (!Buffer.isBuffer(body)) {
-      throw new Error("Cloudinary upload requires a buffered image body.");
+      throw new Error("Cloudinary upload requires a buffered body.");
     }
+    const isVideo = mimeType.startsWith("video/");
     const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       cloud()
         .uploader.upload_stream(
           {
             public_id: key,
-            resource_type: "image",
+            resource_type: isVideo ? "video" : "image",
             type: "authenticated",
-            allowed_formats: ["jpg", "png", "webp"],
             overwrite: false,
+            ...(isVideo
+              ? {}
+              : { allowed_formats: ["jpg", "png", "webp"] }),
           },
           (error, result) =>
             error
@@ -101,27 +110,45 @@ export async function uploadObjectBody(
 }
 
 /** Stream a Web File/Blob to B2 without buffering the whole object in Node. */
-export async function uploadWebFileToB2(file: Blob, mimeType: string) {
+export async function uploadWebFileToB2(
+  file: Blob,
+  mimeType: string,
+  storageKey?: string,
+) {
   const nodeStream = Readable.fromWeb(
     file.stream() as import("node:stream/web").ReadableStream,
   );
-  return uploadObjectBody(nodeStream, file.size, "BACKBLAZE_B2", mimeType);
+  return uploadObjectBody(
+    nodeStream,
+    file.size,
+    "BACKBLAZE_B2",
+    mimeType,
+    storageKey,
+  );
 }
-type ObjectRef = Pick<StoredFile, "storageProvider" | "storageKey" | "storageVersion">;
+type ObjectRef = Pick<StoredFile, "storageProvider" | "storageKey" | "storageVersion"> & {
+  mimeType?: string | null;
+};
 export async function deleteObject(file: ObjectRef) {
   if (file.storageProvider === "CLOUDINARY") {
-    const result = await cloud().uploader.destroy(file.storageKey, { resource_type: "image", type: "authenticated", invalidate: true });
+    const resourceType = file.mimeType?.toLowerCase().startsWith("video/")
+      ? "video"
+      : "image";
+    const result = await cloud().uploader.destroy(file.storageKey, { resource_type: resourceType, type: "authenticated", invalidate: true });
     if (result.result !== "ok" && result.result !== "not found") throw new Error("Storage deletion failed");
   } else {
     await b2().send(new DeleteObjectCommand({ Bucket: required("B2_BUCKET_NAME"), Key: file.storageKey, VersionId: file.storageVersion ?? undefined }));
   }
 }
 export async function readObject(file: StoredFile, thumbnail: boolean, range: string | null, download: boolean) {
+  void thumbnail;
   if (file.storageProvider === "CLOUDINARY") {
     const client = cloud();
-    const url = download
-      ? client.utils.private_download_url(file.storageKey, file.extension === "jpeg" ? "jpg" : file.extension, { resource_type: "image", type: "authenticated", expires_at: Math.floor(Date.now() / 1000) + 60 })
-      : client.url(file.storageKey, { type: "authenticated", resource_type: "image", sign_url: true, secure: true, version: Number(file.storageVersion), transformation: [{ width: thumbnail ? 112 : 1800, height: thumbnail ? 112 : 1800, crop: thumbnail ? "fill" : "limit", quality: "auto", fetch_format: "auto" }] });
+    const video = isVideoFile(file);
+    const resourceType = video ? "video" : "image";
+    const url = download || !video
+      ? client.utils.private_download_url(file.storageKey, file.extension === "jpeg" ? "jpg" : file.extension, { resource_type: resourceType, type: "authenticated", expires_at: Math.floor(Date.now() / 1000) + 120 })
+      : client.url(file.storageKey, { type: "authenticated", resource_type: "video", sign_url: true, secure: true, version: Number(file.storageVersion) });
     // The signed provider URL stays on the server; browsers only receive bytes.
     const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(30000) });
     if (!response.ok || !response.body) throw new Error("Storage read failed");

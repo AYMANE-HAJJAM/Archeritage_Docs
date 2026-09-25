@@ -1,8 +1,17 @@
 import "server-only";
 import { createHmac, randomBytes } from "node:crypto";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
+
+async function cookieStore() {
+  const { cookies } = await import("next/headers");
+  return cookies();
+}
+
+async function redirectTo(pathname: string): Promise<never> {
+  const { redirect } = await import("next/navigation");
+  redirect(pathname);
+  throw new Error("redirect");
+}
 
 const cookieName = "archeritage_session";
 
@@ -35,7 +44,7 @@ const userSelect = {
 } as const;
 
 export async function getUser(): Promise<SessionUser | null> {
-  const token = (await cookies()).get(cookieName)?.value;
+  const token = (await cookieStore()).get(cookieName)?.value;
   if (!token || !/^[a-f0-9]{64}$/.test(token)) return null;
   const session = await db.session.findUnique({
     where: { id: sessionHash(token) },
@@ -52,7 +61,7 @@ export async function getUser(): Promise<SessionUser | null> {
 
 export async function requireUser(): Promise<SessionUser> {
   const user = await getUser();
-  if (!user) redirect("/login");
+  if (!user) return redirectTo("/login");
   return user;
 }
 
@@ -60,7 +69,7 @@ export async function createSession(userId: string) {
   const token = randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 8 * 60 * 60 * 1000);
   await db.session.create({ data: { id: sessionHash(token), userId, expiresAt } });
-  (await cookies()).set(cookieName, token, {
+  (await cookieStore()).set(cookieName, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -70,7 +79,7 @@ export async function createSession(userId: string) {
 }
 
 export async function clearSession() {
-  const jar = await cookies();
+  const jar = await cookieStore();
   const token = jar.get(cookieName)?.value;
   if (token) await db.session.deleteMany({ where: { id: sessionHash(token) } });
   jar.delete(cookieName);

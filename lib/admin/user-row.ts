@@ -17,14 +17,12 @@ export type UsersTableRow = {
   status: "INVITED" | "ACTIVE" | "DISABLED";
   accessLabels: string[];
   projectAccess: Record<string, DossierFlags>;
-  territoireAccess: Record<string, { canCreateDossier: boolean }>;
 };
 
 export function shortDossierLabel(name: string): string {
   const trimmed = name.trim();
   const beforeDash = trimmed.split(/\s+[—–-]\s+/)[0]?.trim();
   if (beforeDash && beforeDash.length < trimmed.length) return beforeDash;
-  if (/^murailles/i.test(trimmed)) return "Murailles";
   return trimmed;
 }
 
