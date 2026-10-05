@@ -1,0 +1,50 @@
+﻿NEW SAFI BATCH LIVE IMPORT
+Uploader: Ahmed Naciri Taoufik <naciri@archeritage.ma>
+
+discovered: 154
+ready: 153
+uploadedFirstPass: 153
+alreadyImported: 0
+skippedDuplicates: 1
+sourceChanged: 0
+failed: 0
+chateau: 8
+muraillesGlobal: 145
+historicalPhotos: 14
+currentPhotos: 104
+videos: 1
+cloudinaryUploads: 119
+b2Uploads: 34
+bytesUploaded: 141249879
+finalDbFileCount: 906
+
+Associated-monument documents:
+  Musée national de la céramique: 5
+  Cathédrale portugaise: 2
+  Hammam de Chichaoua: 1
+  Kechla & Dar Sultan: 4
+  Kasbah Ben Hamidouch: 1
+  Dar Baroud: 1
+  Minaret almohade: 1
+  Église espagnole: 1
+
+Retry: uploaded 0; already imported 153; failed 0.
+Retry database, storage and structure counts unchanged.
+Existing 753 File rows unchanged: TRUE (verified again after UI checks).
+Existing storage objects retained: TRUE.
+Projects and Parts unchanged: TRUE.
+Source_changed: 0; unresolved: 0; unsupported: 0.
+Missing upload audit records: 0; mapping errors: 0.
+Typecheck: PASS; lint: PASS; tests: 97 passed, 2 skipped; build: PASS.
+Authenticated rendered-page checks: PASS.
+Sample PDF/DOCX/JPEG/MP4 downloads: HTTP 200, SHA-256 matches source.
+Sample PDF/DOCX/JPEG/MP4 previews: HTTP 200.
+Folder totals verified against the application UI model.
+Visual browser interaction was unavailable; verification used authenticated HTTP routes.
+Inline video preview signing fixed in local code and verified; not deployed.
+Normal DOCX preview testing may add a derived B2 cache; original objects unchanged.
+
+Manifest: reports/import/new-safi-batch-manifest.json
+Live report: reports/import/new-safi-batch-live-report.json
+Retry journal: reports/import/new-safi-batch-live-journal.json
+Baseline snapshot: reports/import/new-safi-batch-live-baseline.json

@@ -1,0 +1,27 @@
+NEW SAFI BATCH - DRY RUN ONLY
+Source: source_import/new_safi_batch
+Exact source counts: 154 files; images/actuelles 105 (104 images + 1 video); images/historiques 15; Plans 26 PDFs; root 8 DOCX.
+Château de Mer mappings: 8
+Murailles GLOBAL mappings: 146
+Historical images: 15
+Current images: 104
+Videos: 1
+Associated-monument documents: 16
+  Musée national de la céramique: 5
+  Cathédrale portugaise: 2
+  Hammam de Chichaoua: 1
+  Kechla & Dar Sultan: 4
+  Kasbah Ben Hamidouch: 1
+  Dar Baroud: 1
+  Minaret almohade: 1
+  Église espagnole: 1
+Duplicates: 1
+READY: 153; UNRESOLVED: 0; UNSUPPORTED: 0
+Unresolved list: None
+Duplicate verification: all proposed DB destinations currently empty; within-batch SHA-256 comparison by full logical destination.
+Uploader resolved from DB: naciri@archeritage.ma (ADMIN, ACTIVE)
+Generic filename inspection des Monuments Historiques de SAFI et ESSAOUIRA(1).pdf: Château de Mer / RELEVÉS & PLANS / Plan général.
+Image_20220425_0021.pdf: Murailles GLOBAL / DOCUMENTATION PATRIMONIALE / Monuments & ouvrages associés / Kechla & Dar Sultan.
+Manifest: reports/import/new-safi-batch-manifest.json
+Summary: reports/import/new-safi-batch-summary.txt
+NO BUSINESS DATA OR STORAGE WAS MODIFIED

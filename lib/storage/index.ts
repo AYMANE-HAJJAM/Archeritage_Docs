@@ -146,9 +146,10 @@ export async function readObject(file: StoredFile, thumbnail: boolean, range: st
     const client = cloud();
     const video = isVideoFile(file);
     const resourceType = video ? "video" : "image";
-    const url = download || !video
-      ? client.utils.private_download_url(file.storageKey, file.extension === "jpeg" ? "jpg" : file.extension, { resource_type: resourceType, type: "authenticated", expires_at: Math.floor(Date.now() / 1000) + 120 })
-      : client.url(file.storageKey, { type: "authenticated", resource_type: "video", sign_url: true, secure: true, version: Number(file.storageVersion) });
+    // Use the authenticated original for both inline reads and downloads.
+    // The application route supplies its own Content-Disposition to the browser.
+    const url = client.utils.private_download_url(file.storageKey, file.extension === "jpeg" ? "jpg" : file.extension, { resource_type: resourceType, type: "authenticated", expires_at: Math.floor(Date.now() / 1000) + 120 });
+    void download;
     // The signed provider URL stays on the server; browsers only receive bytes.
     const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(30000) });
     if (!response.ok || !response.body) throw new Error("Storage read failed");

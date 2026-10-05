@@ -1,0 +1,1379 @@
+{
+  "[\"cecdd4b872487bd4b314b6cbd47b6f79dc98bd2a84e03d3508cd308889058769\",\"Murailles portugaises de Safi\",null,\"RELEVÉS & PLANS\",\"Bordjs & tours\",null]": {
+    "fileId": "cmuv6xwgp0002f4uw5cn3auqf",
+    "sha256": "cecdd4b872487bd4b314b6cbd47b6f79dc98bd2a84e03d3508cd308889058769",
+    "sectionId": "cmuv6xswc0000f4uwcjiurpyt",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6xswc0000f4uwcjiurpyt/911555be-50e8-448e-b174-f4da15707d28-bordj-nador.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 2716034
+  },
+  "[\"491fd1acf21ecbc4feecca341a4b756b3e9a362efe6251ebb4e849768f4ad654\",\"Murailles portugaises de Safi\",null,\"RELEVÉS & PLANS\",\"Plan général de l’enceinte\",null]": {
+    "fileId": "cmuv6xzjm0006f4uwmlzmsbx0",
+    "sha256": "491fd1acf21ecbc4feecca341a4b756b3e9a362efe6251ebb4e849768f4ad654",
+    "sectionId": "cmuv6xy2e0004f4uwqkn7code",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6xy2e0004f4uwqkn7code/be980e2f-287a-43f9-a86f-4bc7df02ffad-plan-de-la-mdina-avec-enceinte-et-tours.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 360534
+  },
+  "[\"d1404c22fe77fc809699a6cb940903141744e0e970d6d3b76638cef575b18c26\",\"Château de Mer\",null,\"RELEVÉS & PLANS\",\"Plan général\",null]": {
+    "fileId": "cmuv6y2so000cf4uwvkamohkc",
+    "sha256": "d1404c22fe77fc809699a6cb940903141744e0e970d6d3b76638cef575b18c26",
+    "sectionId": "cmuv6y0yn000af4uwmwschw5i",
+    "folderId": null,
+    "storageKey": "saf/chateau-de-mer/cmuv6y0yn000af4uwmwschw5i/a6313e44-0cfe-49a4-abbf-841af89ea4f3-chateau-de-mer-portogaise.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 4368551
+  },
+  "[\"76d90f84c58d9c4a4f021abf82e8f1952d1eded6236650905659d8d5958eb79f\",\"Château de Mer\",null,\"RELEVÉS & PLANS\",\"Façades\",null]": {
+    "fileId": "cmuv6y5hz000gf4uwbgwkgpnu",
+    "sha256": "76d90f84c58d9c4a4f021abf82e8f1952d1eded6236650905659d8d5958eb79f",
+    "sectionId": "cmuv6y3un000ef4uws1y14u7r",
+    "folderId": null,
+    "storageKey": "saf/chateau-de-mer/cmuv6y3un000ef4uws1y14u7r/ca0b6f89-d501-4c24-982d-0fdb52fdd586-croquis-facade-ouest.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 1244402
+  },
+  "[\"9c0023ace9e40a434c9e0d28f5012315d5c02d19752bf30a6950a9dffc8c9372\",\"Château de Mer\",null,\"RELEVÉS & PLANS\",\"Façades\",null]": {
+    "fileId": "cmuv6y7rx000if4uw4i6ucr84",
+    "sha256": "9c0023ace9e40a434c9e0d28f5012315d5c02d19752bf30a6950a9dffc8c9372",
+    "sectionId": "cmuv6y3un000ef4uws1y14u7r",
+    "folderId": null,
+    "storageKey": "saf/chateau-de-mer/cmuv6y3un000ef4uws1y14u7r/cefb720a-06d3-4d5a-bb3d-46b00582e9f6-facade-quest-front-de-mer-inspection-des-monuments-historiques-de-safi.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 4250485
+  },
+  "[\"1a49c96bc8aff7de0d5cb276935497f016b06f08d2169a877021e34888a144e1\",\"Château de Mer\",null,\"RELEVÉS & PLANS\",\"Façades\",null]": {
+    "fileId": "cmuv6yasx000kf4uwd35pdc94",
+    "sha256": "1a49c96bc8aff7de0d5cb276935497f016b06f08d2169a877021e34888a144e1",
+    "sectionId": "cmuv6y3un000ef4uws1y14u7r",
+    "folderId": null,
+    "storageKey": "saf/chateau-de-mer/cmuv6y3un000ef4uws1y14u7r/2673c398-e3fe-4280-b234-c3d8a4bb9445-facade-nord-et-est.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 5466685
+  },
+  "[\"64e5a0002ff0bd5615852366bac2a0a311374bb2e7e7bbcff392fcc947270d86\",\"Château de Mer\",null,\"RELEVÉS & PLANS\",\"Aménagements extérieurs\",null]": {
+    "fileId": "cmuv6ye38000of4uwkiitr07t",
+    "sha256": "64e5a0002ff0bd5615852366bac2a0a311374bb2e7e7bbcff392fcc947270d86",
+    "sectionId": "cmuv6ybv3000mf4uwtxwqkg6r",
+    "folderId": null,
+    "storageKey": "saf/chateau-de-mer/cmuv6ybv3000mf4uwtxwqkg6r/711135b3-731f-4705-bd03-86eb61e474d6-projet-de-jardin-chateau-de-mer-de-safi.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 11034760
+  },
+  "[\"4ffcaf5de2c31d73c4d171b5b9d71810c6b7d20a94ea48777ca8c672e0711930\",\"Château de Mer\",null,\"RELEVÉS & PLANS\",\"Façades\",null]": {
+    "fileId": "cmuv6ygxa000qf4uwccjcaclo",
+    "sha256": "4ffcaf5de2c31d73c4d171b5b9d71810c6b7d20a94ea48777ca8c672e0711930",
+    "sectionId": "cmuv6y3un000ef4uws1y14u7r",
+    "folderId": null,
+    "storageKey": "saf/chateau-de-mer/cmuv6y3un000ef4uws1y14u7r/e37a15eb-d16a-42fa-8bfb-7b8439d0eb53-chateau-de-la-mer-facade-sud.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 3663482
+  },
+  "[\"959efffcea7a96b71b028634c86d9c7b1b9f49a6183606acd7d024a7d0e141aa\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Musée national de la céramique\"]": {
+    "fileId": "cmuv6yl4v000yf4uwy5sxff9h",
+    "sha256": "959efffcea7a96b71b028634c86d9c7b1b9f49a6183606acd7d024a7d0e141aa",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6yizq000wf4uwqq6qqh3u",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/musee-national-de-la-ceramique/471da32b-59cb-4e0d-acd4-4e1c704facd5-facade-de-la-buvette-de-la-salle-d-exposition-et-du-r-d-c-ceramique-contemporain.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 1861418
+  },
+  "[\"883dbeede2f9947b1b5761223f82085440f886f92578617122355e98ff1319dc\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Musée national de la céramique\"]": {
+    "fileId": "cmuv6yocn0010f4uw3bo3awmm",
+    "sha256": "883dbeede2f9947b1b5761223f82085440f886f92578617122355e98ff1319dc",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6yizq000wf4uwqq6qqh3u",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/musee-national-de-la-ceramique/0cba2539-6774-4bea-8353-dac68b741d8d-musee-national-de-ceramique-safi.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 6148012
+  },
+  "[\"587f898a276c5aff4648f81524a95798f5b50cef60be769c8b4a2a3087f425ba\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Musée national de la céramique\"]": {
+    "fileId": "cmuv6ysz30012f4uwc4fs2e9a",
+    "sha256": "587f898a276c5aff4648f81524a95798f5b50cef60be769c8b4a2a3087f425ba",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6yizq000wf4uwqq6qqh3u",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/musee-national-de-la-ceramique/22f2b16e-4d3c-4d74-a26e-b56baab63270-projet-d-extension-du-musee-national-de-ceramioue-a-safi.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 13285800
+  },
+  "[\"43d96c82fa5211131d28a2b053004e45a19fa06aa791aec8a569a5bd9a096299\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Musée national de la céramique\"]": {
+    "fileId": "cmuv6yvm60014f4uwmu7ej7m4",
+    "sha256": "43d96c82fa5211131d28a2b053004e45a19fa06aa791aec8a569a5bd9a096299",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6yizq000wf4uwqq6qqh3u",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/musee-national-de-la-ceramique/fc601044-6582-41e0-873c-241e371e2cba-projet-d-extension-du-musee-national-de-ceramique-safi-section-arche-ologique-co.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 3972289
+  },
+  "[\"fed6fa3ef33e60ed39118b6cfc11629e12e75e6a2411772ed97250ea36b16104\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Musée national de la céramique\"]": {
+    "fileId": "cmuv6yype0016f4uwqsc8n8za",
+    "sha256": "fed6fa3ef33e60ed39118b6cfc11629e12e75e6a2411772ed97250ea36b16104",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6yizq000wf4uwqq6qqh3u",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/musee-national-de-la-ceramique/c67191ba-b393-45ba-80c3-a94d78fc6182-projet-d-extension-du-musee-national-de-ceramique-ea-saf-section-de-la-ceramique.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 4005142
+  },
+  "[\"dd1ed662fded6ad6a6452d789311afae9bf5d6a221f86410b9955dcdc2cccdc0\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Cathédrale portugaise\"]": {
+    "fileId": "cmuv6z28p001af4uwtjye5x5a",
+    "sha256": "dd1ed662fded6ad6a6452d789311afae9bf5d6a221f86410b9955dcdc2cccdc0",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6yzu30018f4uwuyd3j3qe",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/cathedrale-portugaise/f3afbdde-4956-4d7e-9364-8163cf466bfb-eglise-portugaise-gotique-releve-des-vestiges-restants.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 3315769
+  },
+  "[\"afadb509f248e3ba416a108a8e887ebd5c6f66712371817bd63d6b0c53eced37\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Hammam de Chichaoua\"]": {
+    "fileId": "cmuv6z5nc001ef4uw99tss8np",
+    "sha256": "afadb509f248e3ba416a108a8e887ebd5c6f66712371817bd63d6b0c53eced37",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6z3cw001cf4uwmat5xaa0",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/hammam-de-chichaoua/f64b8a4b-3e83-4ceb-83f1-13c04d04be68-hammam-de-chichaoua.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 3921887
+  },
+  "[\"dd7881e82d92b81dfae86ced21e420efeaa666b8c1c0f15f1f1da4a71b0006ff\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Kechla & Dar Sultan\"]": {
+    "fileId": "cmuv6z8aq001if4uwr20vkgd2",
+    "sha256": "dd7881e82d92b81dfae86ced21e420efeaa666b8c1c0f15f1f1da4a71b0006ff",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6z6rs001gf4uwpzb46hdz",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/kechla-dar-sultan/8b7dc8c7-0a09-4fdb-9b24-fe383bde5e40-image-20220425-0021.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 934841
+  },
+  "[\"dde0dc18afb61006cbfc566bea7865a57cfd1aae69bd22d48d287345d912fd98\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Kasbah Ben Hamidouch\"]": {
+    "fileId": "cmuv6zb7y001mf4uwbs53x0nb",
+    "sha256": "dde0dc18afb61006cbfc566bea7865a57cfd1aae69bd22d48d287345d912fd98",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6z9ey001kf4uwefnm3sgy",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/kasbah-ben-hamidouch/8444222d-26cb-449c-a810-9e0f089b19d8-kas-a-ben-hamidouch.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 1807010
+  },
+  "[\"03420026306fadd2ad01a73ae027d49998e8735e774134a743ad1645a0a582f1\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Kechla & Dar Sultan\"]": {
+    "fileId": "cmuv6zeqg001of4uwq0yitbog",
+    "sha256": "03420026306fadd2ad01a73ae027d49998e8735e774134a743ad1645a0a582f1",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6z6rs001gf4uwpzb46hdz",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/kechla-dar-sultan/f8ece9d1-5776-4edd-9a08-f7854d40b7bd-des-monuments-historiques-kechla-de-safi-plan-au-niveau-de-la-cour-d-honneur.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 3284690
+  },
+  "[\"cbe1c26c10c0ecc831e53ae1f390ccc972bb0d87110a2d83c60e97aceef633a5\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Kechla & Dar Sultan\"]": {
+    "fileId": "cmuv6zii6001qf4uwld7ttm6s",
+    "sha256": "cbe1c26c10c0ecc831e53ae1f390ccc972bb0d87110a2d83c60e97aceef633a5",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6z6rs001gf4uwpzb46hdz",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/kechla-dar-sultan/e68f1755-7320-40e5-b8f3-c1cc1974c15d-propriete-dite-immeuble-du-controle-n-2335-civil-situee-a-safi-quartier-kechla-a.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 2922898
+  },
+  "[\"e0351551eed9bb888dfa4345e742c997cf651a760279d19d90ebf6f70696d753\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Classement & protection\",null]": {
+    "fileId": "cmuv6zlm2001uf4uwgsx22vei",
+    "sha256": "e0351551eed9bb888dfa4345e742c997cf651a760279d19d90ebf6f70696d753",
+    "sectionId": "cmuv6zjj9001sf4uw960ikahv",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6zjj9001sf4uw960ikahv/c0d20228-7eb3-4f69-a26a-6e3c0a49a5ce-classement-de-la-medina-safi-legende.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 2467945
+  },
+  "[\"737ea6da7d5a43967e81e7e1b9f30494b17681190f0ce386e8e014e77a7b665d\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Classement & protection\",null]": {
+    "fileId": "cmuv6znpx001wf4uw2q06oznh",
+    "sha256": "737ea6da7d5a43967e81e7e1b9f30494b17681190f0ce386e8e014e77a7b665d",
+    "sectionId": "cmuv6zjj9001sf4uw960ikahv",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6zjj9001sf4uw960ikahv/17ce8944-892d-4fb0-a8db-21d38f6ca97d-classement-de-la-medina-safi.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 1943356
+  },
+  "[\"ca298de1bd015e0249e7b5c1112f7e8157344ba561fdfb10a122b6eb1a30c6bd\",\"Murailles portugaises de Safi\",null,\"RELEVÉS & PLANS\",\"Travaux & tronçons\",null]": {
+    "fileId": "cmuv6zqwr0020f4uwkq5iz4rg",
+    "sha256": "ca298de1bd015e0249e7b5c1112f7e8157344ba561fdfb10a122b6eb1a30c6bd",
+    "sectionId": "cmuv6zoqy001yf4uw9ma96qiq",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6zoqy001yf4uw9ma96qiq/fb8836ed-ed59-43b8-9baf-f473dcdea7c6-travaux-de-reparation-et-gfortati-ot-de-la-muraille-de-la-rue-des-remparts-medin.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 2535013
+  },
+  "[\"3ab0893dfd4187186568002d50d62e814baea4b3e1456a694dce4ebeb561250e\",\"Château de Mer\",null,\"RELEVÉS & PLANS\",\"Plan général\",null]": {
+    "fileId": "cmuv6zsro0022f4uwq5msudmx",
+    "sha256": "3ab0893dfd4187186568002d50d62e814baea4b3e1456a694dce4ebeb561250e",
+    "sectionId": "cmuv6y0yn000af4uwmwschw5i",
+    "folderId": null,
+    "storageKey": "saf/chateau-de-mer/cmuv6y0yn000af4uwmwschw5i/26945841-064d-4306-9139-6589f6f43370-inspection-des-monuments-historiques-de-safi-et-essaouira-1.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 1033568
+  },
+  "[\"4b21fd7eff82f8b25b3926813f85211fb7fe8b927d9d0e5d73d2d7deca0d945b\",\"Murailles portugaises de Safi\",null,\"RELEVÉS & PLANS\",\"Plan général de l’enceinte\",null]": {
+    "fileId": "cmuv6zv1i0024f4uw8zfxwzyg",
+    "sha256": "4b21fd7eff82f8b25b3926813f85211fb7fe8b927d9d0e5d73d2d7deca0d945b",
+    "sectionId": "cmuv6xy2e0004f4uwqkn7code",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6xy2e0004f4uwqkn7code/eea4b399-b9c9-4947-b85b-ee4fc8202801-inspection-des-monuments-historiques-de-safi-et-essaouira.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 1865174
+  },
+  "[\"8f9c7e7c15a54862b45b218b36b1c89fbd3279b6925289258604f92b548be571\",\"Murailles portugaises de Safi\",null,\"RELEVÉS & PLANS\",\"Portes & ouvrages\",null]": {
+    "fileId": "cmuv6zy410028f4uwbgedadqh",
+    "sha256": "8f9c7e7c15a54862b45b218b36b1c89fbd3279b6925289258604f92b548be571",
+    "sectionId": "cmuv6zw3i0026f4uwiocwde5d",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6zw3i0026f4uwiocwde5d/2878df0c-b263-41a7-8405-35d8be41fe7a-details-de-la-porte-destinee-a-la-tour-de-la-place-du-r-bat-a-safi.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 8430156
+  },
+  "[\"83409e9858abbd4ac5be75a327aefed61fc2d42b08f8d6d2d1c66c0683997ade\",\"Murailles portugaises de Safi\",null,\"RELEVÉS & PLANS\",\"Travaux & tronçons\",null]": {
+    "fileId": "cmuv7009y002af4uws5hab8qx",
+    "sha256": "83409e9858abbd4ac5be75a327aefed61fc2d42b08f8d6d2d1c66c0683997ade",
+    "sectionId": "cmuv6zoqy001yf4uw9ma96qiq",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6zoqy001yf4uw9ma96qiq/223fa8cb-fb38-404e-8262-e472820e8d3d-travaux-de-reparation-et-de-confrontation-du-rempart-entre-bordj-ed-dar-t-khazen.pdf",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 1840529
+  },
+  "[\"b381333d082f9d48553b03529c81137fca3eff7bc7a1f4d8cd07b9d95f558bae\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv704bo002gf4uwgqgiv72s",
+    "sha256": "b381333d082f9d48553b03529c81137fca3eff7bc7a1f4d8cd07b9d95f558bae",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/50cc4f28-42d4-4f55-a5ae-256aa3f749fd-whatsapp-image-2026-09-30-at-11-37-30-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 592150
+  },
+  "[\"5de581b391cefcc23825ac813dbd184f5bb2669cce8b3c7c013b50ade77ccd67\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv706lw002if4uww9xxlv54",
+    "sha256": "5de581b391cefcc23825ac813dbd184f5bb2669cce8b3c7c013b50ade77ccd67",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/5b6b1e62-f710-4e71-bb3d-9dedc02da755-whatsapp-image-2026-09-30-at-11-37-30-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 913376
+  },
+  "[\"d0d49d0fa90acb18be40982932a0d0b5870b1dd58188970c1cad53070add0628\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv708ri002kf4uwmr14xzxa",
+    "sha256": "d0d49d0fa90acb18be40982932a0d0b5870b1dd58188970c1cad53070add0628",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/be4a3215-9928-4af9-8cf2-033d2dc9c7c7-whatsapp-image-2026-09-30-at-11-37-31-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 485956
+  },
+  "[\"bc488d2f3c6e0632560c91a6768f416dde3e16cd7893998c9a96eeaaf8e469a1\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70awy002mf4uw81e9c5a6",
+    "sha256": "bc488d2f3c6e0632560c91a6768f416dde3e16cd7893998c9a96eeaaf8e469a1",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/2f71858b-2b39-4b7a-baa0-265b43bb51b9-whatsapp-image-2026-09-30-at-11-37-31-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1022171
+  },
+  "[\"87c167063d8f080065c64181ef446e6d42d5e78ce47f1daedfff28e240101422\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70d85002of4uw6ti1l2jq",
+    "sha256": "87c167063d8f080065c64181ef446e6d42d5e78ce47f1daedfff28e240101422",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/dfce38fe-e2a8-4f86-9580-ade835f51bae-whatsapp-image-2026-09-30-at-11-37-31-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 899267
+  },
+  "[\"e6b189a8b2eb5e46ce6ff1cb30be1a95ca233638b06d212d26aac2a80fabfaf3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70fid002qf4uwfbv0wsix",
+    "sha256": "e6b189a8b2eb5e46ce6ff1cb30be1a95ca233638b06d212d26aac2a80fabfaf3",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/e5fd14e1-3e93-42e3-9021-e89c28333064-whatsapp-image-2026-09-30-at-11-37-31-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 883567
+  },
+  "[\"3af1aabd4c332cf7bd43ef37116f5915e4fca277c83b61a361e83eb8c4f06952\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70j7g002sf4uwtwf7ehw5",
+    "sha256": "3af1aabd4c332cf7bd43ef37116f5915e4fca277c83b61a361e83eb8c4f06952",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/d610b0bf-21b8-4934-9cd7-549855bcd346-whatsapp-image-2026-09-30-at-11-37-31-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 838078
+  },
+  "[\"df9fb8aa7162e48a10370b8fb0489c5440af82beb86f608e6affb244d2ec2159\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70li2002uf4uwm5umjq8r",
+    "sha256": "df9fb8aa7162e48a10370b8fb0489c5440af82beb86f608e6affb244d2ec2159",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/1fa0b54a-c673-4c12-a1e1-4765817a7983-whatsapp-image-2026-09-30-at-11-37-31-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1002331
+  },
+  "[\"3e1df99089f8f223e7b41b13c87db8c7795048c66e110efc96ea1a6ef6a2ac01\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70ov5002wf4uw5cu412ke",
+    "sha256": "3e1df99089f8f223e7b41b13c87db8c7795048c66e110efc96ea1a6ef6a2ac01",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/0340b27f-5acc-43a8-bf5c-9b8936fff354-whatsapp-image-2026-09-30-at-11-37-32-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 724995
+  },
+  "[\"a3a546d47d3b1ecfd6a3b6a50b6d888e77c5af0443c64d02b74b8b20d0938cf6\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70r43002yf4uw1a4b2m06",
+    "sha256": "a3a546d47d3b1ecfd6a3b6a50b6d888e77c5af0443c64d02b74b8b20d0938cf6",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/ac3b0299-dd91-40b5-9aa4-017c517e43d3-whatsapp-image-2026-09-30-at-11-37-32-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 708546
+  },
+  "[\"01afcf72aa20ef04122854749d1db66022e49e5562a2beaa9ae87200e16d7939\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70t950030f4uw5rc6anjj",
+    "sha256": "01afcf72aa20ef04122854749d1db66022e49e5562a2beaa9ae87200e16d7939",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/afc3f54c-5a87-4cbc-b0c6-3bac9c6d40dc-whatsapp-image-2026-09-30-at-11-37-32-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 601229
+  },
+  "[\"41fccf04fad4171b920b192128b05b2f27a4a5a048f5496643c8716266985454\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70vb60032f4uwgb57463a",
+    "sha256": "41fccf04fad4171b920b192128b05b2f27a4a5a048f5496643c8716266985454",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/2c3f9c0f-78c8-4311-9547-77b3cc0a7fef-whatsapp-image-2026-09-30-at-11-37-32-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 610670
+  },
+  "[\"0dbc7f02c3bb0b79258f84408eb6156a516fb0a8ce9b80f419070c7cbaad5d00\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70xnr0034f4uw7ybdaxji",
+    "sha256": "0dbc7f02c3bb0b79258f84408eb6156a516fb0a8ce9b80f419070c7cbaad5d00",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/ac0d8061-7b1e-411f-a9fd-8377ecb36be5-whatsapp-image-2026-09-30-at-11-37-32-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 849172
+  },
+  "[\"4142914d54ba471948443ec7c8fe6faf96d483a04f919a28602800c950ee9d7c\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv70zpg0036f4uw7768s2yl",
+    "sha256": "4142914d54ba471948443ec7c8fe6faf96d483a04f919a28602800c950ee9d7c",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/cabbb5b6-b1b6-445e-b525-2cc049e73d8f-whatsapp-image-2026-09-30-at-11-37-32-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 807934
+  },
+  "[\"ed7a22c2943c0edee1605d9161816813b2ef0a6475a8f55beffb8dc9aea3ac5e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv711wd0038f4uw59mdpn8i",
+    "sha256": "ed7a22c2943c0edee1605d9161816813b2ef0a6475a8f55beffb8dc9aea3ac5e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/ad139f39-91c0-4041-88bf-dafd2255bd28-whatsapp-image-2026-09-30-at-11-37-33-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 829390
+  },
+  "[\"f4826ec370bbd2e338a857daf01f5ddc67af9e9d3922cbdc49d7b6387ec44c4e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv715lt003af4uw9qbvyc3p",
+    "sha256": "f4826ec370bbd2e338a857daf01f5ddc67af9e9d3922cbdc49d7b6387ec44c4e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/c908ec6e-5fce-4c56-a483-8f6c8d17ad55-whatsapp-image-2026-09-30-at-11-37-33-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 935829
+  },
+  "[\"a21b66024369da7008385cc8260e538c721e84639380a4aa424830f3fd1278cd\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv717ra003cf4uw1e7g95hf",
+    "sha256": "a21b66024369da7008385cc8260e538c721e84639380a4aa424830f3fd1278cd",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/a765717e-47d0-4a8d-806b-befe54786995-whatsapp-image-2026-09-30-at-11-37-33-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1042228
+  },
+  "[\"3c024935761313bcce74b9f5d63d825abbaf78004510b8ac0eff56d4bc2604ee\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv719xw003ef4uws64p59uc",
+    "sha256": "3c024935761313bcce74b9f5d63d825abbaf78004510b8ac0eff56d4bc2604ee",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/952a0f5c-4228-4757-8652-c9b2087fafb0-whatsapp-image-2026-09-30-at-11-37-33-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1132855
+  },
+  "[\"c9053031affe8a96fae111197dc23b0c51a1f592105a402310cadd65c1a5b5c9\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71cfr003gf4uwogr8o5z0",
+    "sha256": "c9053031affe8a96fae111197dc23b0c51a1f592105a402310cadd65c1a5b5c9",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/17817875-edce-47e2-878d-5fe44be8dfd7-whatsapp-image-2026-09-30-at-11-37-33-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 766565
+  },
+  "[\"0ac91cafa91916e6d56a6a864cb67601483b15ce4f13bfa77a70345100f36106\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71ejr003if4uwj7z26pxf",
+    "sha256": "0ac91cafa91916e6d56a6a864cb67601483b15ce4f13bfa77a70345100f36106",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/66b5bd0a-bf7d-4173-a1c5-4da9adad53e5-whatsapp-image-2026-09-30-at-11-37-34-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1019928
+  },
+  "[\"e22decb262aa406d1740302b7e6663a1659cccec82059812a20d8a3ea73d3e92\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71gnp003kf4uwjxkukukn",
+    "sha256": "e22decb262aa406d1740302b7e6663a1659cccec82059812a20d8a3ea73d3e92",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/c1f77fd6-da90-4436-a284-4dd415bdaad2-whatsapp-image-2026-09-30-at-11-37-34-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1145029
+  },
+  "[\"7bc843b5d6b3b0df542d73157bf8b9d46831ddf6cbabc9356642513b5b5309a0\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71iz6003mf4uw3bk39k0q",
+    "sha256": "7bc843b5d6b3b0df542d73157bf8b9d46831ddf6cbabc9356642513b5b5309a0",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/9cd756c8-cf33-4f9f-b8be-e032b97a16b7-whatsapp-image-2026-09-30-at-11-37-34-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1146202
+  },
+  "[\"5405b97d957616fe48a8306d337c0db206d58e9bcf2963b72c7db8a04d8a86a7\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71l3s003of4uw10okjfkx",
+    "sha256": "5405b97d957616fe48a8306d337c0db206d58e9bcf2963b72c7db8a04d8a86a7",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/97247e10-bd8c-41cc-bacd-580278b018e7-whatsapp-image-2026-09-30-at-11-37-34-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1008397
+  },
+  "[\"921065f9fe908b069f9e1df47dc1a5780da45d7e35961ca0cd1f137b701984e7\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71n8s003qf4uws2xencla",
+    "sha256": "921065f9fe908b069f9e1df47dc1a5780da45d7e35961ca0cd1f137b701984e7",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/52b2df87-50c1-4ff4-9eb4-24bd5d62cd97-whatsapp-image-2026-09-30-at-11-37-35-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1168686
+  },
+  "[\"34ae1285183943fa81782063acb48cad33223f5ec4da2147a5b8f55b82ed0a65\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71pju003sf4uwvac5ll6m",
+    "sha256": "34ae1285183943fa81782063acb48cad33223f5ec4da2147a5b8f55b82ed0a65",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/5be84e5e-4ec3-44c3-b59e-e6769c1c214a-whatsapp-image-2026-09-30-at-11-37-35-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 1036671
+  },
+  "[\"cc8fcfcafabfcc926d40b3e0abe981a5997609242f896e04057c1296b5d2814e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71s59003uf4uwska3pl5o",
+    "sha256": "cc8fcfcafabfcc926d40b3e0abe981a5997609242f896e04057c1296b5d2814e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/021d82d2-3900-41c7-8433-797a014a6cfa-whatsapp-image-2026-09-30-at-11-37-35-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 867119
+  },
+  "[\"b38efb86d8f54ef3de9f75ea374a04e0973ada5224d49cb071969cc7cdce37d8\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71vt7003wf4uw8ky7j9t4",
+    "sha256": "b38efb86d8f54ef3de9f75ea374a04e0973ada5224d49cb071969cc7cdce37d8",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/2fa63089-a46a-4164-98f6-33069cf30411-whatsapp-image-2026-09-30-at-11-37-35-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 414635
+  },
+  "[\"64a902d1a51ddc598c779f495e312087bf13eb95e3bf530605426b30816c1e1f\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv71y95003yf4uwawmopmk1",
+    "sha256": "64a902d1a51ddc598c779f495e312087bf13eb95e3bf530605426b30816c1e1f",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/b5cfe998-615e-46fa-bf6a-b8a404b0c1c0-whatsapp-image-2026-09-30-at-11-37-36-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 370829
+  },
+  "[\"8ff3e1fff7011ebf38f2c0ae5932ab62ed672de943087bdd617df5e5c1aa53b3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv720ot0040f4uwmpp9is0x",
+    "sha256": "8ff3e1fff7011ebf38f2c0ae5932ab62ed672de943087bdd617df5e5c1aa53b3",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/83dc4420-891d-4e3f-80a9-691d1f008e7d-whatsapp-image-2026-09-30-at-11-37-36-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 334390
+  },
+  "[\"1560c23026ae6c4019b8761e337a03d74eb8d43ecbd05c67ad4d010a894b4b77\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv7235g0042f4uwzylm90m6",
+    "sha256": "1560c23026ae6c4019b8761e337a03d74eb8d43ecbd05c67ad4d010a894b4b77",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/8942cacf-937b-488f-8bd7-785f8b03a5da-whatsapp-image-2026-09-30-at-11-37-36-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 916050
+  },
+  "[\"4ab64062c7db653799e41444c7af6e55fd0412ec8b5880467c664d8d1cc7c1bb\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv725au0044f4uw8043ynz5",
+    "sha256": "4ab64062c7db653799e41444c7af6e55fd0412ec8b5880467c664d8d1cc7c1bb",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/a2407815-f615-4f09-9a1a-efb6d0b304a3-whatsapp-image-2026-09-30-at-11-37-36-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 499017
+  },
+  "[\"ffe002bd54eef34cc904a88c305b1b7fbb17df91dadc81563cc70db9908f27c1\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv727h60046f4uwddi4zrm1",
+    "sha256": "ffe002bd54eef34cc904a88c305b1b7fbb17df91dadc81563cc70db9908f27c1",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/74285121-db0c-442a-aa8e-9da060550634-whatsapp-image-2026-09-30-at-11-37-36-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 354065
+  },
+  "[\"ae352a2905d97d272876a8a508b6b49a5bce4b6deb93be7efb36c3a615ac7844\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72a3e0048f4uwa6bd7e5l",
+    "sha256": "ae352a2905d97d272876a8a508b6b49a5bce4b6deb93be7efb36c3a615ac7844",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/aec04698-8738-4685-a832-f2bde0a44f08-whatsapp-image-2026-09-30-at-11-37-36-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 364150
+  },
+  "[\"9df3b5af036418dc1865ca8a8435a8e11f7c9948290d0664e71072d4c1c25d9a\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72cgu004af4uwvsx9gmmj",
+    "sha256": "9df3b5af036418dc1865ca8a8435a8e11f7c9948290d0664e71072d4c1c25d9a",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/40e6a7cc-7601-46ee-8973-c4a8dcf9d410-whatsapp-image-2026-09-30-at-11-37-37-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 390696
+  },
+  "[\"d326e2a36c15cb38aeee3031159e85be749e9d39ac63a715e1ef0b8cc75c9178\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72f0t004cf4uwbhgx96wd",
+    "sha256": "d326e2a36c15cb38aeee3031159e85be749e9d39ac63a715e1ef0b8cc75c9178",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/41036074-4a53-40c9-b6d3-c1668fb9bb34-whatsapp-image-2026-10-01-at-9-35-26-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 131097
+  },
+  "[\"9beacbd27e3ec4abeca031c686c95443e9865db5d73baff8bc46a5801987145d\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72hcz004ef4uwew8tiolr",
+    "sha256": "9beacbd27e3ec4abeca031c686c95443e9865db5d73baff8bc46a5801987145d",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/bce36018-7679-4972-adfd-2da1a3d8ce5b-whatsapp-image-2026-10-01-at-9-35-28-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 148020
+  },
+  "[\"312b1d65e917d4e942e382d319e52d5583a392acfcd6cd35c48bec325e6ae892\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72jdj004gf4uwmp4n16zr",
+    "sha256": "312b1d65e917d4e942e382d319e52d5583a392acfcd6cd35c48bec325e6ae892",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/de0426f9-a3bd-475a-832a-9d058ba8b2a4-whatsapp-image-2026-10-01-at-9-35-28-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 176295
+  },
+  "[\"a9ffa712004d866ff12140644306de4a9a3f376d0ab9e932cca33c54fa5ee845\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72lro004if4uwsll58cm7",
+    "sha256": "a9ffa712004d866ff12140644306de4a9a3f376d0ab9e932cca33c54fa5ee845",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/76c68417-3b8e-42db-b108-474b80410d4d-whatsapp-image-2026-10-01-at-9-35-28-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 78457
+  },
+  "[\"da2ea14a3b8baab9be1f5febeada259a0ff2c60f51ec0202a6e27aa7cdd50e18\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72nyf004kf4uw6udjxhl8",
+    "sha256": "da2ea14a3b8baab9be1f5febeada259a0ff2c60f51ec0202a6e27aa7cdd50e18",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/ad43978b-3e1c-4921-9176-04f4906ff96d-whatsapp-image-2026-10-01-at-9-35-28-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 93296
+  },
+  "[\"c63071cccca8a6d662c3f57d4809d07f7d4c612ae0948af70c1ec881d5b24efa\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72q4f004mf4uwlgslkxbh",
+    "sha256": "c63071cccca8a6d662c3f57d4809d07f7d4c612ae0948af70c1ec881d5b24efa",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/1e23a67d-2bff-4ad8-b4fb-1d21f0ec45f0-whatsapp-image-2026-10-01-at-9-35-28-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 121368
+  },
+  "[\"1bd7177ea015f520be523539afd4d4746e12b24c4ba8acf004d16e290e97154e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72s72004of4uwgf2pl39l",
+    "sha256": "1bd7177ea015f520be523539afd4d4746e12b24c4ba8acf004d16e290e97154e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/1c8107b4-5648-4162-a286-c5d11371a98b-whatsapp-image-2026-10-01-at-9-35-28-am-6.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 166796
+  },
+  "[\"3536b33c1b95c97a884cbbae135f1463d07acb900cdff399c6ec8b721612887a\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72uak004qf4uw1ag8hyki",
+    "sha256": "3536b33c1b95c97a884cbbae135f1463d07acb900cdff399c6ec8b721612887a",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/2a2c4fdc-1ad3-41a1-b7a2-d64be5223960-whatsapp-image-2026-10-01-at-9-35-28-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 201765
+  },
+  "[\"3ffa24462d5c526b8f04941c986c9023120dc471d88f38350c6e20124e11c674\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72wbo004sf4uwj28a0140",
+    "sha256": "3ffa24462d5c526b8f04941c986c9023120dc471d88f38350c6e20124e11c674",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/44fed943-b1e1-4b8e-8388-8c1f727bca5b-whatsapp-image-2026-10-01-at-9-35-29-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 136461
+  },
+  "[\"ddbd27052df8a7d4561e82c0ec8038c17b440d3d533725bc4935a9dcce0f2797\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv72yb4004uf4uwsxbexpjq",
+    "sha256": "ddbd27052df8a7d4561e82c0ec8038c17b440d3d533725bc4935a9dcce0f2797",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/28d9e9a5-bcf5-4f97-9603-100e054cff3a-whatsapp-image-2026-10-01-at-9-35-29-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 93451
+  },
+  "[\"f7507f0e4e1139fef26893cdd047c1cc298152ca291854e9ad1f7758489e9e4e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv730ep004wf4uw8470l4do",
+    "sha256": "f7507f0e4e1139fef26893cdd047c1cc298152ca291854e9ad1f7758489e9e4e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/a7ce591e-caa2-4da2-8353-982d95ff72fd-whatsapp-image-2026-10-01-at-9-35-29-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 85772
+  },
+  "[\"83ee5a5bdf7544999c6216fdb6f3fe904e4dac6370e08b4a030cd732f6ed8c1e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv732oy004yf4uwrwva826o",
+    "sha256": "83ee5a5bdf7544999c6216fdb6f3fe904e4dac6370e08b4a030cd732f6ed8c1e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/08cfbe7c-de41-42ba-98bb-a056e346edf6-whatsapp-image-2026-10-01-at-9-35-29-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 149435
+  },
+  "[\"56d9751e0357d85a8270bf0b798d88d1733777fb8e4e1c3ee3b617b210bb473a\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv735w30050f4uwdq6pixq6",
+    "sha256": "56d9751e0357d85a8270bf0b798d88d1733777fb8e4e1c3ee3b617b210bb473a",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/f04daf60-1bc9-4cbc-a5ae-8b786b64cf04-whatsapp-image-2026-10-01-at-9-35-29-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 78237
+  },
+  "[\"13ca47baf093813821373f2163b96feea69e1d5291039920190178d8a4d41b1b\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv738qt0052f4uwppzkug1x",
+    "sha256": "13ca47baf093813821373f2163b96feea69e1d5291039920190178d8a4d41b1b",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/9536141d-6a19-45cb-83fa-4f2c24914517-whatsapp-image-2026-10-01-at-9-35-29-am-6.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 138253
+  },
+  "[\"ffc5ab1ee2d4cb30e7dbccdef0b8d65a9a7410bed342206544e1ed43f7d75535\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73asb0054f4uw7r3z2sr2",
+    "sha256": "ffc5ab1ee2d4cb30e7dbccdef0b8d65a9a7410bed342206544e1ed43f7d75535",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/e592da0e-f439-4162-9964-7b9afe44851e-whatsapp-image-2026-10-01-at-9-35-29-am-7.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 125239
+  },
+  "[\"318ed5b82821f88600c5066f9dda30cf8dd50c19f3a5251353500c894684f843\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73cu00056f4uwa6ei4wjg",
+    "sha256": "318ed5b82821f88600c5066f9dda30cf8dd50c19f3a5251353500c894684f843",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/a08e0652-f4ab-416a-ac15-d41b41e93dbb-whatsapp-image-2026-10-01-at-9-35-29-am-8.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 118349
+  },
+  "[\"1c52bee64a59e407577042a957f2c377a37894a837916fe8e7082b2bd8304e12\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73eul0058f4uw0j8epnho",
+    "sha256": "1c52bee64a59e407577042a957f2c377a37894a837916fe8e7082b2bd8304e12",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/b78e299f-3026-4ef7-bb54-daf53015f478-whatsapp-image-2026-10-01-at-9-35-29-am-9.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 94989
+  },
+  "[\"817bbaf52c8fba8a71f6d189c56a895f074e4bc3f963142b1360deffcbe7fc7b\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73gu2005af4uwoi5dl4ix",
+    "sha256": "817bbaf52c8fba8a71f6d189c56a895f074e4bc3f963142b1360deffcbe7fc7b",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/bc53becb-afa6-4e23-b0be-4f8ad356e5cb-whatsapp-image-2026-10-01-at-9-35-29-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 117723
+  },
+  "[\"ca4b400b467b15971589342ce489678dd0b62aa53513578434dd788e44bb8afd\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73ixr005cf4uwsl40shlv",
+    "sha256": "ca4b400b467b15971589342ce489678dd0b62aa53513578434dd788e44bb8afd",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/a2ee80e8-061f-4d46-9012-86fd71eac304-whatsapp-image-2026-10-01-at-9-35-30-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 87242
+  },
+  "[\"62c3a9bc632433a40278740a8ca82a0f8f120ba510ba13538b588be3d5b4173e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73l6d005ef4uwbexu0kaj",
+    "sha256": "62c3a9bc632433a40278740a8ca82a0f8f120ba510ba13538b588be3d5b4173e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/fe7400ae-1876-40f8-a6ad-1cb2b1ee6be4-whatsapp-image-2026-10-03-at-11-47-39-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 117908
+  },
+  "[\"6f38de09ca857a03b804ca64d9ea590ecdd9b2b657a45a94ff4965d9c8221890\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73ndi005gf4uw1ru8jvh5",
+    "sha256": "6f38de09ca857a03b804ca64d9ea590ecdd9b2b657a45a94ff4965d9c8221890",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/251873c4-d975-4eff-8b83-2baec125f169-whatsapp-image-2026-10-03-at-11-47-40-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 135281
+  },
+  "[\"d6af8b5216f83b2715e34faecb3683749d201fdc7984d467e6bbeddf47e0a190\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73quw005if4uwmfat7gii",
+    "sha256": "d6af8b5216f83b2715e34faecb3683749d201fdc7984d467e6bbeddf47e0a190",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/0079bf56-1eca-44d6-86c3-c2f5c37e5f24-whatsapp-image-2026-10-03-at-11-47-40-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 243819
+  },
+  "[\"b7d9f1326b0a0ae4483f7481fda2117e3fcbdd869b6b123bb9070badddd804b3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73u0f005kf4uwz2707b0r",
+    "sha256": "b7d9f1326b0a0ae4483f7481fda2117e3fcbdd869b6b123bb9070badddd804b3",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/3e890412-c521-4a38-8817-824c5deb6772-whatsapp-image-2026-10-03-at-11-47-40-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 113713
+  },
+  "[\"6a147630b87b5a210b4d9543b292eb1ac7da4e30977a81469922c3fea6caf2e8\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73w86005mf4uw14r0vvmf",
+    "sha256": "6a147630b87b5a210b4d9543b292eb1ac7da4e30977a81469922c3fea6caf2e8",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/15c84753-cfb3-4877-9346-c5562ecb69cb-whatsapp-image-2026-10-03-at-11-47-40-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 97008
+  },
+  "[\"16c047d7dbf84c93873c545e56eb33218206bffb1c335892c7926daf55b4a6d3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv73yd8005of4uwco9n8jiz",
+    "sha256": "16c047d7dbf84c93873c545e56eb33218206bffb1c335892c7926daf55b4a6d3",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/7256536d-a656-4a44-9657-2bc7ae46a603-whatsapp-image-2026-10-03-at-11-47-40-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 191357
+  },
+  "[\"b1fbb771c476f7f2f1a355d0a822262896a3154044ed156937353ef24010fdc2\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv740j7005qf4uwivpofpes",
+    "sha256": "b1fbb771c476f7f2f1a355d0a822262896a3154044ed156937353ef24010fdc2",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/c40ad8a6-5348-4693-a6fe-709b3e31dd72-whatsapp-image-2026-10-03-at-11-47-40-am-6.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 89904
+  },
+  "[\"4fcab2a0e904734d36b7ab12a6f7251169c9127e946e881d1a801725ac8801f3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv742u1005sf4uw34i3crji",
+    "sha256": "4fcab2a0e904734d36b7ab12a6f7251169c9127e946e881d1a801725ac8801f3",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/69fffcff-681f-47cd-9f5d-bd758311affd-whatsapp-image-2026-10-03-at-11-47-40-am-7.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 207734
+  },
+  "[\"8ad14f88b5e5808e39458a12dfbce6d377483ee6c234c17dadf693d71546284d\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv7459z005uf4uw8t014ehx",
+    "sha256": "8ad14f88b5e5808e39458a12dfbce6d377483ee6c234c17dadf693d71546284d",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/1f7d2df0-f041-47eb-b216-1c4a42ca7fef-whatsapp-image-2026-10-03-at-11-47-40-am-8.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 234602
+  },
+  "[\"0c41f01c8281cc879d83c9e384ecb4c84b4cc31b43fa0a2bffd6b76bc9a1478e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv747br005wf4uw5hmbub4o",
+    "sha256": "0c41f01c8281cc879d83c9e384ecb4c84b4cc31b43fa0a2bffd6b76bc9a1478e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/86cfe2c7-c70c-4396-80cb-516d5d0423e5-whatsapp-image-2026-10-03-at-11-47-40-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 92589
+  },
+  "[\"405ceeebf0ca7dfc88140fabea9f09760b0e9529c6ec07fd01632f99b21c23f2\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv749c8005yf4uwtgf6ci4n",
+    "sha256": "405ceeebf0ca7dfc88140fabea9f09760b0e9529c6ec07fd01632f99b21c23f2",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/9f603d4a-c943-44bf-943a-ee9123c44bd5-whatsapp-image-2026-10-03-at-11-47-41-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 199985
+  },
+  "[\"bae4afee3dd8f4241da316e1ee9b676d151b304145dcac82649d0a6df73b289b\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74bgc0060f4uwktedl0rr",
+    "sha256": "bae4afee3dd8f4241da316e1ee9b676d151b304145dcac82649d0a6df73b289b",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/0ff31a04-87ae-4f35-b155-ddc9e0b51c51-whatsapp-image-2026-10-03-at-11-47-41-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 100718
+  },
+  "[\"a12a3ef06e3165c7372a70bb7e42c2c69af8c71b641d000c31bb794e23899d37\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74duo0062f4uw89ke25lf",
+    "sha256": "a12a3ef06e3165c7372a70bb7e42c2c69af8c71b641d000c31bb794e23899d37",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/c9d58d24-3307-47ec-a536-dd3edd346c00-whatsapp-image-2026-10-03-at-11-47-41-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 99620
+  },
+  "[\"920bbf22424e7329a859a695fafb971b9c25cb05e5b40f06f5a58a96bb075fe6\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74fws0064f4uw7c7ujdsc",
+    "sha256": "920bbf22424e7329a859a695fafb971b9c25cb05e5b40f06f5a58a96bb075fe6",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/bde93f25-642c-4ef7-8cab-b8b9029af2d3-whatsapp-image-2026-10-03-at-11-47-41-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 120336
+  },
+  "[\"d0509f3939a87748d709d819f3b812c8264fc8de845c8166a9b36ebece8d56cd\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74j7a0066f4uwprhek741",
+    "sha256": "d0509f3939a87748d709d819f3b812c8264fc8de845c8166a9b36ebece8d56cd",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/895c0198-4dd9-4ca7-89e8-8d04a28da417-whatsapp-image-2026-10-03-at-11-47-41-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 95531
+  },
+  "[\"d54e4a7a9003b07298a7243c0b6a411a4cbc27acf724e88334169ca6ee1c0b1b\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74l7z0068f4uw7vviio0l",
+    "sha256": "d54e4a7a9003b07298a7243c0b6a411a4cbc27acf724e88334169ca6ee1c0b1b",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/2ee8e431-8f5d-44c4-a5a8-b077d65fb7f7-whatsapp-image-2026-10-03-at-11-47-41-am-6.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 112857
+  },
+  "[\"8bbf4432b5acd5576dafc9d6763bdd3101379969a63eeb8f06dec33a25adf596\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74n6h006af4uw21lc6187",
+    "sha256": "8bbf4432b5acd5576dafc9d6763bdd3101379969a63eeb8f06dec33a25adf596",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/ee70a0a9-dc38-4f1e-9d05-a5567e59922c-whatsapp-image-2026-10-03-at-11-47-41-am-7.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 114887
+  },
+  "[\"3948706ef8fecf91ab6592aee890db5e96f8b91807abc129f601126602be3dca\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74p72006cf4uww6pd9swf",
+    "sha256": "3948706ef8fecf91ab6592aee890db5e96f8b91807abc129f601126602be3dca",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/9997b72d-ba95-4d46-bcee-2038ce9b9585-whatsapp-image-2026-10-03-at-11-47-41-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 93018
+  },
+  "[\"531235f5fd2df82278085b3d5fc6a17cf144bf51658fa85254890005dbfc97f8\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74reb006ef4uwz1wcd6lb",
+    "sha256": "531235f5fd2df82278085b3d5fc6a17cf144bf51658fa85254890005dbfc97f8",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/22d57b94-a168-4ae7-86ca-672ae6fbfc4c-whatsapp-image-2026-10-03-at-11-47-42-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 115334
+  },
+  "[\"0454d81b036cecab0f8beae0716f989e304800472203592681dd9fe022117a6e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74teq006gf4uwqyxsdzqq",
+    "sha256": "0454d81b036cecab0f8beae0716f989e304800472203592681dd9fe022117a6e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/07707a6c-2d66-46f0-a3be-65038ff1834b-whatsapp-image-2026-10-03-at-11-47-42-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 90774
+  },
+  "[\"6d0a404f7b27423d2ee08f698e347b2bd0390163eb7bf2d62ef4627332ce8441\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74vdb006if4uw4fgwvgc9",
+    "sha256": "6d0a404f7b27423d2ee08f698e347b2bd0390163eb7bf2d62ef4627332ce8441",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/12783d56-2be6-4629-99fb-006e4c0cb113-whatsapp-image-2026-10-03-at-11-47-42-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 114083
+  },
+  "[\"3a0a91ab6bf858a1c99b5dec44c537609558e941beb51fd6b4a6b9da42fa0c4c\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74xd5006kf4uwi6j478a1",
+    "sha256": "3a0a91ab6bf858a1c99b5dec44c537609558e941beb51fd6b4a6b9da42fa0c4c",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/8f28f962-171e-496f-b9af-bcf7d6897c60-whatsapp-image-2026-10-03-at-11-47-42-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 101583
+  },
+  "[\"5e8e5460cf155715d3f41b050fe7b26a9ab404e9cc588e59b28fdc061b03d347\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv74zcn006mf4uwiofpgwah",
+    "sha256": "5e8e5460cf155715d3f41b050fe7b26a9ab404e9cc588e59b28fdc061b03d347",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/1714fb1d-09f7-445c-aaf7-53cf7822f712-whatsapp-image-2026-10-03-at-11-47-42-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 108406
+  },
+  "[\"e28a962d21c44b53abb3d9cff1bbaa9370e6b1a385723526d202e63cc9f68740\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv753k5006of4uwdjo4pt5r",
+    "sha256": "e28a962d21c44b53abb3d9cff1bbaa9370e6b1a385723526d202e63cc9f68740",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/4cfb17ba-9f6d-42d9-aa35-a95fcc918b17-whatsapp-image-2026-10-03-at-11-47-42-am-6.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 219758
+  },
+  "[\"2583d2bca515ea140b9b289d096f68a953edd3df8d658a8c83d31572f40c407a\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv755kf006qf4uwdzbdrchq",
+    "sha256": "2583d2bca515ea140b9b289d096f68a953edd3df8d658a8c83d31572f40c407a",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/963171ac-8ae4-4a63-83f6-6de498f207f8-whatsapp-image-2026-10-03-at-11-47-42-am-7.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 120446
+  },
+  "[\"37d79e291ac6e1a76022f3c29ddf694b8f63dd6dd5edcf32c844bf6ddab7d66c\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv757km006sf4uwob9jay60",
+    "sha256": "37d79e291ac6e1a76022f3c29ddf694b8f63dd6dd5edcf32c844bf6ddab7d66c",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/c1f24906-cad8-4c77-ac37-22ef58096100-whatsapp-image-2026-10-03-at-11-47-42-am-8.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 114921
+  },
+  "[\"5df5fd69dff18bf33dbc92471e60fcb732a64cef835929ee0dbb4801d7ae7ac4\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv759mn006uf4uwpzdhjo2o",
+    "sha256": "5df5fd69dff18bf33dbc92471e60fcb732a64cef835929ee0dbb4801d7ae7ac4",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/052a0a49-eb94-4ab5-a2e1-e79afbd43468-whatsapp-image-2026-10-03-at-11-47-42-am-9.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 158960
+  },
+  "[\"c07254fd58e7ae64dbfea2e4435ec92d6a1fde79934e5656c157f88e9d877be3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75bm0006wf4uwywyssofj",
+    "sha256": "c07254fd58e7ae64dbfea2e4435ec92d6a1fde79934e5656c157f88e9d877be3",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/1332dee2-5f79-4135-83b6-0a505ee73ecb-whatsapp-image-2026-10-03-at-11-47-42-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 92646
+  },
+  "[\"7b5e1108d91e27fa2051bf69cbe23f08b8f6c64dc294f8b4b3da462f3f7214a1\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75dn5006yf4uwl7bq4bkj",
+    "sha256": "7b5e1108d91e27fa2051bf69cbe23f08b8f6c64dc294f8b4b3da462f3f7214a1",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/baf3f151-0c97-4ce1-b143-b53491f87770-whatsapp-image-2026-10-03-at-11-47-43-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 129775
+  },
+  "[\"7b1b5374b6b57f3ef57ebae206cb196625d2821d95b3ecb20a80b05c1ffdabe1\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75fs40070f4uwfse782ok",
+    "sha256": "7b1b5374b6b57f3ef57ebae206cb196625d2821d95b3ecb20a80b05c1ffdabe1",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/1bba9fdc-e1c8-4af9-985a-441c255509b4-whatsapp-image-2026-10-03-at-11-47-43-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 106195
+  },
+  "[\"d66b6391b5953db6e1d8a5eeb2ac0ed240138f2168861797f21c1c49f6fe8766\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75hr00072f4uw3xroibh3",
+    "sha256": "d66b6391b5953db6e1d8a5eeb2ac0ed240138f2168861797f21c1c49f6fe8766",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/02b1158a-08d6-4371-94bc-4904ca735a85-whatsapp-image-2026-10-03-at-11-47-43-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 87905
+  },
+  "[\"414ee3fcd9adb5a0ee82357a9f93fe6350956b989e483e344c23b6213ff1eae4\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75jsk0074f4uwd7fazy84",
+    "sha256": "414ee3fcd9adb5a0ee82357a9f93fe6350956b989e483e344c23b6213ff1eae4",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/794f5d5b-7330-49dd-b617-c8705eabca0c-whatsapp-image-2026-10-03-at-11-47-43-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 107577
+  },
+  "[\"814f114aa128b53af23ffe46e8bb308745982a6d89e667e8376a3b7d5c8de62b\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75mty0076f4uwti08wpem",
+    "sha256": "814f114aa128b53af23ffe46e8bb308745982a6d89e667e8376a3b7d5c8de62b",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/1ae0e774-6495-49ac-aefc-145fb49b23c0-whatsapp-image-2026-10-03-at-11-47-43-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 41057
+  },
+  "[\"d1e9347574e37c783ac942ce840def6097a1cfe21a60ff788908deb303e53ec9\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75p1d0078f4uwakzewq9a",
+    "sha256": "d1e9347574e37c783ac942ce840def6097a1cfe21a60ff788908deb303e53ec9",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/e4545636-2c05-4f38-986b-9439193b666d-whatsapp-image-2026-10-03-at-11-47-43-am-6.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 119725
+  },
+  "[\"6d53d94019de1629b41faf2d316ace1117af499572b1ce7eb32c3830a650a179\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75r1e007af4uwxa529pjv",
+    "sha256": "6d53d94019de1629b41faf2d316ace1117af499572b1ce7eb32c3830a650a179",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/0f1ac2c6-a9be-4373-8863-ee186449b8e5-whatsapp-image-2026-10-03-at-11-47-43-am-7.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 51368
+  },
+  "[\"ba0b2e9ea47c2ead1365eedb0bbfc13dc5779ada6f5f18af9321fd2462cfe55d\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75t2d007cf4uwbt6sil3w",
+    "sha256": "ba0b2e9ea47c2ead1365eedb0bbfc13dc5779ada6f5f18af9321fd2462cfe55d",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/3c93743e-87b4-4890-ab7a-418bdccd173c-whatsapp-image-2026-10-03-at-11-47-43-am-8.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 127656
+  },
+  "[\"646b4bd10546817efb165542a76f9efe6efee2ec4a26a86ed8dbbb51eeb9da45\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75v4t007ef4uw22azkiv7",
+    "sha256": "646b4bd10546817efb165542a76f9efe6efee2ec4a26a86ed8dbbb51eeb9da45",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/a5f4e47c-780a-4953-9ff9-bc6f02262c44-whatsapp-image-2026-10-03-at-11-47-43-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 165280
+  },
+  "[\"821fb949c22b35731233f9cdce36542363ce3559f52e52ef387559216b519793\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75xsy007gf4uwvt278y0u",
+    "sha256": "821fb949c22b35731233f9cdce36542363ce3559f52e52ef387559216b519793",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/c2465d9f-fd28-4ba1-bdfb-6b3a4c6d5c8b-whatsapp-image-2026-10-03-at-11-47-44-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 152014
+  },
+  "[\"964e39c90c34d672bd96ea76055c0436d71b044f85a9ad520732a0126c24ce9f\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv75zxw007if4uw1z8yhsfo",
+    "sha256": "964e39c90c34d672bd96ea76055c0436d71b044f85a9ad520732a0126c24ce9f",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/9d1314f5-8e6e-40b6-85cb-7114bb5f764b-whatsapp-image-2026-10-03-at-11-47-44-am-10.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 124456
+  },
+  "[\"1948875750d9bbe06b037913df66afd0c820cd91f95ee10ab8778bfae429ec1c\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv7621n007kf4uwq84ejg2l",
+    "sha256": "1948875750d9bbe06b037913df66afd0c820cd91f95ee10ab8778bfae429ec1c",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/7855940c-fd6d-4a1a-a112-6ab97aa1daa3-whatsapp-image-2026-10-03-at-11-47-44-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 131682
+  },
+  "[\"528bc597c3671e83f40f415c879dcf84bf7a5e9cc6335b2633a38ce45d3a6875\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv764k0007mf4uw8qkn4454",
+    "sha256": "528bc597c3671e83f40f415c879dcf84bf7a5e9cc6335b2633a38ce45d3a6875",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/039822d1-8ffc-4086-bfb3-02094cab944f-whatsapp-image-2026-10-03-at-11-47-44-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 121163
+  },
+  "[\"c81d80921a6d05cc13a7b04fe23139ed582354741158c05696dd383876b8cf1e\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv766k5007of4uw2utu5rd1",
+    "sha256": "c81d80921a6d05cc13a7b04fe23139ed582354741158c05696dd383876b8cf1e",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/d674f2b6-68e6-46a2-8a4b-4e3719f91ca3-whatsapp-image-2026-10-03-at-11-47-44-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 169915
+  },
+  "[\"c5324b333160aa9e16924d25e212e11e74117e67e943b3beab9382b831a754eb\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv768hz007qf4uwoili4vgn",
+    "sha256": "c5324b333160aa9e16924d25e212e11e74117e67e943b3beab9382b831a754eb",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/ec49bb2a-f088-447a-bdce-a0d97f4e3bc5-whatsapp-image-2026-10-03-at-11-47-44-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 130736
+  },
+  "[\"cae36a2a205e4076eeb27f0a468449e05a2cfdbc05324e40a29308f74f38976f\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv76ahf007sf4uw8y5rw36d",
+    "sha256": "cae36a2a205e4076eeb27f0a468449e05a2cfdbc05324e40a29308f74f38976f",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/48fff4c3-7088-4d68-ae8b-d7844b1443b4-whatsapp-image-2026-10-03-at-11-47-44-am-6.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 67252
+  },
+  "[\"51a8f91d66849a702a583b146e28625b4feee0dbc5caade46d0bd291e28ba2fd\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv76ceg007uf4uwkd935rbe",
+    "sha256": "51a8f91d66849a702a583b146e28625b4feee0dbc5caade46d0bd291e28ba2fd",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/d86a2cf9-4303-4042-a086-452da5e5a5b6-whatsapp-image-2026-10-03-at-11-47-44-am-7.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 70449
+  },
+  "[\"4768eaba7a59827607444ab42616fe0d491b2c39b2677c78986f9b008a216267\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv76ed1007wf4uw31xwa9w7",
+    "sha256": "4768eaba7a59827607444ab42616fe0d491b2c39b2677c78986f9b008a216267",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/9b21fb11-4a26-423a-b57a-c96c0e2e4aef-whatsapp-image-2026-10-03-at-11-47-44-am-8.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 80454
+  },
+  "[\"094f706da3711c21c3ae9dfbd3e3a27dea7560a42c809666311d98aefac5f001\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv76gdm007yf4uw6gjh10rj",
+    "sha256": "094f706da3711c21c3ae9dfbd3e3a27dea7560a42c809666311d98aefac5f001",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/816c93a8-16f6-4521-9e8b-79bdd65daffc-whatsapp-image-2026-10-03-at-11-47-44-am-9.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 128293
+  },
+  "[\"10981f7b8c375839c1ba3dda4e9a4e1430f51f984fc7bc3769192b40a7b6ef5c\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv76iea0080f4uwznx8ujuu",
+    "sha256": "10981f7b8c375839c1ba3dda4e9a4e1430f51f984fc7bc3769192b40a7b6ef5c",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/9af5e2cd-556e-4b52-9223-ae956753f1f4-whatsapp-image-2026-10-03-at-11-47-44-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 38573
+  },
+  "[\"157169f5eebd5cc26087c2b9e495cb5fd5f81979af78e1176d65d947695c12c6\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv76kcu0082f4uww81vn3bo",
+    "sha256": "157169f5eebd5cc26087c2b9e495cb5fd5f81979af78e1176d65d947695c12c6",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/c9f34dd7-f97e-4e48-9b55-bb1e197241fe-whatsapp-image-2026-10-03-at-11-47-45-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 123581
+  },
+  "[\"6d0c139a252a383ad9d4b82bda2cafbfc1407cfa51f17cc24702a881d303225a\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv76mbv0084f4uwkyl5ybb4",
+    "sha256": "6d0c139a252a383ad9d4b82bda2cafbfc1407cfa51f17cc24702a881d303225a",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/92ffd7c1-190b-408b-91cc-2efe8f71b9fe-whatsapp-image-2026-10-03-at-11-47-45-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 82991
+  },
+  "[\"bc4d5bb05b9bfb3a701559535e501d5e39d5c6bc4573e5a9a2355cb3559be3a8\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies actuelles\"]": {
+    "fileId": "cmuv76oab0086f4uw3no1o79s",
+    "sha256": "bc4d5bb05b9bfb3a701559535e501d5e39d5c6bc4573e5a9a2355cb3559be3a8",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv701yn002ef4uw5rz2g695",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-actuelles/e9c0d573-38e3-4761-b0a2-9b7de2a2ef36-whatsapp-image-2026-10-03-at-11-47-45-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 134190
+  },
+  "[\"d6010cc68483a1c26e76d01a6d62c57c62eb393fc24c4dcfb4ebc7b7aa33ced3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation vidéo\",\"Photographies/Vidéos actuelles\"]": {
+    "fileId": "cmuv76r4r008af4uw6nrnamkb",
+    "sha256": "d6010cc68483a1c26e76d01a6d62c57c62eb393fc24c4dcfb4ebc7b7aa33ced3",
+    "sectionId": "cmul3mz1q000ecouwgrpwm7dg",
+    "folderId": "cmuv76pek0088f4uw6mygtb2h",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmul3mz1q000ecouwgrpwm7dg/photographies-videos-actuelles/5ded84ff-a11c-4f93-8dd0-a63a4217a083-whatsapp-video-2026-10-03-at-11-47-45-am.mp4",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 513675
+  },
+  "[\"0f3e7b5a94e1f52a948d465ca2ae2e46d8905028e610da725bcb54fea3dc9b73\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv76tx3008ef4uw5ebyw7yl",
+    "sha256": "0f3e7b5a94e1f52a948d465ca2ae2e46d8905028e610da725bcb54fea3dc9b73",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/ab759c48-0e6e-4893-8bf4-19e840919ff5-whatsapp-image-2026-10-01-at-9-34-42-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 183692
+  },
+  "[\"f2e01e0c33c9739e427831f7e56827739df02a0a25e96380ede7e9ad6b87f786\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv76w31008gf4uwpfrjj21h",
+    "sha256": "f2e01e0c33c9739e427831f7e56827739df02a0a25e96380ede7e9ad6b87f786",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/9f2ec59a-9464-465b-9fb9-43229cdbc3ff-whatsapp-image-2026-10-01-at-9-34-42-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 188493
+  },
+  "[\"f82fece030e7115f220d5f68d2b42a6079935896ecccc1dd9135f2eebbe6aa21\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv76y5l008if4uwm0e03tpc",
+    "sha256": "f82fece030e7115f220d5f68d2b42a6079935896ecccc1dd9135f2eebbe6aa21",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/dc97083d-475f-4821-bec1-f99daba79564-whatsapp-image-2026-10-01-at-9-34-42-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 177766
+  },
+  "[\"cb32e118d579944740657b131f01a94e5c5a0866454501a8bfa6e5b2fbd424a5\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv770cz008kf4uws9i95gbh",
+    "sha256": "cb32e118d579944740657b131f01a94e5c5a0866454501a8bfa6e5b2fbd424a5",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/021ed83c-318e-4938-8f93-1297c74ce97b-whatsapp-image-2026-10-01-at-9-34-42-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 219365
+  },
+  "[\"0efa0a89e1949064b3b5a4a1d8244512096401a111e05588b52d6fa5b40eccac\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv772v9008mf4uwpckbx24g",
+    "sha256": "0efa0a89e1949064b3b5a4a1d8244512096401a111e05588b52d6fa5b40eccac",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/2ddb2c67-bc79-4eb2-ab80-9070f52f473d-whatsapp-image-2026-10-01-at-9-34-42-am-6.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 203705
+  },
+  "[\"6c671574f8396141d331d6e572553e0aff705ad6d9b35cf09b8c179ebfb97302\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv7750h008of4uw70oj57kc",
+    "sha256": "6c671574f8396141d331d6e572553e0aff705ad6d9b35cf09b8c179ebfb97302",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/04aa317f-0ad5-410e-8900-bd0dec42b4d9-whatsapp-image-2026-10-01-at-9-34-42-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 65630
+  },
+  "[\"f7417a61db580c4ce4172e88c6edf84a981ba3cc2f04a2fc61047b5643652c1d\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv7772w008qf4uwrus5at5c",
+    "sha256": "f7417a61db580c4ce4172e88c6edf84a981ba3cc2f04a2fc61047b5643652c1d",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/0aee05f1-65b8-4ba1-8497-f0c2b8e09ca5-whatsapp-image-2026-10-01-at-9-34-43-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 130130
+  },
+  "[\"ae13c594481bdde75b72433de1913a883cb949b53e97296172c7927377624f48\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv7790n008sf4uwpcg8l83x",
+    "sha256": "ae13c594481bdde75b72433de1913a883cb949b53e97296172c7927377624f48",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/3a378dae-7681-414b-b2db-4f65543a90ba-whatsapp-image-2026-10-01-at-9-34-43-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 108353
+  },
+  "[\"3f1db8b9217289139d3ea7ef7b1210febfae3c09f51007deb1f59a907f8e40c3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv77b1n008uf4uwgln9pmi5",
+    "sha256": "3f1db8b9217289139d3ea7ef7b1210febfae3c09f51007deb1f59a907f8e40c3",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/ad78a368-b9a0-47c2-bb32-158d5d1ce4ce-whatsapp-image-2026-10-01-at-9-34-43-am.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 213444
+  },
+  "[\"0d607488f1824860b183ee5569a1815262515f2439e32bb2b7d26924378975a3\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv77d95008wf4uwoklre77w",
+    "sha256": "0d607488f1824860b183ee5569a1815262515f2439e32bb2b7d26924378975a3",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/852e03fd-df34-41e5-86f5-0b8fa19d55f7-whatsapp-image-2026-10-01-at-9-35-26-am-1.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 113945
+  },
+  "[\"022289b5a62ddba143b1bafb7049f07ebdaaaa10890d147a7545c228c7cff6aa\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv77fou008yf4uwga07in5z",
+    "sha256": "022289b5a62ddba143b1bafb7049f07ebdaaaa10890d147a7545c228c7cff6aa",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/d7fb9b1b-a41c-4432-a552-0ed46591526c-whatsapp-image-2026-10-01-at-9-35-26-am-2.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 79559
+  },
+  "[\"59e43c9b52417a2d27fade37a9c593b51df200860503b331a65e10022e71914b\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv77j8z0090f4uwk67x8kyt",
+    "sha256": "59e43c9b52417a2d27fade37a9c593b51df200860503b331a65e10022e71914b",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/21b7ffff-191c-45b8-8a2c-2980961a54f1-whatsapp-image-2026-10-01-at-9-35-26-am-3.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 207900
+  },
+  "[\"724a9ff6029a2ef82cf4d053591d546fbc4e1428e9a59c7fb18f223cd9802b9c\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv77l7w0092f4uwdgta75ep",
+    "sha256": "724a9ff6029a2ef82cf4d053591d546fbc4e1428e9a59c7fb18f223cd9802b9c",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/fa76bba1-cbea-4752-8acf-059a7d1edc02-whatsapp-image-2026-10-01-at-9-35-26-am-4.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 165552
+  },
+  "[\"8c31255bfe78c8d74ee42ac198e5fddb643c5bee5866b3b764cc09bbf94bd939\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION VISUELLE\",\"Documentation photographique\",\"Photographies historiques\"]": {
+    "fileId": "cmuv77nm80094f4uwmq03wmln",
+    "sha256": "8c31255bfe78c8d74ee42ac198e5fddb643c5bee5866b3b764cc09bbf94bd939",
+    "sectionId": "cmuv701eb002cf4uw9zafyk0r",
+    "folderId": "cmuv76s8q008cf4uwm4ilfums",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv701eb002cf4uw9zafyk0r/photographies-historiques/48172a95-0e27-4f33-a1f3-ee9b140eb697-whatsapp-image-2026-10-01-at-9-35-26-am-5.jpeg",
+    "provider": "CLOUDINARY",
+    "sizeBytes": 214281
+  },
+  "[\"4396e0fb0fa2a4a335c71948c97a4da9f09e4e8c09cbaf3aa59337b221e62f7b\",\"Château de Mer\",null,\"COMPRENDRE\",\"Fiches techniques & programmation\",null]": {
+    "fileId": "cmuv77q670098f4uwq9j1oubw",
+    "sha256": "4396e0fb0fa2a4a335c71948c97a4da9f09e4e8c09cbaf3aa59337b221e62f7b",
+    "sectionId": "cmuv77op10096f4uwv9ierlgg",
+    "folderId": null,
+    "storageKey": "saf/chateau-de-mer/cmuv77op10096f4uwv9ierlgg/ba7be934-3328-41b2-894a-e3b426267639-1.docx",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 699301
+  },
+  "[\"63b80a19cead31d48040391580c83fa308afbc604ef15c01ad9f98e08d477ce7\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Kechla & Dar Sultan\"]": {
+    "fileId": "cmuv77sta009af4uw70bb3p03",
+    "sha256": "63b80a19cead31d48040391580c83fa308afbc604ef15c01ad9f98e08d477ce7",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6z6rs001gf4uwpzb46hdz",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/kechla-dar-sultan/6803a123-b539-4773-ba50-37066f06a24d-2.docx",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 1455031
+  },
+  "[\"54cc915eeac7557733c54783665938bc5053dad811120f48edbb47c35bc18835\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Dar Baroud\"]": {
+    "fileId": "cmuv77vdd009ef4uww2oghleb",
+    "sha256": "54cc915eeac7557733c54783665938bc5053dad811120f48edbb47c35bc18835",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv77txt009cf4uw0ivq3u1o",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/dar-baroud/1a44dc1e-4b4d-4c4f-a51a-cbfc9c447768-3.docx",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 209745
+  },
+  "[\"e203872bfde91626d9bbee9b4b25eecbf2a6034fa313df00be7adcf8bcfaa605\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Cathédrale portugaise\"]": {
+    "fileId": "cmuv77xk7009gf4uw19uqlosl",
+    "sha256": "e203872bfde91626d9bbee9b4b25eecbf2a6034fa313df00be7adcf8bcfaa605",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv6yzu30018f4uwuyd3j3qe",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/cathedrale-portugaise/75996401-0e37-4c21-86ff-2b6d5286e681-4.docx",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 636780
+  },
+  "[\"82a9b2638026d24c71cf38ebd772da936ee74e9c18caf58d7ab36865992ad0ce\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Fiches techniques\",null]": {
+    "fileId": "cmuv7800t009kf4uwvd2cryfs",
+    "sha256": "82a9b2638026d24c71cf38ebd772da936ee74e9c18caf58d7ab36865992ad0ce",
+    "sectionId": "cmuv77yl5009if4uwsvibzce2",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv77yl5009if4uwsvibzce2/3deef07c-c8bd-47b4-ac24-f2e7fd1a0852-5.docx",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 608395
+  },
+  "[\"be4d803f420844090935223ee10de1e4786a15aafcb782a7116538402bd5b859\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Minaret almohade\"]": {
+    "fileId": "cmuv782kh009of4uwz2wqzajl",
+    "sha256": "be4d803f420844090935223ee10de1e4786a15aafcb782a7116538402bd5b859",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv7815j009mf4uwm81g85ae",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/minaret-almohade/4d169524-6bca-44f5-962e-14d6ba2d6181-6.docx",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 216683
+  },
+  "[\"2c576643abae22758266a1435038de6de5b97a1ae00329b96605dc66812d62f2\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Monuments & ouvrages associés\",\"Église espagnole\"]": {
+    "fileId": "cmuv786rz009sf4uwk8opb30o",
+    "sha256": "2c576643abae22758266a1435038de6de5b97a1ae00329b96605dc66812d62f2",
+    "sectionId": "cmuv6yiex000uf4uw84tkk2g3",
+    "folderId": "cmuv7853o009qf4uwbppnlqmw",
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv6yiex000uf4uw84tkk2g3/eglise-espagnole/f3ea5768-5837-4d89-afe2-3e849ed3da7c-7.docx",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 229566
+  },
+  "[\"2cc1d62e70273d96bebca1bba4b275434a36e035576aa3346c138cc8f5020d63\",\"Murailles portugaises de Safi\",null,\"DOCUMENTATION PATRIMONIALE\",\"Fiches techniques\",null]": {
+    "fileId": "cmuv788jw009uf4uw4lz6636b",
+    "sha256": "2cc1d62e70273d96bebca1bba4b275434a36e035576aa3346c138cc8f5020d63",
+    "sectionId": "cmuv77yl5009if4uwsvibzce2",
+    "folderId": null,
+    "storageKey": "saf/murailles-portugaises-de-safi/cmuv77yl5009if4uwsvibzce2/b9beebd5-8e84-4626-8830-f600267edb5b-8.docx",
+    "provider": "BACKBLAZE_B2",
+    "sizeBytes": 513975
+  }
+}
