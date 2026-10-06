@@ -5,6 +5,7 @@ import { existsSync } from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { promisify } from "node:util";
+import { pathToFileURL } from "node:url";
 
 const execFileAsync = promisify(execFile);
 
@@ -224,10 +225,7 @@ export async function convertOfficeToPdf(
     await fs.mkdir(profileDir, { recursive: true });
     await fs.writeFile(inputPath, inputBuffer);
 
-    const normalizedProfile = profileDir.replace(/\\/g, "/");
-    const profileUrl = normalizedProfile.startsWith("/")
-      ? `file://${normalizedProfile}`
-      : `file:///${normalizedProfile}`;
+    const profileUrl = pathToFileURL(profileDir).href;
 
     const args = [
       "--headless",
@@ -322,7 +320,14 @@ export async function convertOfficeToPdf(
       detail,
     );
   } finally {
-    await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});
+    await fs.rm(tempDir, { recursive: true, force: true, maxRetries: 3 }).catch(
+      (error) => {
+        console.warn("[preview] Could not remove temporary conversion directory", {
+          tempDir,
+          detail: error instanceof Error ? error.message : String(error),
+        });
+      },
+    );
   }
 }
 

@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { promises as fs } from "node:fs";
 import * as path from "node:path";
+import * as os from "node:os";
 import {
   isConvertibleOfficeDocument,
   convertOfficeToPdf,
@@ -9,6 +10,7 @@ import {
   isLibreOfficeAvailable,
   resetSofficeBinaryCache,
   SUPPORTED_OFFICE_EXTENSIONS,
+  PreviewConversionError,
 } from "../../lib/documents/converter";
 import { computePreviewCacheKey } from "../../lib/storage/preview-cache";
 
@@ -75,34 +77,40 @@ test("findSofficeBinary returns an existing path or null (never a bare command)"
   assert.equal(isLibreOfficeAvailable(), true);
 });
 
-test("convertOfficeToPdf converts real DOCX when LibreOffice is available", async (t) => {
+test("Office previews convert DOCX/PPTX/XLSX and clean scratch space on success and failure", async (t) => {
   resetSofficeBinaryCache();
   if (!isLibreOfficeAvailable()) {
     t.skip("LibreOffice not installed on this machine");
     return;
   }
 
-  const docxPath = path.join(
-    process.cwd(),
-    "tests",
-    "fixtures",
-    "office",
-    "sample.docx",
-  );
-
-  let docxBuffer: Buffer;
+  // Isolate scratch space; spaces and '#' also exercise profile file-URL encoding.
+  const scratchRoot = await fs.mkdtemp(path.join(os.tmpdir(), "office test #"));
+  const tempVariable = process.platform === "win32" ? "TEMP" : "TMPDIR";
+  const previousTemp = process.env[tempVariable];
+  process.env[tempVariable] = scratchRoot;
   try {
-    docxBuffer = await fs.readFile(docxPath);
-  } catch {
-    t.skip(`Sample DOCX not found at ${docxPath}`);
-    return;
+    for (const extension of ["docx", "pptx", "xlsx"]) {
+      const input = await fs.readFile(
+        path.join(process.cwd(), "tests/fixtures/office", `sample.${extension}`),
+      );
+      const pdf = await convertOfficeToPdf(input, extension);
+      assert.ok(pdf.length > 1000, extension);
+      assert.equal(pdf.subarray(0, 5).toString("utf8"), "%PDF-", extension);
+      assert.deepEqual(await fs.readdir(scratchRoot), [], `${extension} cleanup`);
+    }
+    // Pass the ZIP-header gate, then fail inside LibreOffice after temp creation.
+    await assert.rejects(
+      convertOfficeToPdf(Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x00, 0x00]), "xlsx"),
+      (error: unknown) => error instanceof PreviewConversionError &&
+        ["output_missing", "libreoffice_conversion_failed"].includes(error.reason),
+    );
+    assert.deepEqual(await fs.readdir(scratchRoot), [], "failed conversion cleanup");
+  } finally {
+    if (previousTemp === undefined) delete process.env[tempVariable];
+    else process.env[tempVariable] = previousTemp;
+    await fs.rm(scratchRoot, { recursive: true, force: true });
   }
-
-  assert.ok(docxBuffer.length > 0);
-
-  const pdfBuffer = await convertOfficeToPdf(docxBuffer, "docx");
-  assert.ok(pdfBuffer.length > 1000);
-  assert.equal(pdfBuffer.subarray(0, 5).toString("utf8"), "%PDF-");
 });
 
 test("convertOfficeToPdf rejects unsupported formats", async () => {

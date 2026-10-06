@@ -1,5 +1,7 @@
-# Example Render Blueprint — Docker runtime with system ffmpeg.
-# In the Render dashboard you can also set Runtime = Docker and point at ./Dockerfile.
+# Optional Docker Blueprint; the existing production service uses Native Node.
+# This file does not describe its live dashboard configuration.
+# Do not sync/create a Blueprint to fix the existing service. See
+# docs/architecture/render-office-previews.md for the in-place runtime change.
 services:
   - type: web
     name: archeritage-docs
@@ -13,6 +15,8 @@ services:
       # Optional override; otherwise /usr/bin/ffmpeg from the image is used.
       - key: FFMPEG_PATH
         value: /usr/bin/ffmpeg
+      - key: SOFFICE_PATH
+        value: /usr/bin/soffice
       - key: DATABASE_URL
         sync: false
       - key: AUTH_SECRET
